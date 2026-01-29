@@ -78,7 +78,6 @@ implements ICFSecJavaFXSecDevicePaneList
 	protected boolean endOfData = true;
 	protected ObservableList<ICFSecSecDeviceObj> observableListOfSecDevice = null;
 	protected TableColumn<ICFSecSecDeviceObj, String> tableColumnDevName = null;
-	protected TableColumn<ICFSecSecDeviceObj, String> tableColumnPubKey = null;
 	protected TableView<ICFSecSecDeviceObj> dataTable = null;
 	protected CFHBox hboxMenu = null;
 	public final String S_ColumnNames[] = { "Name" };
@@ -148,29 +147,6 @@ implements ICFSecJavaFXSecDevicePaneList
 			}
 		});
 		dataTable.getColumns().add( tableColumnDevName );
-		tableColumnPubKey = new TableColumn<ICFSecSecDeviceObj,String>( "Device Public Key" );
-		tableColumnPubKey.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecDeviceObj,String>,ObservableValue<String> >() {
-			public ObservableValue<String> call( CellDataFeatures<ICFSecSecDeviceObj, String> p ) {
-				ICFSecSecDeviceObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					String value = obj.getOptionalPubKey();
-					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnPubKey.setCellFactory( new Callback<TableColumn<ICFSecSecDeviceObj,String>,TableCell<ICFSecSecDeviceObj,String>>() {
-			@Override public TableCell<ICFSecSecDeviceObj,String> call(
-				TableColumn<ICFSecSecDeviceObj,String> arg)
-			{
-				return new CFTextTableCell<ICFSecSecDeviceObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnPubKey );
 		dataTable.getSelectionModel().selectedItemProperty().addListener(
 			new ChangeListener<ICFSecSecDeviceObj>() {
 				@Override public void changed( ObservableValue<? extends ICFSecSecDeviceObj> observable,

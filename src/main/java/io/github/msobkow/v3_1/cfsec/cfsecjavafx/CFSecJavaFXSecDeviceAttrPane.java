@@ -90,31 +90,8 @@ implements ICFSecJavaFXSecDevicePaneCommon
 		}
 	}
 
-	protected class PubKeyCFLabel
-		extends CFLabel
-	{
-		public PubKeyCFLabel() {
-			super();
-			setText(Inz.s("cfsec.javafx.SecDevice.AttrPane.PubKey.EffLabel"));
-		}
-	}
-
-	protected class PubKeyEditor
-		extends CFTextEditor
-	{
-		public PubKeyEditor() {
-			super();
-			setMaxLen( 10000 );
-			setFieldNameInzTag( "cfsec.javafx.SecDevice.AttrPane.PubKey.EffLabel" );
-			setPrefHeight( 10 * 20 );
-			setMinHeight( 10 * 20 );
-		}
-	}
-
 	protected DevNameCFLabel javafxLabelDevName = null;
 	protected DevNameEditor javafxEditorDevName = null;
-	protected PubKeyCFLabel javafxLabelPubKey = null;
-	protected PubKeyEditor javafxEditorPubKey = null;
 
 	public CFSecJavaFXSecDeviceAttrPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecDeviceObj argFocus ) {
 		super();
@@ -154,17 +131,6 @@ implements ICFSecJavaFXSecDevicePaneCommon
 		gridRow ++;
 
 		ctrl = getJavaFXEditorDevName();
-		setHalignment( ctrl, HPos.LEFT );
-		add( ctrl, 0, gridRow );
-		gridRow ++;
-
-		label = getJavaFXLabelPubKey();
-		setHalignment( label, HPos.LEFT );
-		setValignment( label, VPos.BOTTOM );
-		add( label, 0, gridRow );
-		gridRow ++;
-
-		ctrl = getJavaFXEditorPubKey();
 		setHalignment( ctrl, HPos.LEFT );
 		add( ctrl, 0, gridRow );
 		gridRow ++;
@@ -249,28 +215,6 @@ implements ICFSecJavaFXSecDevicePaneCommon
 		javafxEditorDevName = value;
 	}
 
-	public PubKeyCFLabel getJavaFXLabelPubKey() {
-		if( javafxLabelPubKey == null ) {
-			javafxLabelPubKey = new PubKeyCFLabel();
-		}
-		return( javafxLabelPubKey );
-	}
-
-	public void setJavaFXLabelPubKey( PubKeyCFLabel value ) {
-		javafxLabelPubKey = value;
-	}
-
-	public PubKeyEditor getJavaFXEditorPubKey() {
-		if( javafxEditorPubKey == null ) {
-			javafxEditorPubKey = new PubKeyEditor();
-		}
-		return( javafxEditorPubKey );
-	}
-
-	public void setJavaFXEditorPubKey( PubKeyEditor value ) {
-		javafxEditorPubKey = value;
-	}
-
 	public void populateFields()
 	{
 		ICFSecSecDeviceObj popObj = getEffJavaFXFocus();
@@ -282,13 +226,6 @@ implements ICFSecJavaFXSecDevicePaneCommon
 		}
 		else {
 			getJavaFXEditorDevName().setStringValue( popObj.getRequiredDevName() );
-		}
-
-		if( popObj == null ) {
-			getJavaFXEditorPubKey().setTextValue( null );
-		}
-		else {
-			getJavaFXEditorPubKey().setTextValue( popObj.getOptionalPubKey() );
 		}
 	}
 
@@ -308,13 +245,6 @@ implements ICFSecJavaFXSecDevicePaneCommon
 				S_ProcName,
 				Inz.s("cflibjavafx.common.PaneIsUnfocusedOrNotEditing"),
 				Inz.x("cflibjavafx.common.PaneIsUnfocusedOrNotEditing") );
-		}
-
-		if( ( getJavaFXEditorPubKey().getTextValue() != null ) && ( getJavaFXEditorPubKey().getTextValue().length() <= 0 ) ) {
-			editObj.setOptionalPubKey( null );
-		}
-		else {
-			editObj.setOptionalPubKey( getJavaFXEditorPubKey().getTextValue() );
 		}
 	}
 
@@ -603,9 +533,6 @@ implements ICFSecJavaFXSecDevicePaneCommon
 		}
 		if( javafxEditorDevName != null ) {
 			javafxEditorDevName.setDisable( true );
-		}
-		if( javafxEditorPubKey != null ) {
-			javafxEditorPubKey.setDisable( ! isEditing );
 		}
 	}
 }
