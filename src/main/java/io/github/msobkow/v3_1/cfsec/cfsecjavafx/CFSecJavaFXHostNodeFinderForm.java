@@ -107,7 +107,7 @@ implements ICFSecJavaFXHostNodePaneCommon,
 			ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
 			if( containingCluster == null ) {
 				ICFSecAuthorization auth = schemaObj.getAuthorization();
-				long containingClusterId = auth.getSecClusterId();
+				CFLibDbKeyHash256 containingClusterId = auth.getSecClusterId();
 				containingCluster = schemaObj.getClusterTableObj().readClusterByIdIdx( containingClusterId );
 			}
 			dataList = schemaObj.getHostNodeTableObj().pageHostNodeByClusterIdx( containingCluster.getRequiredId(),

@@ -52,5 +52,5 @@ import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
  */
 public interface ICFSecJavaFXClusterPageCallback
 {
-	public List<ICFSecClusterObj> pageData( Long priorId );
+	public List<ICFSecClusterObj> pageData( CFLibDbKeyHash256 priorId );
 }

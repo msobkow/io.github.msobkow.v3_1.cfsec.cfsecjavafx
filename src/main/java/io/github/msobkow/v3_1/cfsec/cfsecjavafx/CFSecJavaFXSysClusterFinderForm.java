@@ -537,7 +537,7 @@ implements ICFSecJavaFXSysClusterPaneCommon,
 		ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
 		if( ( containingCluster == null ) || forceReload ) {
 			ICFSecAuthorization auth = schemaObj.getAuthorization();
-			long containingClusterId = auth.getSecClusterId();
+			CFLibDbKeyHash256 containingClusterId = auth.getSecClusterId();
 			containingCluster = schemaObj.getClusterTableObj().readClusterByIdIdx( containingClusterId );
 		}
 		if( ( listOfSysCluster == null ) || forceReload ) {

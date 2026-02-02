@@ -81,7 +81,7 @@ implements ICFSecJavaFXClusterPaneCommon
 	}
 
 	protected class IdEditor
-		extends CFInt64Editor
+		extends CFDbKeyHash256Editor
 	{
 		public IdEditor() {
 			super();
@@ -329,10 +329,10 @@ implements ICFSecJavaFXClusterPaneCommon
 			popObj = null;
 		}
 		if( popObj == null ) {
-			getJavaFXEditorId().setInt64Value( null );
+			getJavaFXEditorId().setDbKeyHash256Value( null );
 		}
 		else {
-			getJavaFXEditorId().setInt64Value( popObj.getRequiredId() );
+			getJavaFXEditorId().setDbKeyHash256Value( popObj.getRequiredId() );
 		}
 
 		if( popObj == null ) {

@@ -114,7 +114,7 @@ implements ICFSecJavaFXSecGrpIncPaneCommon
 			ICFSecSecGroupObj referencedObj = (ICFSecSecGroupObj)javafxReferenceParentSubGroup.getReferencedObject();
 			java.util.List<ICFSecSecGroupObj> listOfSecGroup = null;
 			ICFSecAuthorization auth = schemaObj.getAuthorization();
-			long containingClusterId = auth.getSecClusterId();
+			CFLibDbKeyHash256 containingClusterId = auth.getSecClusterId();
 			listOfSecGroup = schemaObj.getSecGroupTableObj().readSecGroupByClusterIdx( containingClusterId );
 			if( listOfSecGroup == null ) {
 				throw new CFLibNullArgumentException( getClass(),

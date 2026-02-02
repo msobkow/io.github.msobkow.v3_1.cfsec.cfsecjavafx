@@ -169,7 +169,7 @@ implements ICFSecJavaFXSchema
 					"getTenantObj",
 					"UniqueTenantName",
 					"UniqueTenantName",
-					new Object() {	protected long clusterId = getClusterObj().getRequiredId();
+					new Object() {	protected CFLibDbKeyHash256 clusterId = getClusterObj().getRequiredId();
 						protected String name = tenantName; } );
 			}
 		}
