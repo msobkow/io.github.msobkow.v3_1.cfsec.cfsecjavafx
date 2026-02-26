@@ -83,16 +83,17 @@ implements ICFSecJavaFXSecSessionPaneList
 	protected CFButton buttonDeleteSelected = null;
 	protected TableView<ICFSecSecSessionObj> dataTable = null;
 	protected TableColumn<ICFSecSecSessionObj, CFLibDbKeyHash256> tableColumnSecSessionId = null;
+	protected TableColumn<ICFSecSecSessionObj, CFLibDbKeyHash256> tableColumnSecUserId = null;
 	protected TableColumn<ICFSecSecSessionObj, String> tableColumnSecDevName = null;
 	protected TableColumn<ICFSecSecSessionObj, LocalDateTime> tableColumnStart = null;
 	protected TableColumn<ICFSecSecSessionObj, LocalDateTime> tableColumnFinish = null;
-	protected TableColumn<ICFSecSecSessionObj, ICFSecSecUserObj> tableColumnParentSecProxy = null;
+	protected TableColumn<ICFSecSecSessionObj, CFLibDbKeyHash256> tableColumnSecProxyId = null;
 
 	public final String S_ColumnNames[] = { "Name" };
 	protected ICFFormManager cfFormManager = null;
 	protected boolean javafxIsInitializing = true;
 	protected boolean javafxSortByChain = false;
-	protected ICFSecSecUserObj javafxContainer = null;
+	protected ICFLibAnyObj javafxContainer = null;
 	protected ICFRefreshCallback javafxRefreshCallback = null;
 	class ViewEditClosedCallback implements ICFFormClosedCallback {
 		public ViewEditClosedCallback() {
@@ -145,7 +146,7 @@ implements ICFSecJavaFXSecSessionPaneList
 
 	public CFSecJavaFXSecSessionListPane( ICFFormManager formManager,
 		ICFSecJavaFXSchema argSchema,
-		ICFSecSecUserObj argContainer,
+		ICFLibAnyObj argContainer,
 		ICFSecSecSessionObj argFocus,
 		ICFSecJavaFXSecSessionPageCallback argPageCallback,
 		ICFRefreshCallback refreshCallback,
@@ -198,6 +199,29 @@ implements ICFSecJavaFXSecSessionPaneList
 			}
 		});
 		dataTable.getColumns().add( tableColumnSecSessionId );
+		tableColumnSecUserId = new TableColumn<ICFSecSecSessionObj,CFLibDbKeyHash256>( "Security User Id" );
+		tableColumnSecUserId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecSessionObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
+			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecSessionObj, CFLibDbKeyHash256> p ) {
+				ICFSecSecSessionObj obj = p.getValue();
+				if( obj == null ) {
+					return( null );
+				}
+				else {
+					CFLibDbKeyHash256 value = obj.getRequiredSecUserId();
+					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
+					observable.setValue( value );
+					return( observable );
+				}
+			}
+		});
+		tableColumnSecUserId.setCellFactory( new Callback<TableColumn<ICFSecSecSessionObj,CFLibDbKeyHash256>,TableCell<ICFSecSecSessionObj,CFLibDbKeyHash256>>() {
+			@Override public TableCell<ICFSecSecSessionObj,CFLibDbKeyHash256> call(
+				TableColumn<ICFSecSecSessionObj,CFLibDbKeyHash256> arg)
+			{
+				return new CFDbKeyHash256TableCell<ICFSecSecSessionObj>();
+			}
+		});
+		dataTable.getColumns().add( tableColumnSecUserId );
 		tableColumnSecDevName = new TableColumn<ICFSecSecSessionObj,String>( "Sesion Device Name" );
 		tableColumnSecDevName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecSessionObj,String>,ObservableValue<String> >() {
 			public ObservableValue<String> call( CellDataFeatures<ICFSecSecSessionObj, String> p ) {
@@ -267,29 +291,29 @@ implements ICFSecJavaFXSecSessionPaneList
 			}
 		});
 		dataTable.getColumns().add( tableColumnFinish );
-		tableColumnParentSecProxy = new TableColumn<ICFSecSecSessionObj, ICFSecSecUserObj>( "Security Proxy User" );
-		tableColumnParentSecProxy.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecSessionObj,ICFSecSecUserObj>,ObservableValue<ICFSecSecUserObj> >() {
-			public ObservableValue<ICFSecSecUserObj> call( CellDataFeatures<ICFSecSecSessionObj, ICFSecSecUserObj> p ) {
+		tableColumnSecProxyId = new TableColumn<ICFSecSecSessionObj,CFLibDbKeyHash256>( "Security Proxy User Id" );
+		tableColumnSecProxyId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecSessionObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
+			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecSessionObj, CFLibDbKeyHash256> p ) {
 				ICFSecSecSessionObj obj = p.getValue();
 				if( obj == null ) {
 					return( null );
 				}
 				else {
-					ICFSecSecUserObj ref = obj.getRequiredParentSecProxy();
-					ReadOnlyObjectWrapper<ICFSecSecUserObj> observable = new ReadOnlyObjectWrapper<ICFSecSecUserObj>();
-					observable.setValue( ref );
+					CFLibDbKeyHash256 value = obj.getOptionalSecProxyId();
+					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
+					observable.setValue( value );
 					return( observable );
 				}
 			}
 		});
-		tableColumnParentSecProxy.setCellFactory( new Callback<TableColumn<ICFSecSecSessionObj,ICFSecSecUserObj>,TableCell<ICFSecSecSessionObj,ICFSecSecUserObj>>() {
-			@Override public TableCell<ICFSecSecSessionObj,ICFSecSecUserObj> call(
-				TableColumn<ICFSecSecSessionObj,ICFSecSecUserObj> arg)
+		tableColumnSecProxyId.setCellFactory( new Callback<TableColumn<ICFSecSecSessionObj,CFLibDbKeyHash256>,TableCell<ICFSecSecSessionObj,CFLibDbKeyHash256>>() {
+			@Override public TableCell<ICFSecSecSessionObj,CFLibDbKeyHash256> call(
+				TableColumn<ICFSecSecSessionObj,CFLibDbKeyHash256> arg)
 			{
-				return new CFReferenceTableCell<ICFSecSecSessionObj,ICFSecSecUserObj>();
+				return new CFDbKeyHash256TableCell<ICFSecSecSessionObj>();
 			}
 		});
-		dataTable.getColumns().add( tableColumnParentSecProxy );
+		dataTable.getColumns().add( tableColumnSecProxyId );
 		dataTable.getSelectionModel().selectedItemProperty().addListener(
 			new ChangeListener<ICFSecSecSessionObj>() {
 				@Override public void changed( ObservableValue<? extends ICFSecSecSessionObj> observable,
@@ -515,14 +539,6 @@ implements ICFSecJavaFXSecSessionPaneList
 								0,
 								"edit" );
 						}
-								ICFSecSecUserObj container = (ICFSecSecUserObj)( getJavaFXContainer() );
-								if( container == null ) {
-									throw new CFLibNullArgumentException( getClass(),
-										S_ProcName,
-										0,
-										"JavaFXContainer" );
-								}
-								edit.setRequiredContainerSecUser( container );
 						CFBorderPane frame = javafxSchema.getSecSessionFactory().newAddForm( cfFormManager, obj, getViewEditClosedCallback(), true );
 						ICFSecJavaFXSecSessionPaneCommon jpanelCommon = (ICFSecJavaFXSecSessionPaneCommon)frame;
 						jpanelCommon.setJavaFXFocus( obj );
@@ -659,11 +675,11 @@ implements ICFSecJavaFXSecSessionPaneList
 		return( hboxMenu );
 	}
 
-	public ICFSecSecUserObj getJavaFXContainer() {
+	public ICFLibAnyObj getJavaFXContainer() {
 		return( javafxContainer );
 	}
 
-	public void setJavaFXContainer( ICFSecSecUserObj value ) {
+	public void setJavaFXContainer( ICFLibAnyObj value ) {
 		javafxContainer = value;
 	}
 

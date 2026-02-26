@@ -56,6 +56,6 @@ import io.github.msobkow.v3_1.cfsec.cfsecobj.*;
 public interface ICFSecJavaFXSecSessionPaneList
 extends
 	ICFSecJavaFXSecSessionPaneCommon,
-	ICFPaneList<ICFSecSecUserObj,ICFSecSecSessionObj>
+	ICFPaneList<ICFLibAnyObj,ICFSecSecSessionObj>
 {
 }
