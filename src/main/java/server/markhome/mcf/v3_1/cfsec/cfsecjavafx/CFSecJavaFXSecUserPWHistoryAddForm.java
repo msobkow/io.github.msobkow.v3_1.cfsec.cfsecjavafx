@@ -1,0 +1,359 @@
+// Description: Java 25 JavaFX Add Form implementation for SecUserPWHistory.
+
+/*
+ *	server.markhome.mcf.CFSec
+ *
+ *	Copyright (c) 2016-2026 Mark Stephen Sobkow
+ *	
+ *	Mark's Code Fractal 3.1 CFSec - Security Services
+ *	
+ *	Copyright (c) 2016-2026 Mark Stephen Sobkow mark.sobkow@gmail.com
+ *	
+ *	These files are part of Mark's Code Fractal CFSec.
+ *	
+ *	Licensed under the Apache License, Version 2.0 (the "License");
+ *	you may not use this file except in compliance with the License.
+ *	You may obtain a copy of the License at
+ *	
+ *	http://www.apache.org/licenses/LICENSE-2.0
+ *	
+ *	Unless required by applicable law or agreed to in writing, software
+ *	distributed under the License is distributed on an "AS IS" BASIS,
+ *	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *	See the License for the specific language governing permissions and
+ *	limitations under the License.
+ *	
+ */
+
+package server.markhome.mcf.v3_1.cfsec.cfsecjavafx;
+
+import java.time.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import server.markhome.mcf.v3_1.cflib.*;
+import server.markhome.mcf.v3_1.cflib.dbutil.*;
+import server.markhome.mcf.v3_1.cflib.inz.Inz;
+import server.markhome.mcf.v3_1.cflib.javafx.*;
+import server.markhome.mcf.v3_1.cfsec.cfsec.*;
+import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
+
+/**
+ *	CFSecJavaFXSecUserPWHistoryAddForm JavaFX Add Form implementation
+ *	for SecUserPWHistory.
+ */
+public class CFSecJavaFXSecUserPWHistoryAddForm
+extends CFBorderPane
+implements ICFSecJavaFXSecUserPWHistoryPaneCommon,
+	ICFForm
+{
+	public static String S_FormName = "Add Security User Password History";
+	protected ICFFormManager cfFormManager = null;
+	protected ICFSecJavaFXSchema javafxSchema = null;
+	protected ICFFormClosedCallback formClosedCallback = null;
+	protected boolean allowSave = true;
+	protected CFSplitPane javafxAddPane = null;
+	protected CFButton buttonSave = null;
+	protected CFButton buttonCancel = null;
+	protected CFButton buttonClose = null;
+	protected ScrollPane scrollMenu = null;
+	protected CFHBox hboxMenu = null;
+
+	public CFSecJavaFXSecUserPWHistoryAddForm( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecUserPWHistoryObj argFocus, ICFFormClosedCallback closeCallback, boolean argAllowSave ) {
+		super();
+		final String S_ProcName = "construct-schema-focus";
+		allowSave = argAllowSave;
+		if( formManager == null ) {
+			throw new CFLibNullArgumentException( getClass(),
+				S_ProcName,
+				1,
+				"formManager" );
+		}
+		cfFormManager = formManager;
+		formClosedCallback = closeCallback;
+		if( argSchema == null ) {
+			throw new CFLibNullArgumentException( getClass(),
+				S_ProcName,
+				2,
+				"argSchema" );
+		}
+		// argFocus is optional; focus may be set later during execution as
+		// conditions of the runtime change.
+		javafxSchema = argSchema;
+		javaFXFocus = argFocus;
+		if( ( argFocus != null ) && ( ! argFocus.getIsNew() ) ) {
+			argFocus = (ICFSecSecUserPWHistoryObj)argFocus.read( true );
+			javaFXFocus = argFocus;
+		}
+		javafxAddPane = argSchema.getSecUserPWHistoryFactory().newAddPane( cfFormManager, argFocus );
+
+		scrollMenu = new ScrollPane();
+		scrollMenu.setVbarPolicy( ScrollBarPolicy.NEVER );
+		scrollMenu.setHbarPolicy( ScrollBarPolicy.AS_NEEDED );
+		scrollMenu.setFitToHeight( true );
+		scrollMenu.setContent( getHBoxMenu() );
+
+		setTop( scrollMenu );
+		setCenter( javafxAddPane );
+	}
+
+	public ICFFormManager getCFFormManager() {
+		return( cfFormManager );
+	}
+
+	public void setCFFormManager( ICFFormManager value ) {
+		final String S_ProcName = "setCFFormManager";
+		if( value == null ) {
+			throw new CFLibNullArgumentException( getClass(),
+				S_ProcName,
+				1,
+				"value" );
+		}
+		cfFormManager = value;
+	}
+
+	public void forceCancelAndClose() {
+		ICFSecSecUserPWHistoryObj focus = getJavaFXFocusAsSecUserPWHistory();
+		if( focus != null ) {
+			ICFSecSecUserPWHistoryEditObj editObj = (ICFSecSecUserPWHistoryEditObj)focus.getEdit();
+			if( editObj != null ) {
+				if( editObj.getIsNew() ) {
+					editObj.endEdit();
+					editObj = null;
+					setJavaFXFocus( null );
+					setPaneMode( CFPane.PaneMode.Unknown );
+				}
+				else {
+					editObj.endEdit();
+					editObj = null;
+					setPaneMode( CFPane.PaneMode.View );
+				}
+			}
+		}
+		if( cfFormManager != null ) {
+			if( cfFormManager.getCurrentForm() == this ) {
+				cfFormManager.closeCurrentForm();
+			}
+		}
+		if( formClosedCallback != null ) {
+			formClosedCallback.formClosed( null );
+		}
+	}
+
+	public ICFSecJavaFXSchema getJavaFXSchema() {
+		return( javafxSchema );
+	}
+
+	public ICFLibAnyObj getJavaFXFocus() {
+		ICFLibAnyObj obj;
+		if( javafxAddPane != null ) {
+			obj = javafxAddPane.getJavaFXFocus();
+		}
+		else {
+			obj = null;
+		}
+		return( obj );
+	}
+
+	public void setJavaFXFocus( ICFLibAnyObj value ) {
+		final String S_ProcName = "setJavaFXFocus";
+		if( ( value == null ) || ( value instanceof ICFSecSecUserPWHistoryObj ) ) {
+			super.setJavaFXFocus( value );
+		}
+		else {
+			throw new CFLibUnsupportedClassException( getClass(),
+				S_ProcName,
+				"value",
+				value,
+				"ICFSecSecUserPWHistoryObj" );
+		}
+		((ICFSecJavaFXSecUserPWHistoryPaneCommon)javafxAddPane).setJavaFXFocus( value );
+		ICFSecSecUserPWHistoryObj argFocus = (ICFSecSecUserPWHistoryObj)value;
+		if( ( argFocus != null ) && ( ! argFocus.getIsNew() ) ) {
+			argFocus = (ICFSecSecUserPWHistoryObj)argFocus.read( true );
+			super.setJavaFXFocus( argFocus );
+		}
+	}
+
+	public ICFSecSecUserPWHistoryObj getJavaFXFocusAsSecUserPWHistory() {
+		return( (ICFSecSecUserPWHistoryObj)getJavaFXFocus() );
+	}
+
+	public void setJavaFXFocusAsSecUserPWHistory( ICFSecSecUserPWHistoryObj value ) {
+		setJavaFXFocus( value );
+	}
+
+	public CFHBox getHBoxMenu() {
+		if( hboxMenu == null ) {
+			hboxMenu = new CFHBox( 10 );
+			buttonSave = new CFButton();
+			buttonSave.setMinWidth( 200 );
+			buttonSave.setText( "Save" );
+			buttonSave.setOnAction( new EventHandler<ActionEvent>() {
+				@Override public void handle( ActionEvent e ) {
+					final String S_ProcName = "handle";
+					try {
+						ICFSecSecUserPWHistoryObj focus = getJavaFXFocusAsSecUserPWHistory();
+						if( focus != null ) {
+							ICFSecSecUserPWHistoryEditObj editObj = (ICFSecSecUserPWHistoryEditObj)( focus.getEdit() );
+							if( editObj != null ) {
+								setPaneMode( CFPane.PaneMode.Update );
+							}
+							else {
+								throw new CFLibUsageException( getClass(),
+									S_ProcName,
+									Inz.x("cflib.common.CannotSaveUneditedObject"),
+									Inz.s("cflib.common.CannotSaveUneditedObject") );
+							}
+						}
+						// If an object was added, the focus will change to the persisted instance
+						focus = getJavaFXFocusAsSecUserPWHistory();
+						CFBorderPane frame = javafxSchema.getSecUserPWHistoryFactory().newViewEditForm( cfFormManager, focus, formClosedCallback, true );
+						((ICFSecJavaFXSecUserPWHistoryPaneCommon)frame).setPaneMode( CFPane.PaneMode.View );
+						cfFormManager.closeCurrentForm();
+						cfFormManager.pushForm( frame );
+					}
+					catch( Throwable t ) {
+						CFConsole.formException( S_FormName, ((CFButton)e.getSource()).getText(), t );
+					}
+				}
+			});
+			if( allowSave ) {
+				hboxMenu.getChildren().add( buttonSave );
+			}
+
+			buttonClose = new CFButton();
+			buttonClose.setMinWidth( 200 );
+			buttonClose.setText( "Close" );
+			buttonClose.setOnAction( new EventHandler<ActionEvent>() {
+				@Override public void handle( ActionEvent e ) {
+					final String S_ProcName = "handle";
+					try {
+						ICFSecSecUserPWHistoryObj focus = getJavaFXFocusAsSecUserPWHistory();
+						if( focus != null ) {
+							ICFSecSecUserPWHistoryEditObj editObj = (ICFSecSecUserPWHistoryEditObj)( focus.getEdit() );
+							if( editObj != null ) {
+								setPaneMode( CFPane.PaneMode.Update );
+							}
+							else {
+								throw new CFLibUsageException( getClass(),
+									S_ProcName,
+									Inz.x("cflib.common.CannotSaveUneditedObject"),
+									Inz.s("cflib.common.CannotSaveUneditedObject") );
+							}
+						}
+						// If an object was added, the focus will change to the persisted instance
+						focus = getJavaFXFocusAsSecUserPWHistory();
+						cfFormManager.closeCurrentForm();
+						if( formClosedCallback != null ) {
+							formClosedCallback.formClosed( focus );
+						}
+					}
+					catch( Throwable t ) {
+						CFConsole.formException( S_FormName, ((CFButton)e.getSource()).getText(), t );
+					}
+				}
+			});
+			hboxMenu.getChildren().add( buttonClose );
+
+			buttonCancel = new CFButton();
+			buttonCancel.setMinWidth( 200 );
+			buttonCancel.setText( "Cancel" );
+			buttonCancel.setOnAction( new EventHandler<ActionEvent>() {
+				@Override public void handle( ActionEvent e ) {
+					final String S_ProcName = "handle";
+					try {
+						ICFSecSecUserPWHistoryObj focus = getJavaFXFocusAsSecUserPWHistory();
+						if( focus != null ) {
+							ICFSecSecUserPWHistoryEditObj editObj = (ICFSecSecUserPWHistoryEditObj)focus.getEdit();
+							if( editObj != null ) {
+								if( editObj.getIsNew() ) {
+									editObj.endEdit();
+									editObj = null;
+									setJavaFXFocus( null );
+									setPaneMode( CFPane.PaneMode.Unknown );
+								}
+								else {
+									editObj.endEdit();
+									editObj = null;
+									setPaneMode( CFPane.PaneMode.View );
+								}
+							}
+						}
+						cfFormManager.closeCurrentForm();
+						if( formClosedCallback != null ) {
+							formClosedCallback.formClosed( null );
+						}
+					}
+					catch( Throwable t ) {
+						CFConsole.formException( S_FormName, ((CFButton)e.getSource()).getText(), t );
+					}
+				}
+			});
+			hboxMenu.getChildren().add( buttonCancel );
+
+		}
+		return( hboxMenu );
+	}
+
+	public void setPaneMode( CFPane.PaneMode value ) {
+		CFPane.PaneMode oldMode = getPaneMode();
+		if( oldMode == value ) {
+			return;
+		}
+		try {
+			super.setPaneMode( value );
+			((ICFSecJavaFXSecUserPWHistoryPaneCommon)javafxAddPane).setPaneMode( value );
+		}
+		catch( Throwable t ) {
+			super.setPaneMode( oldMode );
+			((ICFSecJavaFXSecUserPWHistoryPaneCommon)javafxAddPane).setPaneMode( oldMode );
+			throw t;
+		}
+		if( value == CFPane.PaneMode.View ) {
+			if( buttonSave != null ) {
+				buttonSave.setDisable( true );
+			}
+			if( buttonCancel != null ) {
+				buttonCancel.setDisable( false );
+			}
+			if( buttonClose != null ) {
+				buttonClose.setDisable( true );
+			}
+		}
+		else if( value == CFPane.PaneMode.Edit ) {
+			if( buttonSave != null ) {
+				buttonSave.setDisable( false );
+			}
+			if( buttonCancel != null ) {
+				buttonCancel.setDisable( false );
+			}
+			if( buttonClose != null ) {
+				buttonClose.setDisable( false );
+			}
+		}
+		else if( value == CFPane.PaneMode.Add ) {
+			if( buttonSave != null ) {
+				buttonSave.setDisable( false );
+			}
+			if( buttonCancel != null ) {
+				buttonCancel.setDisable( false );
+			}
+			if( buttonClose != null ) {
+				buttonClose.setDisable( false );
+			}
+		}
+		else {
+			if( buttonSave != null ) {
+				buttonSave.setDisable( true );
+			}
+			if( buttonCancel != null ) {
+				buttonCancel.setDisable( false );
+			}
+			if( buttonClose != null ) {
+				buttonClose.setDisable( true );
+			}
+		}
+	}
+}

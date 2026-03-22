@@ -54,15 +54,12 @@ implements ICFSecJavaFXClusterPaneCommon
 	protected ICFFormManager cfFormManager = null;
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	protected boolean javafxIsInitializing = true;
-	public final String LABEL_TabComponentsHostNodeList = "Optional Components Host Node";
-	protected CFTab tabComponentsHostNode = null;
 	public final String LABEL_TabComponentsTenantList = "Optional Components Tenant";
 	protected CFTab tabComponentsTenant = null;
 	public final String LABEL_TabComponentsSecGroupList = "Optional Components Security Group";
 	protected CFTab tabComponentsSecGroup = null;
 	public final String LABEL_TabComponentsSysClusterList = "Optional Components System Cluster";
 	protected CFTab tabComponentsSysCluster = null;
-	protected CFBorderPane tabViewComponentsHostNodeListPane = null;
 	protected CFBorderPane tabViewComponentsTenantListPane = null;
 	protected CFBorderPane tabViewComponentsSecGroupListPane = null;
 	protected CFBorderPane tabViewComponentsSysClusterListPane = null;
@@ -88,10 +85,6 @@ implements ICFSecJavaFXClusterPaneCommon
 		javafxSchema = argSchema;
 		setJavaFXFocusAsCluster( argFocus );
 		// Wire the newly constructed Panes/Tabs to this TabPane
-		tabComponentsHostNode = new CFTab();
-		tabComponentsHostNode.setText( LABEL_TabComponentsHostNodeList );
-		tabComponentsHostNode.setContent( getTabViewComponentsHostNodeListPane() );
-		getTabs().add( tabComponentsHostNode );
 		tabComponentsTenant = new CFTab();
 		tabComponentsTenant.setText( LABEL_TabComponentsTenantList );
 		tabComponentsTenant.setContent( getTabViewComponentsTenantListPane() );
@@ -146,54 +139,6 @@ implements ICFSecJavaFXClusterPaneCommon
 
 	public ICFSecClusterObj getJavaFXFocusAsCluster() {
 		return( (ICFSecClusterObj)getJavaFXFocus() );
-	}
-
-	protected class RefreshComponentsHostNodeList
-	implements ICFRefreshCallback
-	{
-		public RefreshComponentsHostNodeList() {
-		}
-
-		public void refreshMe() {
-			// Use page data instead
-		}
-	}
-
-	protected class PageDataComponentsHostNodeList
-	implements ICFSecJavaFXHostNodePageCallback
-	{
-		public PageDataComponentsHostNodeList() {
-		}
-
-		public List<ICFSecHostNodeObj> pageData( CFLibDbKeyHash256 priorHostNodeId )
-		{
-			List<ICFSecHostNodeObj> dataList;
-			ICFSecClusterObj focus = (ICFSecClusterObj)getJavaFXFocusAsCluster();
-			if( focus != null ) {
-				ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
-				dataList = schemaObj.getHostNodeTableObj().pageHostNodeByClusterIdx( focus.getRequiredId(),
-					priorHostNodeId );
-			}
-			else {
-				dataList = new ArrayList<ICFSecHostNodeObj>();
-			}
-			return( dataList );
-		}
-	}
-
-	public CFBorderPane getTabViewComponentsHostNodeListPane() {
-		if( tabViewComponentsHostNodeListPane == null ) {
-			ICFSecClusterObj focus = (ICFSecClusterObj)getJavaFXFocusAsCluster();
-			ICFSecClusterObj javafxContainer;
-			if( ( focus != null ) && ( focus instanceof ICFSecClusterObj ) ) {
-				javafxContainer = (ICFSecClusterObj)focus;
-			}
-			else {
-				javafxContainer = null;
-			}
-			tabViewComponentsHostNodeListPane = javafxSchema.getHostNodeFactory().newListPane( cfFormManager, javafxContainer, null, new PageDataComponentsHostNodeList(), new RefreshComponentsHostNodeList(), false );
-		}
-		return( tabViewComponentsHostNodeListPane );
 	}
 
 	protected class RefreshComponentsTenantList
@@ -251,7 +196,7 @@ implements ICFSecJavaFXClusterPaneCommon
 		}
 
 		public void refreshMe() {
-			Collection<ICFSecSecGroupObj> dataCollection;
+			Collection<ICFSecSecClusGrpObj> dataCollection;
 			ICFSecClusterObj focus = (ICFSecClusterObj)getJavaFXFocusAsCluster();
 			if( focus != null ) {
 				dataCollection = focus.getOptionalComponentsSecGroup( javafxIsInitializing );
@@ -260,7 +205,7 @@ implements ICFSecJavaFXClusterPaneCommon
 				dataCollection = null;
 			}
 			CFBorderPane pane = getTabViewComponentsSecGroupListPane();
-			ICFSecJavaFXSecGroupPaneList jpList = (ICFSecJavaFXSecGroupPaneList)pane;
+			ICFSecJavaFXSecClusGrpPaneList jpList = (ICFSecJavaFXSecClusGrpPaneList)pane;
 			jpList.setJavaFXDataCollection( dataCollection );
 		}
 	}
@@ -268,21 +213,16 @@ implements ICFSecJavaFXClusterPaneCommon
 	public CFBorderPane getTabViewComponentsSecGroupListPane() {
 		if( tabViewComponentsSecGroupListPane == null ) {
 			ICFSecClusterObj focus = (ICFSecClusterObj)getJavaFXFocusAsCluster();
-			Collection<ICFSecSecGroupObj> dataCollection;
+			Collection<ICFSecSecClusGrpObj> dataCollection;
 			if( focus != null ) {
 				dataCollection = focus.getOptionalComponentsSecGroup( javafxIsInitializing );
 			}
 			else {
 				dataCollection = null;
 			}
-			ICFSecClusterObj javafxContainer;
-			if( ( focus != null ) && ( focus instanceof ICFSecClusterObj ) ) {
-				javafxContainer = (ICFSecClusterObj)focus;
-			}
-			else {
-				javafxContainer = null;
-			}
-			tabViewComponentsSecGroupListPane = javafxSchema.getSecGroupFactory().newListPane( cfFormManager, javafxContainer, null, dataCollection, new RefreshComponentsSecGroupList(), false );
+			ICFLibAnyObj javafxContainer;
+			javafxContainer = null;
+			tabViewComponentsSecGroupListPane = javafxSchema.getSecClusGrpFactory().newListPane( cfFormManager, javafxContainer, null, dataCollection, new RefreshComponentsSecGroupList(), false );
 		}
 		return( tabViewComponentsSecGroupListPane );
 	}
@@ -333,14 +273,11 @@ implements ICFSecJavaFXClusterPaneCommon
 	public void setPaneMode( CFPane.PaneMode value ) {
 		CFPane.PaneMode oldMode = getPaneMode();
 		super.setPaneMode( value );
-		if( tabViewComponentsHostNodeListPane != null ) {
-			((ICFSecJavaFXHostNodePaneCommon)tabViewComponentsHostNodeListPane).setPaneMode( value );
-		}
 		if( tabViewComponentsTenantListPane != null ) {
 			((ICFSecJavaFXTenantPaneCommon)tabViewComponentsTenantListPane).setPaneMode( value );
 		}
 		if( tabViewComponentsSecGroupListPane != null ) {
-			((ICFSecJavaFXSecGroupPaneCommon)tabViewComponentsSecGroupListPane).setPaneMode( value );
+			((ICFSecJavaFXSecClusGrpPaneCommon)tabViewComponentsSecGroupListPane).setPaneMode( value );
 		}
 		if( tabViewComponentsSysClusterListPane != null ) {
 			((ICFSecJavaFXSysClusterPaneCommon)tabViewComponentsSysClusterListPane).setPaneMode( value );

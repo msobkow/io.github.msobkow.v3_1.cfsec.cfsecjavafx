@@ -54,9 +54,9 @@ implements ICFSecJavaFXTenantPaneCommon
 	protected ICFFormManager cfFormManager = null;
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	protected boolean javafxIsInitializing = true;
-	public final String LABEL_TabComponentsTSecGroupList = "Optional Components Tenant Security Group";
-	protected CFTab tabComponentsTSecGroup = null;
-	protected CFBorderPane tabViewComponentsTSecGroupListPane = null;
+	public final String LABEL_TabComponentsSecGroupList = "Optional Components Tenant Security Group";
+	protected CFTab tabComponentsSecGroup = null;
+	protected CFBorderPane tabViewComponentsSecGroupListPane = null;
 
 	public CFSecJavaFXTenantEltTabPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecTenantObj argFocus ) {
 		super();
@@ -79,10 +79,10 @@ implements ICFSecJavaFXTenantPaneCommon
 		javafxSchema = argSchema;
 		setJavaFXFocusAsTenant( argFocus );
 		// Wire the newly constructed Panes/Tabs to this TabPane
-		tabComponentsTSecGroup = new CFTab();
-		tabComponentsTSecGroup.setText( LABEL_TabComponentsTSecGroupList );
-		tabComponentsTSecGroup.setContent( getTabViewComponentsTSecGroupListPane() );
-		getTabs().add( tabComponentsTSecGroup );
+		tabComponentsSecGroup = new CFTab();
+		tabComponentsSecGroup.setText( LABEL_TabComponentsSecGroupList );
+		tabComponentsSecGroup.setContent( getTabViewComponentsSecGroupListPane() );
+		getTabs().add( tabComponentsSecGroup );
 		javafxIsInitializing = false;
 	}
 
@@ -127,54 +127,49 @@ implements ICFSecJavaFXTenantPaneCommon
 		return( (ICFSecTenantObj)getJavaFXFocus() );
 	}
 
-	protected class RefreshComponentsTSecGroupList
+	protected class RefreshComponentsSecGroupList
 	implements ICFRefreshCallback
 	{
-		public RefreshComponentsTSecGroupList() {
+		public RefreshComponentsSecGroupList() {
 		}
 
 		public void refreshMe() {
-			Collection<ICFSecTSecGroupObj> dataCollection;
+			Collection<ICFSecSecTentGrpObj> dataCollection;
 			ICFSecTenantObj focus = (ICFSecTenantObj)getJavaFXFocusAsTenant();
 			if( focus != null ) {
-				dataCollection = focus.getOptionalComponentsTSecGroup( javafxIsInitializing );
+				dataCollection = focus.getOptionalComponentsSecGroup( javafxIsInitializing );
 			}
 			else {
 				dataCollection = null;
 			}
-			CFBorderPane pane = getTabViewComponentsTSecGroupListPane();
-			ICFSecJavaFXTSecGroupPaneList jpList = (ICFSecJavaFXTSecGroupPaneList)pane;
+			CFBorderPane pane = getTabViewComponentsSecGroupListPane();
+			ICFSecJavaFXSecTentGrpPaneList jpList = (ICFSecJavaFXSecTentGrpPaneList)pane;
 			jpList.setJavaFXDataCollection( dataCollection );
 		}
 	}
 
-	public CFBorderPane getTabViewComponentsTSecGroupListPane() {
-		if( tabViewComponentsTSecGroupListPane == null ) {
+	public CFBorderPane getTabViewComponentsSecGroupListPane() {
+		if( tabViewComponentsSecGroupListPane == null ) {
 			ICFSecTenantObj focus = (ICFSecTenantObj)getJavaFXFocusAsTenant();
-			Collection<ICFSecTSecGroupObj> dataCollection;
+			Collection<ICFSecSecTentGrpObj> dataCollection;
 			if( focus != null ) {
-				dataCollection = focus.getOptionalComponentsTSecGroup( javafxIsInitializing );
+				dataCollection = focus.getOptionalComponentsSecGroup( javafxIsInitializing );
 			}
 			else {
 				dataCollection = null;
 			}
-			ICFSecTenantObj javafxContainer;
-			if( ( focus != null ) && ( focus instanceof ICFSecTenantObj ) ) {
-				javafxContainer = (ICFSecTenantObj)focus;
-			}
-			else {
-				javafxContainer = null;
-			}
-			tabViewComponentsTSecGroupListPane = javafxSchema.getTSecGroupFactory().newListPane( cfFormManager, javafxContainer, null, dataCollection, new RefreshComponentsTSecGroupList(), false );
+			ICFLibAnyObj javafxContainer;
+			javafxContainer = null;
+			tabViewComponentsSecGroupListPane = javafxSchema.getSecTentGrpFactory().newListPane( cfFormManager, javafxContainer, null, dataCollection, new RefreshComponentsSecGroupList(), false );
 		}
-		return( tabViewComponentsTSecGroupListPane );
+		return( tabViewComponentsSecGroupListPane );
 	}
 
 	public void setPaneMode( CFPane.PaneMode value ) {
 		CFPane.PaneMode oldMode = getPaneMode();
 		super.setPaneMode( value );
-		if( tabViewComponentsTSecGroupListPane != null ) {
-			((ICFSecJavaFXTSecGroupPaneCommon)tabViewComponentsTSecGroupListPane).setPaneMode( value );
+		if( tabViewComponentsSecGroupListPane != null ) {
+			((ICFSecJavaFXSecTentGrpPaneCommon)tabViewComponentsSecGroupListPane).setPaneMode( value );
 		}
 	}
 }

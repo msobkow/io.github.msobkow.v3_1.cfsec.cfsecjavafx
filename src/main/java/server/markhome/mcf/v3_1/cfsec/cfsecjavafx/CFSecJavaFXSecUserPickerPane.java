@@ -72,11 +72,13 @@ implements ICFSecJavaFXSecUserPaneList
 	protected ObservableList<ICFSecSecUserObj> observableListOfSecUser = null;
 	protected TableColumn<ICFSecSecUserObj, CFLibDbKeyHash256> tableColumnSecUserId = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnLoginId = null;
+	protected TableColumn<ICFSecSecUserObj, String> tableColumnDfltSysGrpName = null;
+	protected TableColumn<ICFSecSecUserObj, String> tableColumnDfltClusGrpName = null;
+	protected TableColumn<ICFSecSecUserObj, String> tableColumnDfltTentGrpName = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnEMailAddress = null;
 	protected TableColumn<ICFSecSecUserObj, CFLibUuid6> tableColumnEMailConfirmUuid6 = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnPasswordHash = null;
 	protected TableColumn<ICFSecSecUserObj, CFLibUuid6> tableColumnPasswordResetUuid6 = null;
-	protected TableColumn<ICFSecSecUserObj, ICFSecSecDeviceObj> tableColumnLookupDefDev = null;
 	protected TableView<ICFSecSecUserObj> dataTable = null;
 	protected CFHBox hboxMenu = null;
 	public final String S_ColumnNames[] = { "Name" };
@@ -169,6 +171,75 @@ implements ICFSecJavaFXSecUserPaneList
 			}
 		});
 		dataTable.getColumns().add( tableColumnLoginId );
+		tableColumnDfltSysGrpName = new TableColumn<ICFSecSecUserObj,String>( "Name" );
+		tableColumnDfltSysGrpName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,String>,ObservableValue<String> >() {
+			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserObj, String> p ) {
+				ICFSecSecUserObj obj = p.getValue();
+				if( obj == null ) {
+					return( null );
+				}
+				else {
+					String value = obj.getRequiredDfltSysGrpName();
+					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
+					observable.setValue( value );
+					return( observable );
+				}
+			}
+		});
+		tableColumnDfltSysGrpName.setCellFactory( new Callback<TableColumn<ICFSecSecUserObj,String>,TableCell<ICFSecSecUserObj,String>>() {
+			@Override public TableCell<ICFSecSecUserObj,String> call(
+				TableColumn<ICFSecSecUserObj,String> arg)
+			{
+				return new CFStringTableCell<ICFSecSecUserObj>();
+			}
+		});
+		dataTable.getColumns().add( tableColumnDfltSysGrpName );
+		tableColumnDfltClusGrpName = new TableColumn<ICFSecSecUserObj,String>( "Name" );
+		tableColumnDfltClusGrpName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,String>,ObservableValue<String> >() {
+			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserObj, String> p ) {
+				ICFSecSecUserObj obj = p.getValue();
+				if( obj == null ) {
+					return( null );
+				}
+				else {
+					String value = obj.getRequiredDfltClusGrpName();
+					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
+					observable.setValue( value );
+					return( observable );
+				}
+			}
+		});
+		tableColumnDfltClusGrpName.setCellFactory( new Callback<TableColumn<ICFSecSecUserObj,String>,TableCell<ICFSecSecUserObj,String>>() {
+			@Override public TableCell<ICFSecSecUserObj,String> call(
+				TableColumn<ICFSecSecUserObj,String> arg)
+			{
+				return new CFStringTableCell<ICFSecSecUserObj>();
+			}
+		});
+		dataTable.getColumns().add( tableColumnDfltClusGrpName );
+		tableColumnDfltTentGrpName = new TableColumn<ICFSecSecUserObj,String>( "Name" );
+		tableColumnDfltTentGrpName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,String>,ObservableValue<String> >() {
+			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserObj, String> p ) {
+				ICFSecSecUserObj obj = p.getValue();
+				if( obj == null ) {
+					return( null );
+				}
+				else {
+					String value = obj.getRequiredDfltTentGrpName();
+					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
+					observable.setValue( value );
+					return( observable );
+				}
+			}
+		});
+		tableColumnDfltTentGrpName.setCellFactory( new Callback<TableColumn<ICFSecSecUserObj,String>,TableCell<ICFSecSecUserObj,String>>() {
+			@Override public TableCell<ICFSecSecUserObj,String> call(
+				TableColumn<ICFSecSecUserObj,String> arg)
+			{
+				return new CFStringTableCell<ICFSecSecUserObj>();
+			}
+		});
+		dataTable.getColumns().add( tableColumnDfltTentGrpName );
 		tableColumnEMailAddress = new TableColumn<ICFSecSecUserObj,String>( "EMail Address" );
 		tableColumnEMailAddress.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,String>,ObservableValue<String> >() {
 			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserObj, String> p ) {
@@ -261,29 +332,6 @@ implements ICFSecJavaFXSecUserPaneList
 			}
 		});
 		dataTable.getColumns().add( tableColumnPasswordResetUuid6 );
-		tableColumnLookupDefDev = new TableColumn<ICFSecSecUserObj, ICFSecSecDeviceObj>( "Default Security Device" );
-		tableColumnLookupDefDev.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,ICFSecSecDeviceObj>,ObservableValue<ICFSecSecDeviceObj> >() {
-			public ObservableValue<ICFSecSecDeviceObj> call( CellDataFeatures<ICFSecSecUserObj, ICFSecSecDeviceObj> p ) {
-				ICFSecSecUserObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					ICFSecSecDeviceObj ref = obj.getOptionalLookupDefDev();
-					ReadOnlyObjectWrapper<ICFSecSecDeviceObj> observable = new ReadOnlyObjectWrapper<ICFSecSecDeviceObj>();
-					observable.setValue( ref );
-					return( observable );
-				}
-			}
-		});
-		tableColumnLookupDefDev.setCellFactory( new Callback<TableColumn<ICFSecSecUserObj,ICFSecSecDeviceObj>,TableCell<ICFSecSecUserObj,ICFSecSecDeviceObj>>() {
-			@Override public TableCell<ICFSecSecUserObj,ICFSecSecDeviceObj> call(
-				TableColumn<ICFSecSecUserObj,ICFSecSecDeviceObj> arg)
-			{
-				return new CFReferenceTableCell<ICFSecSecUserObj,ICFSecSecDeviceObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnLookupDefDev );
 		dataTable.getSelectionModel().selectedItemProperty().addListener(
 			new ChangeListener<ICFSecSecUserObj>() {
 				@Override public void changed( ObservableValue<? extends ICFSecSecUserObj> observable,

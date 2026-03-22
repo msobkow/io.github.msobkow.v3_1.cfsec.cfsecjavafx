@@ -54,15 +54,9 @@ implements ICFSecJavaFXSecUserPaneCommon
 	protected ICFFormManager cfFormManager = null;
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	protected boolean javafxIsInitializing = true;
-	public final String LABEL_TabComponentsSecDevList = "Optional Components Security Device";
-	protected CFTab tabComponentsSecDev = null;
-	public final String LABEL_TabChildrenSecGrpMembList = "Optional Children Security Group Members";
-	protected CFTab tabChildrenSecGrpMemb = null;
-	public final String LABEL_TabChildrenTSecGrpMembList = "Optional Children Tenant Security Group Members";
-	protected CFTab tabChildrenTSecGrpMemb = null;
-	protected CFBorderPane tabViewComponentsSecDevListPane = null;
-	protected CFBorderPane tabViewChildrenSecGrpMembListPane = null;
-	protected CFBorderPane tabViewChildrenTSecGrpMembListPane = null;
+	public final String LABEL_TabChildrenSysSecGrpMembList = "Optional Children System Security Group Members";
+	protected CFTab tabChildrenSysSecGrpMemb = null;
+	protected CFBorderPane tabViewChildrenSysSecGrpMembListPane = null;
 
 	public CFSecJavaFXSecUserEltTabPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecUserObj argFocus ) {
 		super();
@@ -85,18 +79,10 @@ implements ICFSecJavaFXSecUserPaneCommon
 		javafxSchema = argSchema;
 		setJavaFXFocusAsSecUser( argFocus );
 		// Wire the newly constructed Panes/Tabs to this TabPane
-		tabComponentsSecDev = new CFTab();
-		tabComponentsSecDev.setText( LABEL_TabComponentsSecDevList );
-		tabComponentsSecDev.setContent( getTabViewComponentsSecDevListPane() );
-		getTabs().add( tabComponentsSecDev );
-		tabChildrenSecGrpMemb = new CFTab();
-		tabChildrenSecGrpMemb.setText( LABEL_TabChildrenSecGrpMembList );
-		tabChildrenSecGrpMemb.setContent( getTabViewChildrenSecGrpMembListPane() );
-		getTabs().add( tabChildrenSecGrpMemb );
-		tabChildrenTSecGrpMemb = new CFTab();
-		tabChildrenTSecGrpMemb.setText( LABEL_TabChildrenTSecGrpMembList );
-		tabChildrenTSecGrpMemb.setContent( getTabViewChildrenTSecGrpMembListPane() );
-		getTabs().add( tabChildrenTSecGrpMemb );
+		tabChildrenSysSecGrpMemb = new CFTab();
+		tabChildrenSysSecGrpMemb.setText( LABEL_TabChildrenSysSecGrpMembList );
+		tabChildrenSysSecGrpMemb.setContent( getTabViewChildrenSysSecGrpMembListPane() );
+		getTabs().add( tabChildrenSysSecGrpMemb );
 		javafxIsInitializing = false;
 	}
 
@@ -141,10 +127,10 @@ implements ICFSecJavaFXSecUserPaneCommon
 		return( (ICFSecSecUserObj)getJavaFXFocus() );
 	}
 
-	protected class RefreshComponentsSecDevList
+	protected class RefreshChildrenSysSecGrpMembList
 	implements ICFRefreshCallback
 	{
-		public RefreshComponentsSecDevList() {
+		public RefreshChildrenSysSecGrpMembList() {
 		}
 
 		public void refreshMe() {
@@ -152,152 +138,50 @@ implements ICFSecJavaFXSecUserPaneCommon
 		}
 	}
 
-	protected class PageDataComponentsSecDevList
-	implements ICFSecJavaFXSecDevicePageCallback
+	protected class PageDataChildrenSysSecGrpMembList
+	implements ICFSecJavaFXSecSysGrpMembPageCallback
 	{
-		public PageDataComponentsSecDevList() {
+		public PageDataChildrenSysSecGrpMembList() {
 		}
 
-		public List<ICFSecSecDeviceObj> pageData( CFLibDbKeyHash256 priorSecUserId,
-		String priorDevName )
+		public List<ICFSecSecSysGrpMembObj> pageData( CFLibDbKeyHash256 priorSecSysGrpId,
+		CFLibDbKeyHash256 priorSecUserId )
 		{
-			List<ICFSecSecDeviceObj> dataList;
+			List<ICFSecSecSysGrpMembObj> dataList;
 			ICFSecSecUserObj focus = (ICFSecSecUserObj)getJavaFXFocusAsSecUser();
 			if( focus != null ) {
 				ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
-				dataList = schemaObj.getSecDeviceTableObj().pageSecDeviceByUserIdx( focus.getRequiredSecUserId(),
-					priorSecUserId,
-					priorDevName );
+				dataList = schemaObj.getSecSysGrpMembTableObj().pageSecSysGrpMembByUserIdx( focus.getRequiredSecUserId(),
+					priorSecSysGrpId,
+					priorSecUserId );
 			}
 			else {
-				dataList = new ArrayList<ICFSecSecDeviceObj>();
+				dataList = new ArrayList<ICFSecSecSysGrpMembObj>();
 			}
 			return( dataList );
 		}
 	}
 
-	public CFBorderPane getTabViewComponentsSecDevListPane() {
-		if( tabViewComponentsSecDevListPane == null ) {
+	public CFBorderPane getTabViewChildrenSysSecGrpMembListPane() {
+		if( tabViewChildrenSysSecGrpMembListPane == null ) {
 			ICFSecSecUserObj focus = (ICFSecSecUserObj)getJavaFXFocusAsSecUser();
-			ICFSecSecUserObj javafxContainer;
-			if( ( focus != null ) && ( focus instanceof ICFSecSecUserObj ) ) {
-				javafxContainer = (ICFSecSecUserObj)focus;
+			ICFSecSecSysGrpObj javafxContainer;
+			if( ( focus != null ) && ( focus instanceof ICFSecSecSysGrpObj ) ) {
+				javafxContainer = (ICFSecSecSysGrpObj)focus;
 			}
 			else {
 				javafxContainer = null;
 			}
-			tabViewComponentsSecDevListPane = javafxSchema.getSecDeviceFactory().newListPane( cfFormManager, javafxContainer, null, new PageDataComponentsSecDevList(), new RefreshComponentsSecDevList(), false );
+			tabViewChildrenSysSecGrpMembListPane = javafxSchema.getSecSysGrpMembFactory().newListPane( cfFormManager, javafxContainer, null, new PageDataChildrenSysSecGrpMembList(), new RefreshChildrenSysSecGrpMembList(), false );
 		}
-		return( tabViewComponentsSecDevListPane );
-	}
-
-	protected class RefreshChildrenSecGrpMembList
-	implements ICFRefreshCallback
-	{
-		public RefreshChildrenSecGrpMembList() {
-		}
-
-		public void refreshMe() {
-			// Use page data instead
-		}
-	}
-
-	protected class PageDataChildrenSecGrpMembList
-	implements ICFSecJavaFXSecGrpMembPageCallback
-	{
-		public PageDataChildrenSecGrpMembList() {
-		}
-
-		public List<ICFSecSecGrpMembObj> pageData( CFLibDbKeyHash256 priorSecGrpMembId )
-		{
-			List<ICFSecSecGrpMembObj> dataList;
-			ICFSecSecUserObj focus = (ICFSecSecUserObj)getJavaFXFocusAsSecUser();
-			if( focus != null ) {
-				ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
-				dataList = schemaObj.getSecGrpMembTableObj().pageSecGrpMembByUserIdx( focus.getRequiredSecUserId(),
-					priorSecGrpMembId );
-			}
-			else {
-				dataList = new ArrayList<ICFSecSecGrpMembObj>();
-			}
-			return( dataList );
-		}
-	}
-
-	public CFBorderPane getTabViewChildrenSecGrpMembListPane() {
-		if( tabViewChildrenSecGrpMembListPane == null ) {
-			ICFSecSecUserObj focus = (ICFSecSecUserObj)getJavaFXFocusAsSecUser();
-			ICFSecSecGroupObj javafxContainer;
-			if( ( focus != null ) && ( focus instanceof ICFSecSecGroupObj ) ) {
-				javafxContainer = (ICFSecSecGroupObj)focus;
-			}
-			else {
-				javafxContainer = null;
-			}
-			tabViewChildrenSecGrpMembListPane = javafxSchema.getSecGrpMembFactory().newListPane( cfFormManager, javafxContainer, null, new PageDataChildrenSecGrpMembList(), new RefreshChildrenSecGrpMembList(), false );
-		}
-		return( tabViewChildrenSecGrpMembListPane );
-	}
-
-	protected class RefreshChildrenTSecGrpMembList
-	implements ICFRefreshCallback
-	{
-		public RefreshChildrenTSecGrpMembList() {
-		}
-
-		public void refreshMe() {
-			// Use page data instead
-		}
-	}
-
-	protected class PageDataChildrenTSecGrpMembList
-	implements ICFSecJavaFXTSecGrpMembPageCallback
-	{
-		public PageDataChildrenTSecGrpMembList() {
-		}
-
-		public List<ICFSecTSecGrpMembObj> pageData( CFLibDbKeyHash256 priorTSecGrpMembId )
-		{
-			List<ICFSecTSecGrpMembObj> dataList;
-			ICFSecSecUserObj focus = (ICFSecSecUserObj)getJavaFXFocusAsSecUser();
-			if( focus != null ) {
-				ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
-				dataList = schemaObj.getTSecGrpMembTableObj().pageTSecGrpMembByUserIdx( focus.getRequiredSecUserId(),
-					priorTSecGrpMembId );
-			}
-			else {
-				dataList = new ArrayList<ICFSecTSecGrpMembObj>();
-			}
-			return( dataList );
-		}
-	}
-
-	public CFBorderPane getTabViewChildrenTSecGrpMembListPane() {
-		if( tabViewChildrenTSecGrpMembListPane == null ) {
-			ICFSecSecUserObj focus = (ICFSecSecUserObj)getJavaFXFocusAsSecUser();
-			ICFSecTSecGroupObj javafxContainer;
-			if( ( focus != null ) && ( focus instanceof ICFSecTSecGroupObj ) ) {
-				javafxContainer = (ICFSecTSecGroupObj)focus;
-			}
-			else {
-				javafxContainer = null;
-			}
-			tabViewChildrenTSecGrpMembListPane = javafxSchema.getTSecGrpMembFactory().newListPane( cfFormManager, javafxContainer, null, new PageDataChildrenTSecGrpMembList(), new RefreshChildrenTSecGrpMembList(), false );
-		}
-		return( tabViewChildrenTSecGrpMembListPane );
+		return( tabViewChildrenSysSecGrpMembListPane );
 	}
 
 	public void setPaneMode( CFPane.PaneMode value ) {
 		CFPane.PaneMode oldMode = getPaneMode();
 		super.setPaneMode( value );
-		if( tabViewComponentsSecDevListPane != null ) {
-			((ICFSecJavaFXSecDevicePaneCommon)tabViewComponentsSecDevListPane).setPaneMode( value );
-		}
-		if( tabViewChildrenSecGrpMembListPane != null ) {
-			((ICFSecJavaFXSecGrpMembPaneCommon)tabViewChildrenSecGrpMembListPane).setPaneMode( value );
-		}
-		if( tabViewChildrenTSecGrpMembListPane != null ) {
-			((ICFSecJavaFXTSecGrpMembPaneCommon)tabViewChildrenTSecGrpMembListPane).setPaneMode( value );
+		if( tabViewChildrenSysSecGrpMembListPane != null ) {
+			((ICFSecJavaFXSecSysGrpMembPaneCommon)tabViewChildrenSysSecGrpMembListPane).setPaneMode( value );
 		}
 	}
 }

@@ -86,7 +86,6 @@ implements ICFSecJavaFXSecSessionPaneCommon,
 	protected ObservableList<ICFSecSecSessionObj> observableListOfSecSession = null;
 	protected TableColumn<ICFSecSecSessionObj, CFLibDbKeyHash256> tableColumnSecSessionId = null;
 	protected TableColumn<ICFSecSecSessionObj, CFLibDbKeyHash256> tableColumnSecUserId = null;
-	protected TableColumn<ICFSecSecSessionObj, String> tableColumnSecDevName = null;
 	protected TableColumn<ICFSecSecSessionObj, LocalDateTime> tableColumnStart = null;
 	protected TableColumn<ICFSecSecSessionObj, LocalDateTime> tableColumnFinish = null;
 	protected TableColumn<ICFSecSecSessionObj, CFLibDbKeyHash256> tableColumnSecProxyId = null;
@@ -221,29 +220,6 @@ implements ICFSecJavaFXSecSessionPaneCommon,
 			}
 		});
 		dataTable.getColumns().add( tableColumnSecUserId );
-		tableColumnSecDevName = new TableColumn<ICFSecSecSessionObj,String>( "Sesion Device Name" );
-		tableColumnSecDevName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecSessionObj,String>,ObservableValue<String> >() {
-			public ObservableValue<String> call( CellDataFeatures<ICFSecSecSessionObj, String> p ) {
-				ICFSecSecSessionObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					String value = obj.getOptionalSecDevName();
-					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnSecDevName.setCellFactory( new Callback<TableColumn<ICFSecSecSessionObj,String>,TableCell<ICFSecSecSessionObj,String>>() {
-			@Override public TableCell<ICFSecSecSessionObj,String> call(
-				TableColumn<ICFSecSecSessionObj,String> arg)
-			{
-				return new CFStringTableCell<ICFSecSecSessionObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnSecDevName );
 		tableColumnStart = new TableColumn<ICFSecSecSessionObj,LocalDateTime>( "Start" );
 		tableColumnStart.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecSessionObj,LocalDateTime>,ObservableValue<LocalDateTime> >() {
 			public ObservableValue<LocalDateTime> call( CellDataFeatures<ICFSecSecSessionObj, LocalDateTime> p ) {
