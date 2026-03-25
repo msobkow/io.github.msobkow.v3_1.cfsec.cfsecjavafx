@@ -66,8 +66,8 @@ implements ICFSecJavaFXSecSysGrpPaneCommon
 
 	protected ObservableList<String> observableListOfSecLevel =
 		FXCollections.observableArrayList(
-			"Global",
 			"System",
+			"Global",
 			"Cluster",
 			"Tenant" );
 
