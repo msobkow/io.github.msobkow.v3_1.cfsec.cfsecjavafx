@@ -71,7 +71,7 @@ implements ICFSecJavaFXSecClusGrpMembPaneList
 	protected boolean endOfData = true;
 	protected ObservableList<ICFSecSecClusGrpMembObj> observableListOfSecClusGrpMemb = null;
 	protected TableColumn<ICFSecSecClusGrpMembObj, CFLibDbKeyHash256> tableColumnSecClusGrpId = null;
-	protected TableColumn<ICFSecSecClusGrpMembObj, CFLibDbKeyHash256> tableColumnSecUserId = null;
+	protected TableColumn<ICFSecSecClusGrpMembObj, String> tableColumnLoginId = null;
 	protected TableView<ICFSecSecClusGrpMembObj> dataTable = null;
 	protected CFHBox hboxMenu = null;
 	public final String S_ColumnNames[] = { "Name" };
@@ -141,29 +141,29 @@ implements ICFSecJavaFXSecClusGrpMembPaneList
 			}
 		});
 		dataTable.getColumns().add( tableColumnSecClusGrpId );
-		tableColumnSecUserId = new TableColumn<ICFSecSecClusGrpMembObj,CFLibDbKeyHash256>( "Security User Id" );
-		tableColumnSecUserId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusGrpMembObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
-			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecClusGrpMembObj, CFLibDbKeyHash256> p ) {
+		tableColumnLoginId = new TableColumn<ICFSecSecClusGrpMembObj,String>( "Login Id" );
+		tableColumnLoginId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusGrpMembObj,String>,ObservableValue<String> >() {
+			public ObservableValue<String> call( CellDataFeatures<ICFSecSecClusGrpMembObj, String> p ) {
 				ICFSecSecClusGrpMembObj obj = p.getValue();
 				if( obj == null ) {
 					return( null );
 				}
 				else {
-					CFLibDbKeyHash256 value = obj.getRequiredSecUserId();
-					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
+					String value = obj.getRequiredLoginId();
+					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
 					observable.setValue( value );
 					return( observable );
 				}
 			}
 		});
-		tableColumnSecUserId.setCellFactory( new Callback<TableColumn<ICFSecSecClusGrpMembObj,CFLibDbKeyHash256>,TableCell<ICFSecSecClusGrpMembObj,CFLibDbKeyHash256>>() {
-			@Override public TableCell<ICFSecSecClusGrpMembObj,CFLibDbKeyHash256> call(
-				TableColumn<ICFSecSecClusGrpMembObj,CFLibDbKeyHash256> arg)
+		tableColumnLoginId.setCellFactory( new Callback<TableColumn<ICFSecSecClusGrpMembObj,String>,TableCell<ICFSecSecClusGrpMembObj,String>>() {
+			@Override public TableCell<ICFSecSecClusGrpMembObj,String> call(
+				TableColumn<ICFSecSecClusGrpMembObj,String> arg)
 			{
-				return new CFDbKeyHash256TableCell<ICFSecSecClusGrpMembObj>();
+				return new CFStringTableCell<ICFSecSecClusGrpMembObj>();
 			}
 		});
-		dataTable.getColumns().add( tableColumnSecUserId );
+		dataTable.getColumns().add( tableColumnLoginId );
 		dataTable.getSelectionModel().selectedItemProperty().addListener(
 			new ChangeListener<ICFSecSecClusGrpMembObj>() {
 				@Override public void changed( ObservableValue<? extends ICFSecSecClusGrpMembObj> observable,
@@ -232,7 +232,7 @@ implements ICFSecJavaFXSecClusGrpMembPaneList
 						List<ICFSecSecClusGrpMembObj> page;
 						if( lastObj != null ) {
 							page = pageCallback.pageData( lastObj.getRequiredSecClusGrpId(),
-							lastObj.getRequiredSecUserId() );
+							lastObj.getRequiredLoginId() );
 						}
 						else {
 							page = pageCallback.pageData( null,

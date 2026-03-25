@@ -46,5 +46,5 @@ import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 public interface ICFSecJavaFXSecClusGrpIncPageCallback
 {
 	public List<ICFSecSecClusGrpIncObj> pageData( CFLibDbKeyHash256 priorSecClusGrpId,
-		String priorIncName );
+		String priorInclName );
 }

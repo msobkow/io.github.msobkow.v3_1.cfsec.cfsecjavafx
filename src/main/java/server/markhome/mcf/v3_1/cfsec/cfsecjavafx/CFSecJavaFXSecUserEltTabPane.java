@@ -145,15 +145,15 @@ implements ICFSecJavaFXSecUserPaneCommon
 		}
 
 		public List<ICFSecSecSysGrpMembObj> pageData( CFLibDbKeyHash256 priorSecSysGrpId,
-		CFLibDbKeyHash256 priorSecUserId )
+		String priorLoginId )
 		{
 			List<ICFSecSecSysGrpMembObj> dataList;
 			ICFSecSecUserObj focus = (ICFSecSecUserObj)getJavaFXFocusAsSecUser();
 			if( focus != null ) {
 				ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
-				dataList = schemaObj.getSecSysGrpMembTableObj().pageSecSysGrpMembByUserIdx( focus.getRequiredSecUserId(),
+				dataList = schemaObj.getSecSysGrpMembTableObj().pageSecSysGrpMembByLoginIdx( focus.getRequiredLoginId(),
 					priorSecSysGrpId,
-					priorSecUserId );
+					priorLoginId );
 			}
 			else {
 				dataList = new ArrayList<ICFSecSecSysGrpMembObj>();

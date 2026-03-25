@@ -208,7 +208,7 @@ implements ICFSecJavaFXSecSysGrpMembPaneList
 						List<ICFSecSecSysGrpMembObj> page;
 						if( lastObj != null ) {
 							page = pageCallback.pageData( lastObj.getRequiredSecSysGrpId(),
-							lastObj.getRequiredSecUserId() );
+							lastObj.getRequiredLoginId() );
 						}
 						else {
 							page = pageCallback.pageData( null,

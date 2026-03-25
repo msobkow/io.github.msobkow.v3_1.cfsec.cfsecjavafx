@@ -152,7 +152,7 @@ implements ICFSecJavaFXSecSysGrpPaneCommon
 		}
 
 		public List<ICFSecSecSysGrpIncObj> pageData( CFLibDbKeyHash256 priorSecSysGrpId,
-		String priorIncName )
+		String priorInclName )
 		{
 			List<ICFSecSecSysGrpIncObj> dataList;
 			ICFSecSecSysGrpObj focus = (ICFSecSecSysGrpObj)getJavaFXFocusAsSecSysGrp();
@@ -160,7 +160,7 @@ implements ICFSecJavaFXSecSysGrpPaneCommon
 				ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
 				dataList = schemaObj.getSecSysGrpIncTableObj().pageSecSysGrpIncBySysGrpIdx( focus.getRequiredSecSysGrpId(),
 					priorSecSysGrpId,
-					priorIncName );
+					priorInclName );
 			}
 			else {
 				dataList = new ArrayList<ICFSecSecSysGrpIncObj>();
@@ -202,7 +202,7 @@ implements ICFSecJavaFXSecSysGrpPaneCommon
 		}
 
 		public List<ICFSecSecSysGrpMembObj> pageData( CFLibDbKeyHash256 priorSecSysGrpId,
-		CFLibDbKeyHash256 priorSecUserId )
+		String priorLoginId )
 		{
 			List<ICFSecSecSysGrpMembObj> dataList;
 			ICFSecSecSysGrpObj focus = (ICFSecSecSysGrpObj)getJavaFXFocusAsSecSysGrp();
@@ -210,7 +210,7 @@ implements ICFSecJavaFXSecSysGrpPaneCommon
 				ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
 				dataList = schemaObj.getSecSysGrpMembTableObj().pageSecSysGrpMembBySysGrpIdx( focus.getRequiredSecSysGrpId(),
 					priorSecSysGrpId,
-					priorSecUserId );
+					priorLoginId );
 			}
 			else {
 				dataList = new ArrayList<ICFSecSecSysGrpMembObj>();

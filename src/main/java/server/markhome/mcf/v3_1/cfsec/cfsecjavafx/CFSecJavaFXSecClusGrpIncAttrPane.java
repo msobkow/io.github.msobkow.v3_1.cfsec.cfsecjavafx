@@ -82,29 +82,29 @@ implements ICFSecJavaFXSecClusGrpIncPaneCommon
 		}
 	}
 
-	protected class IncNameCFLabel
+	protected class InclNameCFLabel
 		extends CFLabel
 	{
-		public IncNameCFLabel() {
+		public InclNameCFLabel() {
 			super();
-			setText(Inz.s("cfsec.javafx.SecClusGrpInc.AttrPane.IncName.EffLabel"));
+			setText(Inz.s("cfsec.javafx.SecClusGrpInc.AttrPane.InclName.EffLabel"));
 		}
 	}
 
-	protected class IncNameEditor
+	protected class InclNameEditor
 		extends CFStringEditor
 	{
-		public IncNameEditor() {
+		public InclNameEditor() {
 			super();
 			setMaxLen( 64 );
-			setFieldNameInzTag( "cfsec.javafx.SecClusGrpInc.AttrPane.IncName.EffLabel" );
+			setFieldNameInzTag( "cfsec.javafx.SecClusGrpInc.AttrPane.InclName.EffLabel" );
 		}
 	}
 
 	protected SecClusGrpIdCFLabel javafxLabelSecClusGrpId = null;
 	protected SecClusGrpIdEditor javafxEditorSecClusGrpId = null;
-	protected IncNameCFLabel javafxLabelIncName = null;
-	protected IncNameEditor javafxEditorIncName = null;
+	protected InclNameCFLabel javafxLabelInclName = null;
+	protected InclNameEditor javafxEditorInclName = null;
 
 	public CFSecJavaFXSecClusGrpIncAttrPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecClusGrpIncObj argFocus ) {
 		super();
@@ -148,13 +148,13 @@ implements ICFSecJavaFXSecClusGrpIncPaneCommon
 		add( ctrl, 0, gridRow );
 		gridRow ++;
 
-		label = getJavaFXLabelIncName();
+		label = getJavaFXLabelInclName();
 		setHalignment( label, HPos.LEFT );
 		setValignment( label, VPos.BOTTOM );
 		add( label, 0, gridRow );
 		gridRow ++;
 
-		ctrl = getJavaFXEditorIncName();
+		ctrl = getJavaFXEditorInclName();
 		setHalignment( ctrl, HPos.LEFT );
 		add( ctrl, 0, gridRow );
 		gridRow ++;
@@ -239,26 +239,26 @@ implements ICFSecJavaFXSecClusGrpIncPaneCommon
 		javafxEditorSecClusGrpId = value;
 	}
 
-	public IncNameCFLabel getJavaFXLabelIncName() {
-		if( javafxLabelIncName == null ) {
-			javafxLabelIncName = new IncNameCFLabel();
+	public InclNameCFLabel getJavaFXLabelInclName() {
+		if( javafxLabelInclName == null ) {
+			javafxLabelInclName = new InclNameCFLabel();
 		}
-		return( javafxLabelIncName );
+		return( javafxLabelInclName );
 	}
 
-	public void setJavaFXLabelIncName( IncNameCFLabel value ) {
-		javafxLabelIncName = value;
+	public void setJavaFXLabelInclName( InclNameCFLabel value ) {
+		javafxLabelInclName = value;
 	}
 
-	public IncNameEditor getJavaFXEditorIncName() {
-		if( javafxEditorIncName == null ) {
-			javafxEditorIncName = new IncNameEditor();
+	public InclNameEditor getJavaFXEditorInclName() {
+		if( javafxEditorInclName == null ) {
+			javafxEditorInclName = new InclNameEditor();
 		}
-		return( javafxEditorIncName );
+		return( javafxEditorInclName );
 	}
 
-	public void setJavaFXEditorIncName( IncNameEditor value ) {
-		javafxEditorIncName = value;
+	public void setJavaFXEditorInclName( InclNameEditor value ) {
+		javafxEditorInclName = value;
 	}
 
 	public void populateFields()
@@ -275,10 +275,10 @@ implements ICFSecJavaFXSecClusGrpIncPaneCommon
 		}
 
 		if( popObj == null ) {
-			getJavaFXEditorIncName().setStringValue( null );
+			getJavaFXEditorInclName().setStringValue( null );
 		}
 		else {
-			getJavaFXEditorIncName().setStringValue( popObj.getRequiredIncName() );
+			getJavaFXEditorInclName().setStringValue( popObj.getRequiredInclName() );
 		}
 	}
 
@@ -587,8 +587,8 @@ implements ICFSecJavaFXSecClusGrpIncPaneCommon
 		if( javafxEditorSecClusGrpId != null ) {
 			javafxEditorSecClusGrpId.setDisable( true );
 		}
-		if( javafxEditorIncName != null ) {
-			javafxEditorIncName.setDisable( true );
+		if( javafxEditorInclName != null ) {
+			javafxEditorInclName.setDisable( true );
 		}
 	}
 }

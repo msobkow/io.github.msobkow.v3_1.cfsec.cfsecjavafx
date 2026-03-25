@@ -208,7 +208,7 @@ implements ICFSecJavaFXSecSysGrpIncPaneList
 						List<ICFSecSecSysGrpIncObj> page;
 						if( lastObj != null ) {
 							page = pageCallback.pageData( lastObj.getRequiredSecSysGrpId(),
-							lastObj.getRequiredIncName() );
+							lastObj.getRequiredInclName() );
 						}
 						else {
 							page = pageCallback.pageData( null,

@@ -76,7 +76,7 @@ implements ICFSecJavaFXSecClusGrpIncPaneList
 	protected CFButton buttonDeleteSelected = null;
 	protected TableView<ICFSecSecClusGrpIncObj> dataTable = null;
 	protected TableColumn<ICFSecSecClusGrpIncObj, CFLibDbKeyHash256> tableColumnSecClusGrpId = null;
-	protected TableColumn<ICFSecSecClusGrpIncObj, String> tableColumnIncName = null;
+	protected TableColumn<ICFSecSecClusGrpIncObj, String> tableColumnInclName = null;
 
 	public final String S_ColumnNames[] = { "Name" };
 	protected ICFFormManager cfFormManager = null;
@@ -188,29 +188,29 @@ implements ICFSecJavaFXSecClusGrpIncPaneList
 			}
 		});
 		dataTable.getColumns().add( tableColumnSecClusGrpId );
-		tableColumnIncName = new TableColumn<ICFSecSecClusGrpIncObj,String>( "Include Name" );
-		tableColumnIncName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusGrpIncObj,String>,ObservableValue<String> >() {
+		tableColumnInclName = new TableColumn<ICFSecSecClusGrpIncObj,String>( "Include Name" );
+		tableColumnInclName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusGrpIncObj,String>,ObservableValue<String> >() {
 			public ObservableValue<String> call( CellDataFeatures<ICFSecSecClusGrpIncObj, String> p ) {
 				ICFSecSecClusGrpIncObj obj = p.getValue();
 				if( obj == null ) {
 					return( null );
 				}
 				else {
-					String value = obj.getRequiredIncName();
+					String value = obj.getRequiredInclName();
 					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
 					observable.setValue( value );
 					return( observable );
 				}
 			}
 		});
-		tableColumnIncName.setCellFactory( new Callback<TableColumn<ICFSecSecClusGrpIncObj,String>,TableCell<ICFSecSecClusGrpIncObj,String>>() {
+		tableColumnInclName.setCellFactory( new Callback<TableColumn<ICFSecSecClusGrpIncObj,String>,TableCell<ICFSecSecClusGrpIncObj,String>>() {
 			@Override public TableCell<ICFSecSecClusGrpIncObj,String> call(
 				TableColumn<ICFSecSecClusGrpIncObj,String> arg)
 			{
 				return new CFStringTableCell<ICFSecSecClusGrpIncObj>();
 			}
 		});
-		dataTable.getColumns().add( tableColumnIncName );
+		dataTable.getColumns().add( tableColumnInclName );
 		dataTable.getSelectionModel().selectedItemProperty().addListener(
 			new ChangeListener<ICFSecSecClusGrpIncObj>() {
 				@Override public void changed( ObservableValue<? extends ICFSecSecClusGrpIncObj> observable,
@@ -390,7 +390,7 @@ implements ICFSecJavaFXSecClusGrpIncPaneList
 						List<ICFSecSecClusGrpIncObj> page;
 						if( lastObj != null ) {
 							page = pageCallback.pageData( lastObj.getRequiredSecClusGrpId(),
-							lastObj.getRequiredIncName() );
+							lastObj.getRequiredInclName() );
 						}
 						else {
 							page = pageCallback.pageData( null,
