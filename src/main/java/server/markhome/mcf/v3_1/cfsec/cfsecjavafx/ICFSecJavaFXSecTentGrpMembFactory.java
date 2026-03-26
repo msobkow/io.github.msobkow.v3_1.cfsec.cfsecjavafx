@@ -48,7 +48,7 @@ public interface ICFSecJavaFXSecTentGrpMembFactory
 	public CFGridPane newAttrPane( ICFFormManager formManager, ICFSecSecTentGrpMembObj javaFXFocus );
 
 	public CFBorderPane newListPane( ICFFormManager formManager,
-		ICFLibAnyObj argContainer,
+		ICFSecSecTentGrpObj argContainer,
 		ICFSecSecTentGrpMembObj argFocus,
 		ICFSecJavaFXSecTentGrpMembPageCallback argPageCallback,
 		ICFRefreshCallback refreshCallback,
@@ -56,7 +56,7 @@ public interface ICFSecJavaFXSecTentGrpMembFactory
 
 	public CFBorderPane newPickerPane( ICFFormManager formManager,
 		ICFSecSecTentGrpMembObj argFocus,
-		ICFLibAnyObj argContainer,
+		ICFSecSecTentGrpObj argContainer,
 		ICFSecJavaFXSecTentGrpMembPageCallback argPageCallback,
 		ICFSecJavaFXSecTentGrpMembChosen whenChosen );
 
@@ -68,11 +68,9 @@ public interface ICFSecJavaFXSecTentGrpMembFactory
 
 	public CFSplitPane newViewEditPane( ICFFormManager formManger, ICFSecSecTentGrpMembObj javaFXFocus );
 
-	public CFBorderPane newFinderForm( ICFFormManager formManager );
-
 	public CFBorderPane newPickerForm( ICFFormManager formManager,
 		ICFSecSecTentGrpMembObj javaFXFocus,
-		ICFLibAnyObj argContainer,
+		ICFSecSecTentGrpObj argContainer,
 		ICFSecJavaFXSecTentGrpMembPageCallback argPageCallback,
 		ICFSecJavaFXSecTentGrpMembChosen whenChosen );
 

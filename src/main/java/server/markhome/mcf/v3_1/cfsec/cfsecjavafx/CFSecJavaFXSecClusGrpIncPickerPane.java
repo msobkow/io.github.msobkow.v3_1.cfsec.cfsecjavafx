@@ -70,14 +70,13 @@ implements ICFSecJavaFXSecClusGrpIncPaneList
 	protected CFButton buttonMoreData = null;
 	protected boolean endOfData = true;
 	protected ObservableList<ICFSecSecClusGrpIncObj> observableListOfSecClusGrpInc = null;
-	protected TableColumn<ICFSecSecClusGrpIncObj, CFLibDbKeyHash256> tableColumnSecClusGrpId = null;
-	protected TableColumn<ICFSecSecClusGrpIncObj, String> tableColumnInclName = null;
+	protected TableColumn<ICFSecSecClusGrpIncObj, ICFSecSecSysGrpObj> tableColumnParentSubGroup = null;
 	protected TableView<ICFSecSecClusGrpIncObj> dataTable = null;
 	protected CFHBox hboxMenu = null;
 	public final String S_ColumnNames[] = { "Name" };
 	protected ICFFormManager cfFormManager = null;
 	protected ICFSecJavaFXSecClusGrpIncChosen invokeWhenChosen = null;
-	protected ICFLibAnyObj javafxContainer = null;
+	protected ICFSecSecClusGrpObj javafxContainer = null;
 	protected CFButton buttonCancel = null;
 	protected CFButton buttonChooseNone = null;
 	protected CFButton buttonChooseSelected = null;
@@ -85,7 +84,7 @@ implements ICFSecJavaFXSecClusGrpIncPaneList
 	public CFSecJavaFXSecClusGrpIncPickerPane( ICFFormManager formManager,
 		ICFSecJavaFXSchema argSchema,
 		ICFSecSecClusGrpIncObj argFocus,
-		ICFLibAnyObj argContainer,
+		ICFSecSecClusGrpObj argContainer,
 		ICFSecJavaFXSecClusGrpIncPageCallback argPageCallback,
 		ICFSecJavaFXSecClusGrpIncChosen whenChosen )
 	{
@@ -118,52 +117,29 @@ implements ICFSecJavaFXSecClusGrpIncPaneList
 		javafxContainer = argContainer;
 		pageCallback = argPageCallback;
 		dataTable = new TableView<ICFSecSecClusGrpIncObj>();
-		tableColumnSecClusGrpId = new TableColumn<ICFSecSecClusGrpIncObj,CFLibDbKeyHash256>( "Cluster Security Group Id" );
-		tableColumnSecClusGrpId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusGrpIncObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
-			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecClusGrpIncObj, CFLibDbKeyHash256> p ) {
+		tableColumnParentSubGroup = new TableColumn<ICFSecSecClusGrpIncObj, ICFSecSecSysGrpObj>( "SubGroup" );
+		tableColumnParentSubGroup.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusGrpIncObj,ICFSecSecSysGrpObj>,ObservableValue<ICFSecSecSysGrpObj> >() {
+			public ObservableValue<ICFSecSecSysGrpObj> call( CellDataFeatures<ICFSecSecClusGrpIncObj, ICFSecSecSysGrpObj> p ) {
 				ICFSecSecClusGrpIncObj obj = p.getValue();
 				if( obj == null ) {
 					return( null );
 				}
 				else {
-					CFLibDbKeyHash256 value = obj.getRequiredSecClusGrpId();
-					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
-					observable.setValue( value );
+					ICFSecSecSysGrpObj ref = obj.getRequiredParentSubGroup();
+					ReadOnlyObjectWrapper<ICFSecSecSysGrpObj> observable = new ReadOnlyObjectWrapper<ICFSecSecSysGrpObj>();
+					observable.setValue( ref );
 					return( observable );
 				}
 			}
 		});
-		tableColumnSecClusGrpId.setCellFactory( new Callback<TableColumn<ICFSecSecClusGrpIncObj,CFLibDbKeyHash256>,TableCell<ICFSecSecClusGrpIncObj,CFLibDbKeyHash256>>() {
-			@Override public TableCell<ICFSecSecClusGrpIncObj,CFLibDbKeyHash256> call(
-				TableColumn<ICFSecSecClusGrpIncObj,CFLibDbKeyHash256> arg)
+		tableColumnParentSubGroup.setCellFactory( new Callback<TableColumn<ICFSecSecClusGrpIncObj,ICFSecSecSysGrpObj>,TableCell<ICFSecSecClusGrpIncObj,ICFSecSecSysGrpObj>>() {
+			@Override public TableCell<ICFSecSecClusGrpIncObj,ICFSecSecSysGrpObj> call(
+				TableColumn<ICFSecSecClusGrpIncObj,ICFSecSecSysGrpObj> arg)
 			{
-				return new CFDbKeyHash256TableCell<ICFSecSecClusGrpIncObj>();
+				return new CFReferenceTableCell<ICFSecSecClusGrpIncObj,ICFSecSecSysGrpObj>();
 			}
 		});
-		dataTable.getColumns().add( tableColumnSecClusGrpId );
-		tableColumnInclName = new TableColumn<ICFSecSecClusGrpIncObj,String>( "Include Name" );
-		tableColumnInclName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusGrpIncObj,String>,ObservableValue<String> >() {
-			public ObservableValue<String> call( CellDataFeatures<ICFSecSecClusGrpIncObj, String> p ) {
-				ICFSecSecClusGrpIncObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					String value = obj.getRequiredInclName();
-					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnInclName.setCellFactory( new Callback<TableColumn<ICFSecSecClusGrpIncObj,String>,TableCell<ICFSecSecClusGrpIncObj,String>>() {
-			@Override public TableCell<ICFSecSecClusGrpIncObj,String> call(
-				TableColumn<ICFSecSecClusGrpIncObj,String> arg)
-			{
-				return new CFStringTableCell<ICFSecSecClusGrpIncObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnInclName );
+		dataTable.getColumns().add( tableColumnParentSubGroup );
 		dataTable.getSelectionModel().selectedItemProperty().addListener(
 			new ChangeListener<ICFSecSecClusGrpIncObj>() {
 				@Override public void changed( ObservableValue<? extends ICFSecSecClusGrpIncObj> observable,
@@ -434,11 +410,11 @@ implements ICFSecJavaFXSecClusGrpIncPaneList
 		// Use page data instead
 	}
 
-	public ICFLibAnyObj getJavaFXContainer() {
+	public ICFSecSecClusGrpObj getJavaFXContainer() {
 		return( javafxContainer );
 	}
 
-	public void setJavaFXContainer( ICFLibAnyObj value ) {
+	public void setJavaFXContainer( ICFSecSecClusGrpObj value ) {
 		javafxContainer = value;
 	}
 

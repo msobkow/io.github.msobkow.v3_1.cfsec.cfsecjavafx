@@ -65,7 +65,7 @@ implements ICFSecJavaFXSecClusGrpIncFactory
 	}
 
 	public CFBorderPane newListPane( ICFFormManager formManager,
-		ICFLibAnyObj argContainer,
+		ICFSecSecClusGrpObj argContainer,
 		ICFSecSecClusGrpIncObj argFocus,
 		ICFSecJavaFXSecClusGrpIncPageCallback argPageCallback,
 		ICFRefreshCallback refreshCallback,
@@ -83,7 +83,7 @@ implements ICFSecJavaFXSecClusGrpIncFactory
 
 	public CFBorderPane newPickerPane( ICFFormManager formManager,
 		ICFSecSecClusGrpIncObj argFocus,
-		ICFLibAnyObj argContainer,
+		ICFSecSecClusGrpObj argContainer,
 		ICFSecJavaFXSecClusGrpIncPageCallback argPageCallback,
 		ICFSecJavaFXSecClusGrpIncChosen whenChosen )
 	{
@@ -116,14 +116,9 @@ implements ICFSecJavaFXSecClusGrpIncFactory
 		return( retnew );
 	}
 
-	public CFBorderPane newFinderForm( ICFFormManager formManager ) {
-		CFSecJavaFXSecClusGrpIncFinderForm retnew = new CFSecJavaFXSecClusGrpIncFinderForm( formManager, javafxSchema );
-		return( retnew );
-	}
-
 	public CFBorderPane newPickerForm( ICFFormManager formManager,
 		ICFSecSecClusGrpIncObj argFocus,
-		ICFLibAnyObj argContainer,
+		ICFSecSecClusGrpObj argContainer,
 		ICFSecJavaFXSecClusGrpIncPageCallback argPageCallback,
 		ICFSecJavaFXSecClusGrpIncChosen whenChosen )
 	{

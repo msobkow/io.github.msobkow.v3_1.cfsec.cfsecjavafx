@@ -75,14 +75,13 @@ implements ICFSecJavaFXSecTentGrpIncPaneList
 	protected CFButton buttonEditSelected = null;
 	protected CFButton buttonDeleteSelected = null;
 	protected TableView<ICFSecSecTentGrpIncObj> dataTable = null;
-	protected TableColumn<ICFSecSecTentGrpIncObj, CFLibDbKeyHash256> tableColumnSecTentGrpId = null;
-	protected TableColumn<ICFSecSecTentGrpIncObj, String> tableColumnInclName = null;
+	protected TableColumn<ICFSecSecTentGrpIncObj, ICFSecSecSysGrpObj> tableColumnParentSubGroup = null;
 
 	public final String S_ColumnNames[] = { "Name" };
 	protected ICFFormManager cfFormManager = null;
 	protected boolean javafxIsInitializing = true;
 	protected boolean javafxSortByChain = false;
-	protected ICFLibAnyObj javafxContainer = null;
+	protected ICFSecSecTentGrpObj javafxContainer = null;
 	protected ICFRefreshCallback javafxRefreshCallback = null;
 	class ViewEditClosedCallback implements ICFFormClosedCallback {
 		public ViewEditClosedCallback() {
@@ -135,7 +134,7 @@ implements ICFSecJavaFXSecTentGrpIncPaneList
 
 	public CFSecJavaFXSecTentGrpIncListPane( ICFFormManager formManager,
 		ICFSecJavaFXSchema argSchema,
-		ICFLibAnyObj argContainer,
+		ICFSecSecTentGrpObj argContainer,
 		ICFSecSecTentGrpIncObj argFocus,
 		ICFSecJavaFXSecTentGrpIncPageCallback argPageCallback,
 		ICFRefreshCallback refreshCallback,
@@ -165,52 +164,29 @@ implements ICFSecJavaFXSecTentGrpIncPaneList
 		javafxSortByChain = sortByChain;
 		pageCallback = argPageCallback;
 		dataTable = new TableView<ICFSecSecTentGrpIncObj>();
-		tableColumnSecTentGrpId = new TableColumn<ICFSecSecTentGrpIncObj,CFLibDbKeyHash256>( "Tenant Security Group Id" );
-		tableColumnSecTentGrpId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecTentGrpIncObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
-			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecTentGrpIncObj, CFLibDbKeyHash256> p ) {
+		tableColumnParentSubGroup = new TableColumn<ICFSecSecTentGrpIncObj, ICFSecSecSysGrpObj>( "SubGroup" );
+		tableColumnParentSubGroup.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecTentGrpIncObj,ICFSecSecSysGrpObj>,ObservableValue<ICFSecSecSysGrpObj> >() {
+			public ObservableValue<ICFSecSecSysGrpObj> call( CellDataFeatures<ICFSecSecTentGrpIncObj, ICFSecSecSysGrpObj> p ) {
 				ICFSecSecTentGrpIncObj obj = p.getValue();
 				if( obj == null ) {
 					return( null );
 				}
 				else {
-					CFLibDbKeyHash256 value = obj.getRequiredSecTentGrpId();
-					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
-					observable.setValue( value );
+					ICFSecSecSysGrpObj ref = obj.getRequiredParentSubGroup();
+					ReadOnlyObjectWrapper<ICFSecSecSysGrpObj> observable = new ReadOnlyObjectWrapper<ICFSecSecSysGrpObj>();
+					observable.setValue( ref );
 					return( observable );
 				}
 			}
 		});
-		tableColumnSecTentGrpId.setCellFactory( new Callback<TableColumn<ICFSecSecTentGrpIncObj,CFLibDbKeyHash256>,TableCell<ICFSecSecTentGrpIncObj,CFLibDbKeyHash256>>() {
-			@Override public TableCell<ICFSecSecTentGrpIncObj,CFLibDbKeyHash256> call(
-				TableColumn<ICFSecSecTentGrpIncObj,CFLibDbKeyHash256> arg)
+		tableColumnParentSubGroup.setCellFactory( new Callback<TableColumn<ICFSecSecTentGrpIncObj,ICFSecSecSysGrpObj>,TableCell<ICFSecSecTentGrpIncObj,ICFSecSecSysGrpObj>>() {
+			@Override public TableCell<ICFSecSecTentGrpIncObj,ICFSecSecSysGrpObj> call(
+				TableColumn<ICFSecSecTentGrpIncObj,ICFSecSecSysGrpObj> arg)
 			{
-				return new CFDbKeyHash256TableCell<ICFSecSecTentGrpIncObj>();
+				return new CFReferenceTableCell<ICFSecSecTentGrpIncObj,ICFSecSecSysGrpObj>();
 			}
 		});
-		dataTable.getColumns().add( tableColumnSecTentGrpId );
-		tableColumnInclName = new TableColumn<ICFSecSecTentGrpIncObj,String>( "Include Name" );
-		tableColumnInclName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecTentGrpIncObj,String>,ObservableValue<String> >() {
-			public ObservableValue<String> call( CellDataFeatures<ICFSecSecTentGrpIncObj, String> p ) {
-				ICFSecSecTentGrpIncObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					String value = obj.getRequiredInclName();
-					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnInclName.setCellFactory( new Callback<TableColumn<ICFSecSecTentGrpIncObj,String>,TableCell<ICFSecSecTentGrpIncObj,String>>() {
-			@Override public TableCell<ICFSecSecTentGrpIncObj,String> call(
-				TableColumn<ICFSecSecTentGrpIncObj,String> arg)
-			{
-				return new CFStringTableCell<ICFSecSecTentGrpIncObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnInclName );
+		dataTable.getColumns().add( tableColumnParentSubGroup );
 		dataTable.getSelectionModel().selectedItemProperty().addListener(
 			new ChangeListener<ICFSecSecTentGrpIncObj>() {
 				@Override public void changed( ObservableValue<? extends ICFSecSecTentGrpIncObj> observable,
@@ -438,6 +414,14 @@ implements ICFSecJavaFXSecTentGrpIncPaneList
 								0,
 								"edit" );
 						}
+								ICFSecSecTentGrpObj container = (ICFSecSecTentGrpObj)( getJavaFXContainer() );
+								if( container == null ) {
+									throw new CFLibNullArgumentException( getClass(),
+										S_ProcName,
+										0,
+										"JavaFXContainer" );
+								}
+								edit.setRequiredContainerGroup( container );
 						CFBorderPane frame = javafxSchema.getSecTentGrpIncFactory().newAddForm( cfFormManager, obj, getViewEditClosedCallback(), true );
 						ICFSecJavaFXSecTentGrpIncPaneCommon jpanelCommon = (ICFSecJavaFXSecTentGrpIncPaneCommon)frame;
 						jpanelCommon.setJavaFXFocus( obj );
@@ -574,11 +558,11 @@ implements ICFSecJavaFXSecTentGrpIncPaneList
 		return( hboxMenu );
 	}
 
-	public ICFLibAnyObj getJavaFXContainer() {
+	public ICFSecSecTentGrpObj getJavaFXContainer() {
 		return( javafxContainer );
 	}
 
-	public void setJavaFXContainer( ICFLibAnyObj value ) {
+	public void setJavaFXContainer( ICFSecSecTentGrpObj value ) {
 		javafxContainer = value;
 	}
 

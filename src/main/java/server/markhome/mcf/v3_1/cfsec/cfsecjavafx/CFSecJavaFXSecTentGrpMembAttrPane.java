@@ -64,47 +64,114 @@ implements ICFSecJavaFXSecTentGrpMembPaneCommon
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	boolean javafxIsInitializing = true;
 
-	protected class SecTentGrpIdCFLabel
+	protected class SecTentGrpMembUserCFLabel
 		extends CFLabel
 	{
-		public SecTentGrpIdCFLabel() {
+		public SecTentGrpMembUserCFLabel() {
 			super();
-			setText(Inz.s("cfsec.javafx.SecTentGrpMemb.AttrPane.SecTentGrpId.EffLabel"));
+			setText(Inz.s("cfsec.javafx.SecTentGrpMemb.AttrPane.ParentUser.EffLabel"));
 		}
 	}
 
-	protected class SecTentGrpIdEditor
-		extends CFDbKeyHash256Editor
+	protected class CallbackSecTentGrpMembUserChosen
+	implements ICFSecJavaFXSecUserChosen
 	{
-		public SecTentGrpIdEditor() {
-			super();
-			setFieldNameInzTag( "cfsec.javafx.SecTentGrpMemb.AttrPane.SecTentGrpId.EffLabel" );
+		public CallbackSecTentGrpMembUserChosen() {
+		}
+
+		public void choseSecUser( ICFSecSecUserObj value ) {
+			if( javafxReferenceParentUser != null ) {
+				ICFSecSecTentGrpMembObj cur = getJavaFXFocusAsSecTentGrpMemb();
+				if( cur != null ) {
+					ICFSecSecTentGrpMembEditObj editObj = (ICFSecSecTentGrpMembEditObj)cur.getEdit();
+					if( null != editObj ) {
+						CFPane.PaneMode curMode = getPaneMode();
+						if( ( curMode == CFPane.PaneMode.Add ) || ( curMode == CFPane.PaneMode.Edit ) ) {
+							javafxReferenceParentUser.setReferencedObject( value );
+							editObj.setRequiredParentUser( value );
+						}
+					}
+				}
+			}
 		}
 	}
 
-	protected class LoginIdCFLabel
-		extends CFLabel
+	protected class PageDataParentUserList
+	implements ICFSecJavaFXSecUserPageCallback
 	{
-		public LoginIdCFLabel() {
-			super();
-			setText(Inz.s("cfsec.javafx.SecTentGrpMemb.AttrPane.LoginId.EffLabel"));
+		public PageDataParentUserList() {
+		}
+
+		public List<ICFSecSecUserObj> pageData( CFLibDbKeyHash256 priorSecUserId )
+		{
+			java.util.List<ICFSecSecUserObj> listOfSecUser = null;
+			ICFSecSecTentGrpMembObj focus = (ICFSecSecTentGrpMembObj)getEffJavaFXFocus();
+			if( focus != null ) {
+				ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
+			listOfSecUser = schemaObj.getSecUserTableObj().pageAllSecUser( priorSecUserId );
+			}
+			else {
+				listOfSecUser = new ArrayList<ICFSecSecUserObj>();
+			}
+			return( listOfSecUser  );
 		}
 	}
 
-	protected class LoginIdEditor
-		extends CFStringEditor
+	protected class SecTentGrpMembUserReferenceCallback
+	implements ICFReferenceCallback
 	{
-		public LoginIdEditor() {
-			super();
-			setMaxLen( 32 );
-			setFieldNameInzTag( "cfsec.javafx.SecTentGrpMemb.AttrPane.LoginId.EffLabel" );
+		public void chose( ICFLibAnyObj value ) {
+			final String S_ProcName = "chose";
+			Node cont;
+			ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
+			ICFSecSecTentGrpMembObj focus = getEffJavaFXFocus();
+			ICFSecSecUserObj referencedObj = (ICFSecSecUserObj)javafxReferenceParentUser.getReferencedObject();
+			CFBorderPane form = javafxSchema.getSecUserFactory().newPickerForm( cfFormManager, referencedObj, null, new PageDataParentUserList(), new CallbackSecTentGrpMembUserChosen() );
+			((ICFSecJavaFXSecUserPaneCommon)form).setPaneMode( CFPane.PaneMode.View );
+			cfFormManager.pushForm( form );
+		}
+
+		public void view( ICFLibAnyObj value ) {
+			final String S_ProcName = "actionPerformed";
+			ICFSecSecTentGrpMembObj focus = getEffJavaFXFocus();
+			if( focus != null ) {
+				ICFSecSecUserObj referencedObj = (ICFSecSecUserObj)javafxReferenceParentUser.getReferencedObject();
+				CFBorderPane form = null;
+				if( referencedObj != null ) {
+					int classCode = referencedObj.getClassCode();
+					ICFSecSchema.ClassMapEntry entry = ICFSecSchema.getClassMapByRuntimeClassCode(classCode);
+					int backingClassCode = entry.getBackingClassCode();
+					if( entry.getSchemaName().equals("CFSec") && backingClassCode == ICFSecSecUser.CLASS_CODE ) {
+						form = javafxSchema.getSecUserFactory().newAddForm( cfFormManager, referencedObj, null, true );
+						ICFSecJavaFXSecUserPaneCommon spec = (ICFSecJavaFXSecUserPaneCommon)form;
+						spec.setJavaFXFocus( referencedObj );
+						spec.setPaneMode( CFPane.PaneMode.View );
+					}
+					else {
+						throw new CFLibUnsupportedClassException( getClass(),
+							S_ProcName,
+							"javaFXFocus",
+							focus,
+							"ICFSecSecUserObj" );
+					}
+					cfFormManager.pushForm( form );
+				}
+			}
 		}
 	}
 
-	protected SecTentGrpIdCFLabel javafxLabelSecTentGrpId = null;
-	protected SecTentGrpIdEditor javafxEditorSecTentGrpId = null;
-	protected LoginIdCFLabel javafxLabelLoginId = null;
-	protected LoginIdEditor javafxEditorLoginId = null;
+	protected class SecTentGrpMembUserCFReferenceEditor
+		extends CFReferenceEditor
+	{
+		public SecTentGrpMembUserCFReferenceEditor() {
+			super( new SecTentGrpMembUserReferenceCallback() );
+			setFieldNameInzTag( "cfsec.javafx.SecTentGrpMemb.AttrPane.SecTentGrpMembUser.EffLabel" );
+		}
+	}
+
+	protected ICFSecSecUserObj javafxParentUserObj = null;
+	protected SecTentGrpMembUserCFLabel javafxLabelParentUser = null;
+	protected SecTentGrpMembUserCFReferenceEditor javafxReferenceParentUser = null;
 
 	public CFSecJavaFXSecTentGrpMembAttrPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecTentGrpMembObj argFocus ) {
 		super();
@@ -137,26 +204,15 @@ implements ICFSecJavaFXSecTentGrpMembPaneCommon
 		column1.setPercentWidth( 100 );
 		getColumnConstraints().addAll( column1 );
 		int gridRow = 0;
-		label = getJavaFXLabelSecTentGrpId();
+		label = getJavaFXLabelParentUser();
 		setHalignment( label, HPos.LEFT );
 		setValignment( label, VPos.BOTTOM );
 		add( label, 0, gridRow );
 		gridRow ++;
 
-		ctrl = getJavaFXEditorSecTentGrpId();
-		setHalignment( ctrl, HPos.LEFT );
-		add( ctrl, 0, gridRow );
-		gridRow ++;
-
-		label = getJavaFXLabelLoginId();
-		setHalignment( label, HPos.LEFT );
-		setValignment( label, VPos.BOTTOM );
-		add( label, 0, gridRow );
-		gridRow ++;
-
-		ctrl = getJavaFXEditorLoginId();
-		setHalignment( ctrl, HPos.LEFT );
-		add( ctrl, 0, gridRow );
+		reference = getJavaFXReferenceParentUser();
+		setHalignment( reference, HPos.LEFT );
+		add( reference, 0, gridRow );
 		gridRow ++;
 
 		populateFields();
@@ -217,48 +273,30 @@ implements ICFSecJavaFXSecTentGrpMembPaneCommon
 		return( eff );
 	}
 
-	public SecTentGrpIdCFLabel getJavaFXLabelSecTentGrpId() {
-		if( javafxLabelSecTentGrpId == null ) {
-			javafxLabelSecTentGrpId = new SecTentGrpIdCFLabel();
+	public ICFSecSecUserObj getJavaFXParentUserObj() {
+		return( javafxParentUserObj );
+	}
+
+	public void setJavaFXParentUserObj( ICFSecSecUserObj value ) {
+		javafxParentUserObj = value;
+	}
+
+	public CFLabel getJavaFXLabelParentUser() {
+		if( javafxLabelParentUser == null ) {
+			javafxLabelParentUser = new SecTentGrpMembUserCFLabel();
 		}
-		return( javafxLabelSecTentGrpId );
+		return( javafxLabelParentUser );
 	}
 
-	public void setJavaFXLabelSecTentGrpId( SecTentGrpIdCFLabel value ) {
-		javafxLabelSecTentGrpId = value;
-	}
-
-	public SecTentGrpIdEditor getJavaFXEditorSecTentGrpId() {
-		if( javafxEditorSecTentGrpId == null ) {
-			javafxEditorSecTentGrpId = new SecTentGrpIdEditor();
+	public CFReferenceEditor getJavaFXReferenceParentUser() {
+		if( javafxReferenceParentUser == null ) {
+			javafxReferenceParentUser = new SecTentGrpMembUserCFReferenceEditor();
 		}
-		return( javafxEditorSecTentGrpId );
+		return( javafxReferenceParentUser );
 	}
 
-	public void setJavaFXEditorSecTentGrpId( SecTentGrpIdEditor value ) {
-		javafxEditorSecTentGrpId = value;
-	}
-
-	public LoginIdCFLabel getJavaFXLabelLoginId() {
-		if( javafxLabelLoginId == null ) {
-			javafxLabelLoginId = new LoginIdCFLabel();
-		}
-		return( javafxLabelLoginId );
-	}
-
-	public void setJavaFXLabelLoginId( LoginIdCFLabel value ) {
-		javafxLabelLoginId = value;
-	}
-
-	public LoginIdEditor getJavaFXEditorLoginId() {
-		if( javafxEditorLoginId == null ) {
-			javafxEditorLoginId = new LoginIdEditor();
-		}
-		return( javafxEditorLoginId );
-	}
-
-	public void setJavaFXEditorLoginId( LoginIdEditor value ) {
-		javafxEditorLoginId = value;
+	public void setJavaFXReferenceParentUser( SecTentGrpMembUserCFReferenceEditor value ) {
+		javafxReferenceParentUser = value;
 	}
 
 	public void populateFields()
@@ -268,17 +306,13 @@ implements ICFSecJavaFXSecTentGrpMembPaneCommon
 			popObj = null;
 		}
 		if( popObj == null ) {
-			getJavaFXEditorSecTentGrpId().setDbKeyHash256Value( null );
+			javafxParentUserObj = null;
 		}
 		else {
-			getJavaFXEditorSecTentGrpId().setDbKeyHash256Value( popObj.getRequiredSecTentGrpId() );
+			javafxParentUserObj = (ICFSecSecUserObj)popObj.getRequiredParentUser( javafxIsInitializing );
 		}
-
-		if( popObj == null ) {
-			getJavaFXEditorLoginId().setStringValue( null );
-		}
-		else {
-			getJavaFXEditorLoginId().setStringValue( popObj.getRequiredLoginId() );
+		if( javafxReferenceParentUser != null ) {
+			javafxReferenceParentUser.setReferencedObject( javafxParentUserObj );
 		}
 	}
 
@@ -299,6 +333,9 @@ implements ICFSecJavaFXSecTentGrpMembPaneCommon
 				Inz.s("cflibjavafx.common.PaneIsUnfocusedOrNotEditing"),
 				Inz.x("cflibjavafx.common.PaneIsUnfocusedOrNotEditing") );
 		}
+
+		javafxParentUserObj = (ICFSecSecUserObj)( javafxReferenceParentUser.getReferencedObject() );
+		editObj.setRequiredParentUser( javafxParentUserObj );
 	}
 
 	public void setPaneMode( CFPane.PaneMode value ) {
@@ -584,11 +621,8 @@ implements ICFSecJavaFXSecTentGrpMembPaneCommon
 				isEditing = false;
 			}
 		}
-		if( javafxEditorSecTentGrpId != null ) {
-			javafxEditorSecTentGrpId.setDisable( true );
-		}
-		if( javafxEditorLoginId != null ) {
-			javafxEditorLoginId.setDisable( true );
+		if( javafxReferenceParentUser != null ) {
+			javafxReferenceParentUser.setCustomDisable( ! isEditing );
 		}
 	}
 }

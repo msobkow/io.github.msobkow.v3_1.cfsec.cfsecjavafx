@@ -49,6 +49,6 @@ import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 public interface ICFSecJavaFXSecTentGrpIncPaneList
 extends
 	ICFSecJavaFXSecTentGrpIncPaneCommon,
-	ICFPaneList<ICFLibAnyObj,ICFSecSecTentGrpIncObj>
+	ICFPaneList<ICFSecSecTentGrpObj,ICFSecSecTentGrpIncObj>
 {
 }

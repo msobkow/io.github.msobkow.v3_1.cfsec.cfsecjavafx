@@ -75,14 +75,13 @@ implements ICFSecJavaFXSecClusGrpMembPaneList
 	protected CFButton buttonEditSelected = null;
 	protected CFButton buttonDeleteSelected = null;
 	protected TableView<ICFSecSecClusGrpMembObj> dataTable = null;
-	protected TableColumn<ICFSecSecClusGrpMembObj, CFLibDbKeyHash256> tableColumnSecClusGrpId = null;
-	protected TableColumn<ICFSecSecClusGrpMembObj, String> tableColumnLoginId = null;
+	protected TableColumn<ICFSecSecClusGrpMembObj, ICFSecSecUserObj> tableColumnParentUser = null;
 
 	public final String S_ColumnNames[] = { "Name" };
 	protected ICFFormManager cfFormManager = null;
 	protected boolean javafxIsInitializing = true;
 	protected boolean javafxSortByChain = false;
-	protected ICFLibAnyObj javafxContainer = null;
+	protected ICFSecSecClusGrpObj javafxContainer = null;
 	protected ICFRefreshCallback javafxRefreshCallback = null;
 	class ViewEditClosedCallback implements ICFFormClosedCallback {
 		public ViewEditClosedCallback() {
@@ -135,7 +134,7 @@ implements ICFSecJavaFXSecClusGrpMembPaneList
 
 	public CFSecJavaFXSecClusGrpMembListPane( ICFFormManager formManager,
 		ICFSecJavaFXSchema argSchema,
-		ICFLibAnyObj argContainer,
+		ICFSecSecClusGrpObj argContainer,
 		ICFSecSecClusGrpMembObj argFocus,
 		ICFSecJavaFXSecClusGrpMembPageCallback argPageCallback,
 		ICFRefreshCallback refreshCallback,
@@ -165,52 +164,29 @@ implements ICFSecJavaFXSecClusGrpMembPaneList
 		javafxSortByChain = sortByChain;
 		pageCallback = argPageCallback;
 		dataTable = new TableView<ICFSecSecClusGrpMembObj>();
-		tableColumnSecClusGrpId = new TableColumn<ICFSecSecClusGrpMembObj,CFLibDbKeyHash256>( "Cluster Security Group Id" );
-		tableColumnSecClusGrpId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusGrpMembObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
-			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecClusGrpMembObj, CFLibDbKeyHash256> p ) {
+		tableColumnParentUser = new TableColumn<ICFSecSecClusGrpMembObj, ICFSecSecUserObj>( "User" );
+		tableColumnParentUser.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusGrpMembObj,ICFSecSecUserObj>,ObservableValue<ICFSecSecUserObj> >() {
+			public ObservableValue<ICFSecSecUserObj> call( CellDataFeatures<ICFSecSecClusGrpMembObj, ICFSecSecUserObj> p ) {
 				ICFSecSecClusGrpMembObj obj = p.getValue();
 				if( obj == null ) {
 					return( null );
 				}
 				else {
-					CFLibDbKeyHash256 value = obj.getRequiredSecClusGrpId();
-					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
-					observable.setValue( value );
+					ICFSecSecUserObj ref = obj.getRequiredParentUser();
+					ReadOnlyObjectWrapper<ICFSecSecUserObj> observable = new ReadOnlyObjectWrapper<ICFSecSecUserObj>();
+					observable.setValue( ref );
 					return( observable );
 				}
 			}
 		});
-		tableColumnSecClusGrpId.setCellFactory( new Callback<TableColumn<ICFSecSecClusGrpMembObj,CFLibDbKeyHash256>,TableCell<ICFSecSecClusGrpMembObj,CFLibDbKeyHash256>>() {
-			@Override public TableCell<ICFSecSecClusGrpMembObj,CFLibDbKeyHash256> call(
-				TableColumn<ICFSecSecClusGrpMembObj,CFLibDbKeyHash256> arg)
+		tableColumnParentUser.setCellFactory( new Callback<TableColumn<ICFSecSecClusGrpMembObj,ICFSecSecUserObj>,TableCell<ICFSecSecClusGrpMembObj,ICFSecSecUserObj>>() {
+			@Override public TableCell<ICFSecSecClusGrpMembObj,ICFSecSecUserObj> call(
+				TableColumn<ICFSecSecClusGrpMembObj,ICFSecSecUserObj> arg)
 			{
-				return new CFDbKeyHash256TableCell<ICFSecSecClusGrpMembObj>();
+				return new CFReferenceTableCell<ICFSecSecClusGrpMembObj,ICFSecSecUserObj>();
 			}
 		});
-		dataTable.getColumns().add( tableColumnSecClusGrpId );
-		tableColumnLoginId = new TableColumn<ICFSecSecClusGrpMembObj,String>( "Login Id" );
-		tableColumnLoginId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusGrpMembObj,String>,ObservableValue<String> >() {
-			public ObservableValue<String> call( CellDataFeatures<ICFSecSecClusGrpMembObj, String> p ) {
-				ICFSecSecClusGrpMembObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					String value = obj.getRequiredLoginId();
-					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnLoginId.setCellFactory( new Callback<TableColumn<ICFSecSecClusGrpMembObj,String>,TableCell<ICFSecSecClusGrpMembObj,String>>() {
-			@Override public TableCell<ICFSecSecClusGrpMembObj,String> call(
-				TableColumn<ICFSecSecClusGrpMembObj,String> arg)
-			{
-				return new CFStringTableCell<ICFSecSecClusGrpMembObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnLoginId );
+		dataTable.getColumns().add( tableColumnParentUser );
 		dataTable.getSelectionModel().selectedItemProperty().addListener(
 			new ChangeListener<ICFSecSecClusGrpMembObj>() {
 				@Override public void changed( ObservableValue<? extends ICFSecSecClusGrpMembObj> observable,
@@ -438,6 +414,14 @@ implements ICFSecJavaFXSecClusGrpMembPaneList
 								0,
 								"edit" );
 						}
+								ICFSecSecClusGrpObj container = (ICFSecSecClusGrpObj)( getJavaFXContainer() );
+								if( container == null ) {
+									throw new CFLibNullArgumentException( getClass(),
+										S_ProcName,
+										0,
+										"JavaFXContainer" );
+								}
+								edit.setRequiredContainerGroup( container );
 						CFBorderPane frame = javafxSchema.getSecClusGrpMembFactory().newAddForm( cfFormManager, obj, getViewEditClosedCallback(), true );
 						ICFSecJavaFXSecClusGrpMembPaneCommon jpanelCommon = (ICFSecJavaFXSecClusGrpMembPaneCommon)frame;
 						jpanelCommon.setJavaFXFocus( obj );
@@ -574,11 +558,11 @@ implements ICFSecJavaFXSecClusGrpMembPaneList
 		return( hboxMenu );
 	}
 
-	public ICFLibAnyObj getJavaFXContainer() {
+	public ICFSecSecClusGrpObj getJavaFXContainer() {
 		return( javafxContainer );
 	}
 
-	public void setJavaFXContainer( ICFLibAnyObj value ) {
+	public void setJavaFXContainer( ICFSecSecClusGrpObj value ) {
 		javafxContainer = value;
 	}
 

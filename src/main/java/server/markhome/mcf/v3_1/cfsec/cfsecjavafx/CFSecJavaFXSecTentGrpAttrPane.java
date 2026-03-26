@@ -82,24 +82,6 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 		}
 	}
 
-	protected class TenantIdCFLabel
-		extends CFLabel
-	{
-		public TenantIdCFLabel() {
-			super();
-			setText(Inz.s("cfsec.javafx.SecTentGrp.AttrPane.TenantId.EffLabel"));
-		}
-	}
-
-	protected class TenantIdEditor
-		extends CFDbKeyHash256Editor
-	{
-		public TenantIdEditor() {
-			super();
-			setFieldNameInzTag( "cfsec.javafx.SecTentGrp.AttrPane.TenantId.EffLabel" );
-		}
-	}
-
 	protected class NameCFLabel
 		extends CFLabel
 	{
@@ -121,8 +103,6 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 
 	protected SecTentGrpIdCFLabel javafxLabelSecTentGrpId = null;
 	protected SecTentGrpIdEditor javafxEditorSecTentGrpId = null;
-	protected TenantIdCFLabel javafxLabelTenantId = null;
-	protected TenantIdEditor javafxEditorTenantId = null;
 	protected NameCFLabel javafxLabelName = null;
 	protected NameEditor javafxEditorName = null;
 
@@ -164,17 +144,6 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 		gridRow ++;
 
 		ctrl = getJavaFXEditorSecTentGrpId();
-		setHalignment( ctrl, HPos.LEFT );
-		add( ctrl, 0, gridRow );
-		gridRow ++;
-
-		label = getJavaFXLabelTenantId();
-		setHalignment( label, HPos.LEFT );
-		setValignment( label, VPos.BOTTOM );
-		add( label, 0, gridRow );
-		gridRow ++;
-
-		ctrl = getJavaFXEditorTenantId();
 		setHalignment( ctrl, HPos.LEFT );
 		add( ctrl, 0, gridRow );
 		gridRow ++;
@@ -270,28 +239,6 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 		javafxEditorSecTentGrpId = value;
 	}
 
-	public TenantIdCFLabel getJavaFXLabelTenantId() {
-		if( javafxLabelTenantId == null ) {
-			javafxLabelTenantId = new TenantIdCFLabel();
-		}
-		return( javafxLabelTenantId );
-	}
-
-	public void setJavaFXLabelTenantId( TenantIdCFLabel value ) {
-		javafxLabelTenantId = value;
-	}
-
-	public TenantIdEditor getJavaFXEditorTenantId() {
-		if( javafxEditorTenantId == null ) {
-			javafxEditorTenantId = new TenantIdEditor();
-		}
-		return( javafxEditorTenantId );
-	}
-
-	public void setJavaFXEditorTenantId( TenantIdEditor value ) {
-		javafxEditorTenantId = value;
-	}
-
 	public NameCFLabel getJavaFXLabelName() {
 		if( javafxLabelName == null ) {
 			javafxLabelName = new NameCFLabel();
@@ -328,13 +275,6 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 		}
 
 		if( popObj == null ) {
-			getJavaFXEditorTenantId().setDbKeyHash256Value( null );
-		}
-		else {
-			getJavaFXEditorTenantId().setDbKeyHash256Value( popObj.getRequiredTenantId() );
-		}
-
-		if( popObj == null ) {
 			getJavaFXEditorName().setStringValue( null );
 		}
 		else {
@@ -359,8 +299,6 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 				Inz.s("cflibjavafx.common.PaneIsUnfocusedOrNotEditing"),
 				Inz.x("cflibjavafx.common.PaneIsUnfocusedOrNotEditing") );
 		}
-
-		editObj.setRequiredTenantId( getJavaFXEditorTenantId().getDbKeyHash256Value() );
 
 		if( getJavaFXEditorName().getStringValue() == null ) {
 			editObj.setRequiredName( "" );
@@ -655,9 +593,6 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 		}
 		if( javafxEditorSecTentGrpId != null ) {
 			javafxEditorSecTentGrpId.setDisable( true );
-		}
-		if( javafxEditorTenantId != null ) {
-			javafxEditorTenantId.setDisable( ! isEditing );
 		}
 		if( javafxEditorName != null ) {
 			javafxEditorName.setDisable( ! isEditing );

@@ -68,7 +68,6 @@ implements ICFSecJavaFXSecTentGrpPaneList
 	protected Collection<ICFSecSecTentGrpObj> javafxDataCollection = null;
 	protected ObservableList<ICFSecSecTentGrpObj> observableListOfSecTentGrp = null;
 	protected TableColumn<ICFSecSecTentGrpObj, CFLibDbKeyHash256> tableColumnSecTentGrpId = null;
-	protected TableColumn<ICFSecSecTentGrpObj, CFLibDbKeyHash256> tableColumnTenantId = null;
 	protected TableColumn<ICFSecSecTentGrpObj, String> tableColumnName = null;
 	protected TableView<ICFSecSecTentGrpObj> dataTable = null;
 	protected CFHBox hboxMenu = null;
@@ -139,29 +138,6 @@ implements ICFSecJavaFXSecTentGrpPaneList
 			}
 		});
 		dataTable.getColumns().add( tableColumnSecTentGrpId );
-		tableColumnTenantId = new TableColumn<ICFSecSecTentGrpObj,CFLibDbKeyHash256>( "Tenant Id" );
-		tableColumnTenantId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecTentGrpObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
-			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecTentGrpObj, CFLibDbKeyHash256> p ) {
-				ICFSecSecTentGrpObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					CFLibDbKeyHash256 value = obj.getRequiredTenantId();
-					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnTenantId.setCellFactory( new Callback<TableColumn<ICFSecSecTentGrpObj,CFLibDbKeyHash256>,TableCell<ICFSecSecTentGrpObj,CFLibDbKeyHash256>>() {
-			@Override public TableCell<ICFSecSecTentGrpObj,CFLibDbKeyHash256> call(
-				TableColumn<ICFSecSecTentGrpObj,CFLibDbKeyHash256> arg)
-			{
-				return new CFDbKeyHash256TableCell<ICFSecSecTentGrpObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnTenantId );
 		tableColumnName = new TableColumn<ICFSecSecTentGrpObj,String>( "Name" );
 		tableColumnName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecTentGrpObj,String>,ObservableValue<String> >() {
 			public ObservableValue<String> call( CellDataFeatures<ICFSecSecTentGrpObj, String> p ) {

@@ -54,6 +54,7 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	protected ScrollPane attrScrollPane = null;
 	protected CFGridPane attrPane = null;
+	protected CFTabPane eltTabPane = null;
 
 	public CFSecJavaFXSecTentGrpViewEditPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecTentGrpObj argFocus ) {
 		super();
@@ -81,8 +82,10 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 		attrScrollPane.setHbarPolicy( ScrollBarPolicy.NEVER );
 		attrScrollPane.setVbarPolicy( ScrollBarPolicy.AS_NEEDED );
 		attrScrollPane.setContent( attrPane );
+		eltTabPane = argSchema.getSecTentGrpFactory().newEltTabPane( cfFormManager, argFocus );
 		setOrientation( Orientation.VERTICAL );
 		getItems().add( attrScrollPane );
+		getItems().add( eltTabPane );
 	}
 
 	public ICFFormManager getCFFormManager() {
@@ -119,6 +122,9 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 		if( attrPane != null ) {
 			attrPane.setJavaFXFocus( value );
 		}
+		if( eltTabPane != null ) {
+			eltTabPane.setJavaFXFocus( value );
+		}
 	}
 
 	public void setJavaFXFocusAsSecTentGrp( ICFSecSecTentGrpObj value ) {
@@ -137,10 +143,12 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 		try {
 			super.setPaneMode( value );
 			((ICFSecJavaFXSecTentGrpPaneCommon)attrPane).setPaneMode( value );
+			((ICFSecJavaFXSecTentGrpPaneCommon)eltTabPane).setPaneMode( value );
 		}
 		catch( Throwable t ) {
 			super.setPaneMode( oldMode );
 			((ICFSecJavaFXSecTentGrpPaneCommon)attrPane).setPaneMode( oldMode );
+			((ICFSecJavaFXSecTentGrpPaneCommon)eltTabPane).setPaneMode( oldMode );
 			throw t;
 		}
 	}
