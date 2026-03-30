@@ -65,7 +65,7 @@ implements ICFSecJavaFXSecUserPasswordFactory
 	}
 
 	public CFBorderPane newListPane( ICFFormManager formManager,
-		ICFLibAnyObj argContainer,
+		ICFSecSecUserObj argContainer,
 		ICFSecSecUserPasswordObj argFocus,
 		Collection<ICFSecSecUserPasswordObj> argDataCollection,
 		ICFRefreshCallback refreshCallback,
@@ -83,7 +83,7 @@ implements ICFSecJavaFXSecUserPasswordFactory
 
 	public CFBorderPane newPickerPane( ICFFormManager formManager,
 		ICFSecSecUserPasswordObj argFocus,
-		ICFLibAnyObj argContainer,
+		ICFSecSecUserObj argContainer,
 		Collection<ICFSecSecUserPasswordObj> argDataCollection,
 		ICFSecJavaFXSecUserPasswordChosen whenChosen )
 	{
@@ -116,14 +116,9 @@ implements ICFSecJavaFXSecUserPasswordFactory
 		return( retnew );
 	}
 
-	public CFBorderPane newFinderForm( ICFFormManager formManager ) {
-		CFSecJavaFXSecUserPasswordFinderForm retnew = new CFSecJavaFXSecUserPasswordFinderForm( formManager, javafxSchema );
-		return( retnew );
-	}
-
 	public CFBorderPane newPickerForm( ICFFormManager formManager,
 		ICFSecSecUserPasswordObj argFocus,
-		ICFLibAnyObj argContainer,
+		ICFSecSecUserObj argContainer,
 		Collection<ICFSecSecUserPasswordObj> argDataCollection,
 		ICFSecJavaFXSecUserPasswordChosen whenChosen )
 	{

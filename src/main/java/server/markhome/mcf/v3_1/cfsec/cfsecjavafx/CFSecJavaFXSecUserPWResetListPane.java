@@ -1,4 +1,4 @@
-// Description: Java 25 JavaFX List of Obj Pane implementation for SecUserPWHistory.
+// Description: Java 25 JavaFX List of Obj Pane implementation for SecUserPWReset.
 
 /*
  *	server.markhome.mcf.CFSec
@@ -54,37 +54,36 @@ import server.markhome.mcf.v3_1.cfsec.cfsec.*;
 import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 
 /**
- *	CFSecJavaFXSecUserPWHistoryListPane JavaFX List of Obj Pane implementation
- *	for SecUserPWHistory.
+ *	CFSecJavaFXSecUserPWResetListPane JavaFX List of Obj Pane implementation
+ *	for SecUserPWReset.
  */
-public class CFSecJavaFXSecUserPWHistoryListPane
+public class CFSecJavaFXSecUserPWResetListPane
 extends CFBorderPane
-implements ICFSecJavaFXSecUserPWHistoryPaneList
+implements ICFSecJavaFXSecUserPWResetPaneList
 {
-	public static String S_FormName = "List Security User Password History";
+	public static String S_FormName = "List Password Reset";
 	protected ICFSecJavaFXSchema javafxSchema = null;
-	protected ICFSecJavaFXSecUserPWHistoryPageCallback pageCallback;
+	protected ICFSecJavaFXSecUserPWResetPageCallback pageCallback;
 	protected CFButton buttonRefresh = null;
 	protected CFButton buttonMoreData = null;
 	protected boolean endOfData = true;
-	protected ObservableList<ICFSecSecUserPWHistoryObj> observableListOfSecUserPWHistory = null;
+	protected ObservableList<ICFSecSecUserPWResetObj> observableListOfSecUserPWReset = null;
 	protected ScrollPane scrollMenu = null;
 	protected CFHBox hboxMenu = null;
-	protected CFButton buttonAddSecUserPWHistory = null;
+	protected CFButton buttonAddSecUserPWReset = null;
 	protected CFButton buttonViewSelected = null;
 	protected CFButton buttonEditSelected = null;
 	protected CFButton buttonDeleteSelected = null;
-	protected TableView<ICFSecSecUserPWHistoryObj> dataTable = null;
-	protected TableColumn<ICFSecSecUserPWHistoryObj, CFLibDbKeyHash256> tableColumnSecUserId = null;
-	protected TableColumn<ICFSecSecUserPWHistoryObj, LocalDateTime> tableColumnPWSetStamp = null;
-	protected TableColumn<ICFSecSecUserPWHistoryObj, LocalDateTime> tableColumnPWReplacedStamp = null;
-	protected TableColumn<ICFSecSecUserPWHistoryObj, String> tableColumnPasswordHash = null;
+	protected TableView<ICFSecSecUserPWResetObj> dataTable = null;
+	protected TableColumn<ICFSecSecUserPWResetObj, String> tableColumnSentToEMailAddr = null;
+	protected TableColumn<ICFSecSecUserPWResetObj, CFLibUuid6> tableColumnPasswordResetUuid6 = null;
+	protected TableColumn<ICFSecSecUserPWResetObj, Boolean> tableColumnNewAccount = null;
 
 	public final String S_ColumnNames[] = { "Name" };
 	protected ICFFormManager cfFormManager = null;
 	protected boolean javafxIsInitializing = true;
 	protected boolean javafxSortByChain = false;
-	protected ICFLibAnyObj javafxContainer = null;
+	protected ICFSecSecUserObj javafxContainer = null;
 	protected ICFRefreshCallback javafxRefreshCallback = null;
 	class ViewEditClosedCallback implements ICFFormClosedCallback {
 		public ViewEditClosedCallback() {
@@ -135,11 +134,11 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 	}
 
 
-	public CFSecJavaFXSecUserPWHistoryListPane( ICFFormManager formManager,
+	public CFSecJavaFXSecUserPWResetListPane( ICFFormManager formManager,
 		ICFSecJavaFXSchema argSchema,
-		ICFLibAnyObj argContainer,
-		ICFSecSecUserPWHistoryObj argFocus,
-		ICFSecJavaFXSecUserPWHistoryPageCallback argPageCallback,
+		ICFSecSecUserObj argContainer,
+		ICFSecSecUserPWResetObj argFocus,
+		ICFSecJavaFXSecUserPWResetPageCallback argPageCallback,
 		ICFRefreshCallback refreshCallback,
 		boolean sortByChain )
 	{
@@ -166,104 +165,82 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 		javafxRefreshCallback = refreshCallback;
 		javafxSortByChain = sortByChain;
 		pageCallback = argPageCallback;
-		dataTable = new TableView<ICFSecSecUserPWHistoryObj>();
-		tableColumnSecUserId = new TableColumn<ICFSecSecUserPWHistoryObj,CFLibDbKeyHash256>( "Security User Id" );
-		tableColumnSecUserId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPWHistoryObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
-			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecUserPWHistoryObj, CFLibDbKeyHash256> p ) {
-				ICFSecSecUserPWHistoryObj obj = p.getValue();
+		dataTable = new TableView<ICFSecSecUserPWResetObj>();
+		tableColumnSentToEMailAddr = new TableColumn<ICFSecSecUserPWResetObj,String>( "Sent To EMail Address" );
+		tableColumnSentToEMailAddr.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPWResetObj,String>,ObservableValue<String> >() {
+			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserPWResetObj, String> p ) {
+				ICFSecSecUserPWResetObj obj = p.getValue();
 				if( obj == null ) {
 					return( null );
 				}
 				else {
-					CFLibDbKeyHash256 value = obj.getRequiredSecUserId();
-					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnSecUserId.setCellFactory( new Callback<TableColumn<ICFSecSecUserPWHistoryObj,CFLibDbKeyHash256>,TableCell<ICFSecSecUserPWHistoryObj,CFLibDbKeyHash256>>() {
-			@Override public TableCell<ICFSecSecUserPWHistoryObj,CFLibDbKeyHash256> call(
-				TableColumn<ICFSecSecUserPWHistoryObj,CFLibDbKeyHash256> arg)
-			{
-				return new CFDbKeyHash256TableCell<ICFSecSecUserPWHistoryObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnSecUserId );
-		tableColumnPWSetStamp = new TableColumn<ICFSecSecUserPWHistoryObj,LocalDateTime>( "Password set at" );
-		tableColumnPWSetStamp.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPWHistoryObj,LocalDateTime>,ObservableValue<LocalDateTime> >() {
-			public ObservableValue<LocalDateTime> call( CellDataFeatures<ICFSecSecUserPWHistoryObj, LocalDateTime> p ) {
-				ICFSecSecUserPWHistoryObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					LocalDateTime value = obj.getRequiredPWSetStamp();
-					ReadOnlyObjectWrapper<LocalDateTime> observable = new ReadOnlyObjectWrapper<LocalDateTime>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnPWSetStamp.setCellFactory( new Callback<TableColumn<ICFSecSecUserPWHistoryObj,LocalDateTime>,TableCell<ICFSecSecUserPWHistoryObj,LocalDateTime>>() {
-			@Override public TableCell<ICFSecSecUserPWHistoryObj,LocalDateTime> call(
-				TableColumn<ICFSecSecUserPWHistoryObj,LocalDateTime> arg)
-			{
-				return new CFTimestampTableCell<ICFSecSecUserPWHistoryObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnPWSetStamp );
-		tableColumnPWReplacedStamp = new TableColumn<ICFSecSecUserPWHistoryObj,LocalDateTime>( "Password set at" );
-		tableColumnPWReplacedStamp.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPWHistoryObj,LocalDateTime>,ObservableValue<LocalDateTime> >() {
-			public ObservableValue<LocalDateTime> call( CellDataFeatures<ICFSecSecUserPWHistoryObj, LocalDateTime> p ) {
-				ICFSecSecUserPWHistoryObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					LocalDateTime value = obj.getRequiredPWReplacedStamp();
-					ReadOnlyObjectWrapper<LocalDateTime> observable = new ReadOnlyObjectWrapper<LocalDateTime>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnPWReplacedStamp.setCellFactory( new Callback<TableColumn<ICFSecSecUserPWHistoryObj,LocalDateTime>,TableCell<ICFSecSecUserPWHistoryObj,LocalDateTime>>() {
-			@Override public TableCell<ICFSecSecUserPWHistoryObj,LocalDateTime> call(
-				TableColumn<ICFSecSecUserPWHistoryObj,LocalDateTime> arg)
-			{
-				return new CFTimestampTableCell<ICFSecSecUserPWHistoryObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnPWReplacedStamp );
-		tableColumnPasswordHash = new TableColumn<ICFSecSecUserPWHistoryObj,String>( "Password Hash" );
-		tableColumnPasswordHash.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPWHistoryObj,String>,ObservableValue<String> >() {
-			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserPWHistoryObj, String> p ) {
-				ICFSecSecUserPWHistoryObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					String value = obj.getRequiredPasswordHash();
+					String value = obj.getRequiredSentToEMailAddr();
 					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
 					observable.setValue( value );
 					return( observable );
 				}
 			}
 		});
-		tableColumnPasswordHash.setCellFactory( new Callback<TableColumn<ICFSecSecUserPWHistoryObj,String>,TableCell<ICFSecSecUserPWHistoryObj,String>>() {
-			@Override public TableCell<ICFSecSecUserPWHistoryObj,String> call(
-				TableColumn<ICFSecSecUserPWHistoryObj,String> arg)
+		tableColumnSentToEMailAddr.setCellFactory( new Callback<TableColumn<ICFSecSecUserPWResetObj,String>,TableCell<ICFSecSecUserPWResetObj,String>>() {
+			@Override public TableCell<ICFSecSecUserPWResetObj,String> call(
+				TableColumn<ICFSecSecUserPWResetObj,String> arg)
 			{
-				return new CFStringTableCell<ICFSecSecUserPWHistoryObj>();
+				return new CFStringTableCell<ICFSecSecUserPWResetObj>();
 			}
 		});
-		dataTable.getColumns().add( tableColumnPasswordHash );
+		dataTable.getColumns().add( tableColumnSentToEMailAddr );
+		tableColumnPasswordResetUuid6 = new TableColumn<ICFSecSecUserPWResetObj,CFLibUuid6>( "Password Reset UUID6" );
+		tableColumnPasswordResetUuid6.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPWResetObj,CFLibUuid6>,ObservableValue<CFLibUuid6> >() {
+			public ObservableValue<CFLibUuid6> call( CellDataFeatures<ICFSecSecUserPWResetObj, CFLibUuid6> p ) {
+				ICFSecSecUserPWResetObj obj = p.getValue();
+				if( obj == null ) {
+					return( null );
+				}
+				else {
+					CFLibUuid6 value = obj.getRequiredPasswordResetUuid6();
+					ReadOnlyObjectWrapper<CFLibUuid6> observable = new ReadOnlyObjectWrapper<CFLibUuid6>();
+					observable.setValue( value );
+					return( observable );
+				}
+			}
+		});
+		tableColumnPasswordResetUuid6.setCellFactory( new Callback<TableColumn<ICFSecSecUserPWResetObj,CFLibUuid6>,TableCell<ICFSecSecUserPWResetObj,CFLibUuid6>>() {
+			@Override public TableCell<ICFSecSecUserPWResetObj,CFLibUuid6> call(
+				TableColumn<ICFSecSecUserPWResetObj,CFLibUuid6> arg)
+			{
+				return new CFUuid6TableCell<ICFSecSecUserPWResetObj>();
+			}
+		});
+		dataTable.getColumns().add( tableColumnPasswordResetUuid6 );
+		tableColumnNewAccount = new TableColumn<ICFSecSecUserPWResetObj,Boolean>( "Password reset is for new account?" );
+		tableColumnNewAccount.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPWResetObj,Boolean>,ObservableValue<Boolean> >() {
+			public ObservableValue<Boolean> call( CellDataFeatures<ICFSecSecUserPWResetObj, Boolean> p ) {
+				ICFSecSecUserPWResetObj obj = p.getValue();
+				if( obj == null ) {
+					return( null );
+				}
+				else {
+					boolean value = obj.getRequiredNewAccount();
+					Boolean wrapped = Boolean.valueOf( value );
+					ReadOnlyObjectWrapper<Boolean> observable = new ReadOnlyObjectWrapper<Boolean>();
+					observable.setValue( wrapped );
+					return( observable );
+				}
+			}
+		});
+		tableColumnNewAccount.setCellFactory( new Callback<TableColumn<ICFSecSecUserPWResetObj,Boolean>,TableCell<ICFSecSecUserPWResetObj,Boolean>>() {
+			@Override public TableCell<ICFSecSecUserPWResetObj,Boolean> call(
+				TableColumn<ICFSecSecUserPWResetObj,Boolean> arg)
+			{
+				return new CFBoolTableCell<ICFSecSecUserPWResetObj>();
+			}
+		});
+		dataTable.getColumns().add( tableColumnNewAccount );
 		dataTable.getSelectionModel().selectedItemProperty().addListener(
-			new ChangeListener<ICFSecSecUserPWHistoryObj>() {
-				@Override public void changed( ObservableValue<? extends ICFSecSecUserPWHistoryObj> observable,
-					ICFSecSecUserPWHistoryObj oldValue,
-					ICFSecSecUserPWHistoryObj newValue )
+			new ChangeListener<ICFSecSecUserPWResetObj>() {
+				@Override public void changed( ObservableValue<? extends ICFSecSecUserPWResetObj> observable,
+					ICFSecSecUserPWResetObj oldValue,
+					ICFSecSecUserPWResetObj newValue )
 				{
 					setJavaFXFocus( newValue );
 				}
@@ -278,8 +255,8 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 		setTop( scrollMenu );
 		setCenter( dataTable );
 		javafxIsInitializing = false;
-		if( observableListOfSecUserPWHistory != null ) {
-			dataTable.setItems( observableListOfSecUserPWHistory );
+		if( observableListOfSecUserPWReset != null ) {
+			dataTable.setItems( observableListOfSecUserPWReset );
 		}
 		adjustListButtons();
 	}
@@ -310,7 +287,7 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 
 	public void setJavaFXFocus( ICFLibAnyObj value ) {
 		final String S_ProcName = "setJavaFXFocus";
-		if( ( value == null ) || ( value instanceof ICFSecSecUserPWHistoryObj ) ) {
+		if( ( value == null ) || ( value instanceof ICFSecSecUserPWResetObj ) ) {
 			super.setJavaFXFocus( value );
 		}
 		else {
@@ -318,26 +295,26 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 				S_ProcName,
 				"value",
 				value,
-				"ICFSecSecUserPWHistoryObj" );
+				"ICFSecSecUserPWResetObj" );
 		}
 		adjustListButtons();
 	}
 
-	public ICFSecSecUserPWHistoryObj getJavaFXFocusAsSecUserPWHistory() {
-		return( (ICFSecSecUserPWHistoryObj)getJavaFXFocus() );
+	public ICFSecSecUserPWResetObj getJavaFXFocusAsSecUserPWReset() {
+		return( (ICFSecSecUserPWResetObj)getJavaFXFocus() );
 	}
 
-	public void setJavaFXFocusAsSecUserPWHistory( ICFSecSecUserPWHistoryObj value ) {
+	public void setJavaFXFocusAsSecUserPWReset( ICFSecSecUserPWResetObj value ) {
 		setJavaFXFocus( value );
 	}
 
-	public class SecUserPWHistoryByQualNameComparator
-	implements Comparator<ICFSecSecUserPWHistoryObj>
+	public class SecUserPWResetByQualNameComparator
+	implements Comparator<ICFSecSecUserPWResetObj>
 	{
-		public SecUserPWHistoryByQualNameComparator() {
+		public SecUserPWResetByQualNameComparator() {
 		}
 
-		public int compare( ICFSecSecUserPWHistoryObj lhs, ICFSecSecUserPWHistoryObj rhs ) {
+		public int compare( ICFSecSecUserPWResetObj lhs, ICFSecSecUserPWResetObj rhs ) {
 			if( lhs == null ) {
 				if( rhs == null ) {
 					return( 0 );
@@ -370,13 +347,13 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 		}
 	}
 
-	protected SecUserPWHistoryByQualNameComparator compareSecUserPWHistoryByQualName = new SecUserPWHistoryByQualNameComparator();
+	protected SecUserPWResetByQualNameComparator compareSecUserPWResetByQualName = new SecUserPWResetByQualNameComparator();
 
-	public Collection<ICFSecSecUserPWHistoryObj> getJavaFXDataCollection() {
+	public Collection<ICFSecSecUserPWResetObj> getJavaFXDataCollection() {
 		return( null );
 	}
 
-	public void setJavaFXDataCollection( Collection<ICFSecSecUserPWHistoryObj> value ) {
+	public void setJavaFXDataCollection( Collection<ICFSecSecUserPWResetObj> value ) {
 		// Use page data instead
 	}
 
@@ -431,32 +408,30 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 				@Override public void handle( ActionEvent e ) {
 					final String S_ProcName = "handle";
 					try {
-						ICFSecSecUserPWHistoryObj lastObj = null;
-						if( ( observableListOfSecUserPWHistory != null ) && ( observableListOfSecUserPWHistory.size() > 0 ) ) {
-							lastObj = observableListOfSecUserPWHistory.get( observableListOfSecUserPWHistory.size() - 1 );
+						ICFSecSecUserPWResetObj lastObj = null;
+						if( ( observableListOfSecUserPWReset != null ) && ( observableListOfSecUserPWReset.size() > 0 ) ) {
+							lastObj = observableListOfSecUserPWReset.get( observableListOfSecUserPWReset.size() - 1 );
 						}
-						List<ICFSecSecUserPWHistoryObj> page;
+						List<ICFSecSecUserPWResetObj> page;
 						if( lastObj != null ) {
-							page = pageCallback.pageData( lastObj.getRequiredSecUserId(),
-							lastObj.getRequiredPWSetStamp() );
+							page = pageCallback.pageData( lastObj.getRequiredSecUserId() );
 						}
 						else {
-							page = pageCallback.pageData( null,
-							null );
+							page = pageCallback.pageData( null );
 						}
-						Iterator<ICFSecSecUserPWHistoryObj> iter = page.iterator();
+						Iterator<ICFSecSecUserPWResetObj> iter = page.iterator();
 						while( iter.hasNext() ) {
-							observableListOfSecUserPWHistory.add( iter.next() );
+							observableListOfSecUserPWReset.add( iter.next() );
 						}
 						if( page.size() < 25 ) {
-							observableListOfSecUserPWHistory.sort( compareSecUserPWHistoryByQualName );
+							observableListOfSecUserPWReset.sort( compareSecUserPWResetByQualName );
 							endOfData = true;
 						}
 						else {
 							endOfData = false;
 						}
 						if( dataTable != null ) {
-							dataTable.setItems( observableListOfSecUserPWHistory );
+							dataTable.setItems( observableListOfSecUserPWReset );
 							// Hack from stackoverflow to fix JavaFX TableView refresh issue
 							((TableColumn)dataTable.getColumns().get(0)).setVisible( false );
 							((TableColumn)dataTable.getColumns().get(0)).setVisible( true );
@@ -470,24 +445,32 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 			});
 			hboxMenu.getChildren().add( buttonMoreData );
 
-			buttonAddSecUserPWHistory = new CFButton();
-			buttonAddSecUserPWHistory.setMinWidth( 200 );
-			buttonAddSecUserPWHistory.setText( "Add Security User Password History" );
-			buttonAddSecUserPWHistory.setOnAction( new EventHandler<ActionEvent>() {
+			buttonAddSecUserPWReset = new CFButton();
+			buttonAddSecUserPWReset.setMinWidth( 200 );
+			buttonAddSecUserPWReset.setText( "Add Password Reset" );
+			buttonAddSecUserPWReset.setOnAction( new EventHandler<ActionEvent>() {
 				@Override public void handle( ActionEvent e ) {
 					final String S_ProcName = "handle";
 					try {
 						ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
-						ICFSecSecUserPWHistoryObj obj = (ICFSecSecUserPWHistoryObj)schemaObj.getSecUserPWHistoryTableObj().newInstance();
-						ICFSecSecUserPWHistoryEditObj edit = (ICFSecSecUserPWHistoryEditObj)( obj.beginEdit() );
+						ICFSecSecUserPWResetObj obj = (ICFSecSecUserPWResetObj)schemaObj.getSecUserPWResetTableObj().newInstance();
+						ICFSecSecUserPWResetEditObj edit = (ICFSecSecUserPWResetEditObj)( obj.beginEdit() );
 						if( edit == null ) {
 							throw new CFLibNullArgumentException( getClass(),
 								S_ProcName,
 								0,
 								"edit" );
 						}
-						CFBorderPane frame = javafxSchema.getSecUserPWHistoryFactory().newAddForm( cfFormManager, obj, getViewEditClosedCallback(), true );
-						ICFSecJavaFXSecUserPWHistoryPaneCommon jpanelCommon = (ICFSecJavaFXSecUserPWHistoryPaneCommon)frame;
+								ICFSecSecUserObj container = (ICFSecSecUserObj)( getJavaFXContainer() );
+								if( container == null ) {
+									throw new CFLibNullArgumentException( getClass(),
+										S_ProcName,
+										0,
+										"JavaFXContainer" );
+								}
+								edit.setRequiredContainerUser( container );
+						CFBorderPane frame = javafxSchema.getSecUserPWResetFactory().newAddForm( cfFormManager, obj, getViewEditClosedCallback(), true );
+						ICFSecJavaFXSecUserPWResetPaneCommon jpanelCommon = (ICFSecJavaFXSecUserPWResetPaneCommon)frame;
 						jpanelCommon.setJavaFXFocus( obj );
 						jpanelCommon.setPaneMode( CFPane.PaneMode.Add );
 						cfFormManager.pushForm( frame );
@@ -497,7 +480,7 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 					}
 				}
 			});
-			hboxMenu.getChildren().add( buttonAddSecUserPWHistory );
+			hboxMenu.getChildren().add( buttonAddSecUserPWReset );
 			buttonViewSelected = new CFButton();
 			buttonViewSelected.setMinWidth( 200 );
 			buttonViewSelected.setText( "View Selected" );
@@ -512,14 +495,14 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 								0,
 								"schemaObj" );
 						}
-						ICFSecSecUserPWHistoryObj selectedInstance = getJavaFXFocusAsSecUserPWHistory();
+						ICFSecSecUserPWResetObj selectedInstance = getJavaFXFocusAsSecUserPWReset();
 						if( selectedInstance != null ) {
 							int classCode = selectedInstance.getClassCode();
 							ICFSecSchema.ClassMapEntry entry = ICFSecSchema.getClassMapByRuntimeClassCode(classCode);
 							int backingClassCode = entry.getBackingClassCode();
-							if( entry.getSchemaName().equals("CFSec") && backingClassCode == ICFSecSecUserPWHistory.CLASS_CODE ) {
-								CFBorderPane frame = javafxSchema.getSecUserPWHistoryFactory().newViewEditForm( cfFormManager, selectedInstance, getViewEditClosedCallback(), false );
-								((ICFSecJavaFXSecUserPWHistoryPaneCommon)frame).setPaneMode( CFPane.PaneMode.View );
+							if( entry.getSchemaName().equals("CFSec") && backingClassCode == ICFSecSecUserPWReset.CLASS_CODE ) {
+								CFBorderPane frame = javafxSchema.getSecUserPWResetFactory().newViewEditForm( cfFormManager, selectedInstance, getViewEditClosedCallback(), false );
+								((ICFSecJavaFXSecUserPWResetPaneCommon)frame).setPaneMode( CFPane.PaneMode.View );
 								cfFormManager.pushForm( frame );
 							}
 							else {
@@ -527,7 +510,7 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 									S_ProcName,
 									"selectedInstance",
 									selectedInstance,
-									"ICFSecSecUserPWHistoryObj" );
+									"ICFSecSecUserPWResetObj" );
 							}
 						}
 					}
@@ -552,14 +535,14 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 								0,
 								"schemaObj" );
 						}
-						ICFSecSecUserPWHistoryObj selectedInstance = getJavaFXFocusAsSecUserPWHistory();
+						ICFSecSecUserPWResetObj selectedInstance = getJavaFXFocusAsSecUserPWReset();
 						if( selectedInstance != null ) {
 							int classCode = selectedInstance.getClassCode();
 							ICFSecSchema.ClassMapEntry entry = ICFSecSchema.getClassMapByRuntimeClassCode(classCode);
 							int backingClassCode = entry.getBackingClassCode();
-							if( entry.getSchemaName().equals("CFSec") && backingClassCode == ICFSecSecUserPWHistory.CLASS_CODE ) {
-								CFBorderPane frame = javafxSchema.getSecUserPWHistoryFactory().newViewEditForm( cfFormManager, selectedInstance, getViewEditClosedCallback(), false );
-								((ICFSecJavaFXSecUserPWHistoryPaneCommon)frame).setPaneMode( CFPane.PaneMode.Edit );
+							if( entry.getSchemaName().equals("CFSec") && backingClassCode == ICFSecSecUserPWReset.CLASS_CODE ) {
+								CFBorderPane frame = javafxSchema.getSecUserPWResetFactory().newViewEditForm( cfFormManager, selectedInstance, getViewEditClosedCallback(), false );
+								((ICFSecJavaFXSecUserPWResetPaneCommon)frame).setPaneMode( CFPane.PaneMode.Edit );
 								cfFormManager.pushForm( frame );
 							}
 							else {
@@ -567,7 +550,7 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 									S_ProcName,
 									"selectedInstance",
 									selectedInstance,
-									"ICFSecSecUserPWHistoryObj" );
+									"ICFSecSecUserPWResetObj" );
 							}
 						}
 					}
@@ -592,14 +575,14 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 								0,
 								"schemaObj" );
 						}
-						ICFSecSecUserPWHistoryObj selectedInstance = getJavaFXFocusAsSecUserPWHistory();
+						ICFSecSecUserPWResetObj selectedInstance = getJavaFXFocusAsSecUserPWReset();
 						if( selectedInstance != null ) {
 							int classCode = selectedInstance.getClassCode();
 							ICFSecSchema.ClassMapEntry entry = ICFSecSchema.getClassMapByRuntimeClassCode(classCode);
 							int backingClassCode = entry.getBackingClassCode();
-							if( entry.getSchemaName().equals("CFSec") && backingClassCode == ICFSecSecUserPWHistory.CLASS_CODE ) {
-								CFBorderPane frame = javafxSchema.getSecUserPWHistoryFactory().newAskDeleteForm( cfFormManager, selectedInstance, getDeleteCallback() );
-								((ICFSecJavaFXSecUserPWHistoryPaneCommon)frame).setPaneMode( CFPane.PaneMode.View );
+							if( entry.getSchemaName().equals("CFSec") && backingClassCode == ICFSecSecUserPWReset.CLASS_CODE ) {
+								CFBorderPane frame = javafxSchema.getSecUserPWResetFactory().newAskDeleteForm( cfFormManager, selectedInstance, getDeleteCallback() );
+								((ICFSecJavaFXSecUserPWResetPaneCommon)frame).setPaneMode( CFPane.PaneMode.View );
 								cfFormManager.pushForm( frame );
 							}
 							else {
@@ -607,7 +590,7 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 									S_ProcName,
 									"selectedInstance",
 									selectedInstance,
-									"ICFSecSecUserPWHistoryObj" );
+									"ICFSecSecUserPWResetObj" );
 							}
 						}
 					}
@@ -622,26 +605,25 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 		return( hboxMenu );
 	}
 
-	public ICFLibAnyObj getJavaFXContainer() {
+	public ICFSecSecUserObj getJavaFXContainer() {
 		return( javafxContainer );
 	}
 
-	public void setJavaFXContainer( ICFLibAnyObj value ) {
+	public void setJavaFXContainer( ICFSecSecUserObj value ) {
 		javafxContainer = value;
 	}
 
 	public void refreshMe() {
 		final String S_ProcName = "refreshMe";
-		observableListOfSecUserPWHistory = FXCollections.observableArrayList();
+		observableListOfSecUserPWReset = FXCollections.observableArrayList();
 		if( javafxContainer != null ) {
-			List<ICFSecSecUserPWHistoryObj> page = pageCallback.pageData( null,
-							null );
-			Iterator<ICFSecSecUserPWHistoryObj> iter = page.iterator();
+			List<ICFSecSecUserPWResetObj> page = pageCallback.pageData( null );
+			Iterator<ICFSecSecUserPWResetObj> iter = page.iterator();
 			while( iter.hasNext() ) {
-				observableListOfSecUserPWHistory.add( iter.next() );
+				observableListOfSecUserPWReset.add( iter.next() );
 			}
 			if( page.size() < 25 ) {
-				observableListOfSecUserPWHistory.sort( compareSecUserPWHistoryByQualName );
+				observableListOfSecUserPWReset.sort( compareSecUserPWResetByQualName );
 				endOfData = true;
 			}
 			else {
@@ -652,7 +634,7 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 			endOfData = true;
 		}
 		if( dataTable != null ) {
-			dataTable.setItems( observableListOfSecUserPWHistory );
+			dataTable.setItems( observableListOfSecUserPWReset );
 			// Hack from stackoverflow to fix JavaFX TableView refresh issue
 			((TableColumn)dataTable.getColumns().get(0)).setVisible( false );
 			((TableColumn)dataTable.getColumns().get(0)).setVisible( true );
@@ -665,7 +647,7 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 		boolean inEditState;
 		boolean allowAdds;
 		boolean inAddMode = false;
-		ICFSecSecUserPWHistoryObj selectedObj = getJavaFXFocusAsSecUserPWHistory();
+		ICFSecSecUserPWResetObj selectedObj = getJavaFXFocusAsSecUserPWReset();
 		CFPane.PaneMode mode = getPaneMode();
 		if( mode == CFPane.PaneMode.Edit ) {
 			inEditState = true;
@@ -718,8 +700,8 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 		if( buttonDeleteSelected != null ) {
 			buttonDeleteSelected.setDisable( ! enableState );
 		}
-		if( buttonAddSecUserPWHistory != null ) {
-			buttonAddSecUserPWHistory.setDisable( ! allowAdds );
+		if( buttonAddSecUserPWReset != null ) {
+			buttonAddSecUserPWReset.setDisable( ! allowAdds );
 		}
 
 	}

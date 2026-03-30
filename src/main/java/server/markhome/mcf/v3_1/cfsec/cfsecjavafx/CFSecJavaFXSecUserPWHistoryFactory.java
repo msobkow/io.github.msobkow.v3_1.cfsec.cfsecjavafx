@@ -67,7 +67,7 @@ implements ICFSecJavaFXSecUserPWHistoryFactory
 	public CFBorderPane newListPane( ICFFormManager formManager,
 		ICFLibAnyObj argContainer,
 		ICFSecSecUserPWHistoryObj argFocus,
-		Collection<ICFSecSecUserPWHistoryObj> argDataCollection,
+		ICFSecJavaFXSecUserPWHistoryPageCallback argPageCallback,
 		ICFRefreshCallback refreshCallback,
 		boolean sortByChain )
 	{
@@ -75,7 +75,7 @@ implements ICFSecJavaFXSecUserPWHistoryFactory
 			javafxSchema,
 			argContainer,
 			argFocus,
-			argDataCollection,
+			argPageCallback,
 			refreshCallback,
 			sortByChain );
 		return( retnew );
@@ -84,14 +84,14 @@ implements ICFSecJavaFXSecUserPWHistoryFactory
 	public CFBorderPane newPickerPane( ICFFormManager formManager,
 		ICFSecSecUserPWHistoryObj argFocus,
 		ICFLibAnyObj argContainer,
-		Collection<ICFSecSecUserPWHistoryObj> argDataCollection,
+		ICFSecJavaFXSecUserPWHistoryPageCallback argPageCallback,
 		ICFSecJavaFXSecUserPWHistoryChosen whenChosen )
 	{
 		CFSecJavaFXSecUserPWHistoryPickerPane retnew = new CFSecJavaFXSecUserPWHistoryPickerPane( formManager,
 			javafxSchema,
 			argFocus,
 			argContainer,
-			argDataCollection,
+			argPageCallback,
 			whenChosen );
 		return( retnew );
 	}
@@ -124,14 +124,14 @@ implements ICFSecJavaFXSecUserPWHistoryFactory
 	public CFBorderPane newPickerForm( ICFFormManager formManager,
 		ICFSecSecUserPWHistoryObj argFocus,
 		ICFLibAnyObj argContainer,
-		Collection<ICFSecSecUserPWHistoryObj> argDataCollection,
+		ICFSecJavaFXSecUserPWHistoryPageCallback argPageCallback,
 		ICFSecJavaFXSecUserPWHistoryChosen whenChosen )
 	{
 		CFSecJavaFXSecUserPWHistoryPickerForm retnew = new CFSecJavaFXSecUserPWHistoryPickerForm( formManager,
 			javafxSchema,
 			argFocus,
 			argContainer,
-			argDataCollection,
+			argPageCallback,
 			whenChosen );
 		return( retnew );
 	}

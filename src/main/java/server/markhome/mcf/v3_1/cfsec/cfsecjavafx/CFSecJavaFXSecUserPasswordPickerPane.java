@@ -67,7 +67,6 @@ implements ICFSecJavaFXSecUserPasswordPaneList
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	protected Collection<ICFSecSecUserPasswordObj> javafxDataCollection = null;
 	protected ObservableList<ICFSecSecUserPasswordObj> observableListOfSecUserPassword = null;
-	protected TableColumn<ICFSecSecUserPasswordObj, CFLibDbKeyHash256> tableColumnSecUserId = null;
 	protected TableColumn<ICFSecSecUserPasswordObj, LocalDateTime> tableColumnPWSetStamp = null;
 	protected TableColumn<ICFSecSecUserPasswordObj, String> tableColumnPasswordHash = null;
 	protected TableView<ICFSecSecUserPasswordObj> dataTable = null;
@@ -75,7 +74,7 @@ implements ICFSecJavaFXSecUserPasswordPaneList
 	public final String S_ColumnNames[] = { "Name" };
 	protected ICFFormManager cfFormManager = null;
 	protected ICFSecJavaFXSecUserPasswordChosen invokeWhenChosen = null;
-	protected ICFLibAnyObj javafxContainer = null;
+	protected ICFSecSecUserObj javafxContainer = null;
 	protected CFButton buttonCancel = null;
 	protected CFButton buttonChooseNone = null;
 	protected CFButton buttonChooseSelected = null;
@@ -83,7 +82,7 @@ implements ICFSecJavaFXSecUserPasswordPaneList
 	public CFSecJavaFXSecUserPasswordPickerPane( ICFFormManager formManager,
 		ICFSecJavaFXSchema argSchema,
 		ICFSecSecUserPasswordObj argFocus,
-		ICFLibAnyObj argContainer,
+		ICFSecSecUserObj argContainer,
 		Collection<ICFSecSecUserPasswordObj> argDataCollection,
 		ICFSecJavaFXSecUserPasswordChosen whenChosen )
 	{
@@ -116,29 +115,6 @@ implements ICFSecJavaFXSecUserPasswordPaneList
 		javafxContainer = argContainer;
 		setJavaFXDataCollection( argDataCollection );
 		dataTable = new TableView<ICFSecSecUserPasswordObj>();
-		tableColumnSecUserId = new TableColumn<ICFSecSecUserPasswordObj,CFLibDbKeyHash256>( "Security User Id" );
-		tableColumnSecUserId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPasswordObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
-			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecUserPasswordObj, CFLibDbKeyHash256> p ) {
-				ICFSecSecUserPasswordObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					CFLibDbKeyHash256 value = obj.getRequiredSecUserId();
-					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnSecUserId.setCellFactory( new Callback<TableColumn<ICFSecSecUserPasswordObj,CFLibDbKeyHash256>,TableCell<ICFSecSecUserPasswordObj,CFLibDbKeyHash256>>() {
-			@Override public TableCell<ICFSecSecUserPasswordObj,CFLibDbKeyHash256> call(
-				TableColumn<ICFSecSecUserPasswordObj,CFLibDbKeyHash256> arg)
-			{
-				return new CFDbKeyHash256TableCell<ICFSecSecUserPasswordObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnSecUserId );
 		tableColumnPWSetStamp = new TableColumn<ICFSecSecUserPasswordObj,LocalDateTime>( "Password set at" );
 		tableColumnPWSetStamp.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPasswordObj,LocalDateTime>,ObservableValue<LocalDateTime> >() {
 			public ObservableValue<LocalDateTime> call( CellDataFeatures<ICFSecSecUserPasswordObj, LocalDateTime> p ) {
@@ -388,11 +364,11 @@ implements ICFSecJavaFXSecUserPasswordPaneList
 		}
 	}
 
-	public ICFLibAnyObj getJavaFXContainer() {
+	public ICFSecSecUserObj getJavaFXContainer() {
 		return( javafxContainer );
 	}
 
-	public void setJavaFXContainer( ICFLibAnyObj value ) {
+	public void setJavaFXContainer( ICFSecSecUserObj value ) {
 		javafxContainer = value;
 	}
 

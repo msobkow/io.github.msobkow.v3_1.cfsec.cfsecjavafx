@@ -50,14 +50,14 @@ public interface ICFSecJavaFXSecUserPWHistoryFactory
 	public CFBorderPane newListPane( ICFFormManager formManager,
 		ICFLibAnyObj argContainer,
 		ICFSecSecUserPWHistoryObj argFocus,
-		Collection<ICFSecSecUserPWHistoryObj> argDataCollection,
+		ICFSecJavaFXSecUserPWHistoryPageCallback argPageCallback,
 		ICFRefreshCallback refreshCallback,
 		boolean sortByChain );
 
 	public CFBorderPane newPickerPane( ICFFormManager formManager,
 		ICFSecSecUserPWHistoryObj argFocus,
 		ICFLibAnyObj argContainer,
-		Collection<ICFSecSecUserPWHistoryObj> argDataCollection,
+		ICFSecJavaFXSecUserPWHistoryPageCallback argPageCallback,
 		ICFSecJavaFXSecUserPWHistoryChosen whenChosen );
 
 	public CFTabPane newEltTabPane( ICFFormManager formManger, ICFSecSecUserPWHistoryObj javaFXFocus );
@@ -73,7 +73,7 @@ public interface ICFSecJavaFXSecUserPWHistoryFactory
 	public CFBorderPane newPickerForm( ICFFormManager formManager,
 		ICFSecSecUserPWHistoryObj javaFXFocus,
 		ICFLibAnyObj argContainer,
-		Collection<ICFSecSecUserPWHistoryObj> argDataCollection,
+		ICFSecJavaFXSecUserPWHistoryPageCallback argPageCallback,
 		ICFSecJavaFXSecUserPWHistoryChosen whenChosen );
 
 	public CFBorderPane newAddForm( ICFFormManager formManager, ICFSecSecUserPWHistoryObj javaFXFocus, ICFFormClosedCallback closeCallback, boolean allowSave );

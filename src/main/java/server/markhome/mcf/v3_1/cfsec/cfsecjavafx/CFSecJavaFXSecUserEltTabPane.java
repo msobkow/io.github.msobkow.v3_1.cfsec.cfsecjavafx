@@ -54,12 +54,24 @@ implements ICFSecJavaFXSecUserPaneCommon
 	protected ICFFormManager cfFormManager = null;
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	protected boolean javafxIsInitializing = true;
+	public final String LABEL_TabComponentsPasswordAttr = "Optional Components Password Singleton";
+	protected CFTab tabComponentsPassword = null;
+	public final String LABEL_TabComponentsEMConfAttr = "Optional Components EMail Confirmation Singleton";
+	protected CFTab tabComponentsEMConf = null;
+	public final String LABEL_TabComponentsPWResetAttr = "Optional Components Password Reset Singleton";
+	protected CFTab tabComponentsPWReset = null;
 	public final String LABEL_TabChildrenSysSecGrpMembList = "Optional Children System Security Group Members";
 	protected CFTab tabChildrenSysSecGrpMemb = null;
 	public final String LABEL_TabChildrenClusSecGrpMembList = "Optional Children Cluster Security Group Members";
 	protected CFTab tabChildrenClusSecGrpMemb = null;
 	public final String LABEL_TabChildrenTentSecGrpMembList = "Optional Children Tenant Security Group Members";
 	protected CFTab tabChildrenTentSecGrpMemb = null;
+	protected ScrollPane tabViewComponentsPasswordAttrScrollPane = null;
+	protected CFGridPane tabViewComponentsPasswordAttrPane = null;
+	protected ScrollPane tabViewComponentsEMConfAttrScrollPane = null;
+	protected CFGridPane tabViewComponentsEMConfAttrPane = null;
+	protected ScrollPane tabViewComponentsPWResetAttrScrollPane = null;
+	protected CFGridPane tabViewComponentsPWResetAttrPane = null;
 	protected CFBorderPane tabViewChildrenSysSecGrpMembListPane = null;
 	protected CFBorderPane tabViewChildrenClusSecGrpMembListPane = null;
 	protected CFBorderPane tabViewChildrenTentSecGrpMembListPane = null;
@@ -85,6 +97,18 @@ implements ICFSecJavaFXSecUserPaneCommon
 		javafxSchema = argSchema;
 		setJavaFXFocusAsSecUser( argFocus );
 		// Wire the newly constructed Panes/Tabs to this TabPane
+		tabComponentsPassword = new CFTab();
+		tabComponentsPassword.setText( LABEL_TabComponentsPasswordAttr );
+		tabComponentsPassword.setContent( getTabViewComponentsPasswordAttrScrollPane() );
+		getTabs().add( tabComponentsPassword );
+		tabComponentsEMConf = new CFTab();
+		tabComponentsEMConf.setText( LABEL_TabComponentsEMConfAttr );
+		tabComponentsEMConf.setContent( getTabViewComponentsEMConfAttrScrollPane() );
+		getTabs().add( tabComponentsEMConf );
+		tabComponentsPWReset = new CFTab();
+		tabComponentsPWReset.setText( LABEL_TabComponentsPWResetAttr );
+		tabComponentsPWReset.setContent( getTabViewComponentsPWResetAttrScrollPane() );
+		getTabs().add( tabComponentsPWReset );
 		tabChildrenSysSecGrpMemb = new CFTab();
 		tabChildrenSysSecGrpMemb.setText( LABEL_TabChildrenSysSecGrpMembList );
 		tabChildrenSysSecGrpMemb.setContent( getTabViewChildrenSysSecGrpMembListPane() );
@@ -139,6 +163,57 @@ implements ICFSecJavaFXSecUserPaneCommon
 
 	public ICFSecSecUserObj getJavaFXFocusAsSecUser() {
 		return( (ICFSecSecUserObj)getJavaFXFocus() );
+	}
+
+	public ScrollPane getTabViewComponentsPasswordAttrScrollPane() {
+		if( tabViewComponentsPasswordAttrScrollPane == null ) {
+			ICFSecSecUserObj focus = (ICFSecSecUserObj)getJavaFXFocusAsSecUser();
+			ICFSecSecUserPasswordObj refPassword =
+				( focus != null )
+					? focus.getOptionalComponentsPassword()
+					: null;
+			tabViewComponentsPasswordAttrPane = javafxSchema.getSecUserPasswordFactory().newAttrPane( cfFormManager, refPassword );
+			tabViewComponentsPasswordAttrScrollPane = new ScrollPane();
+			tabViewComponentsPasswordAttrScrollPane.setFitToWidth( true );
+			tabViewComponentsPasswordAttrScrollPane.setHbarPolicy( ScrollBarPolicy.NEVER );
+			tabViewComponentsPasswordAttrScrollPane.setVbarPolicy( ScrollBarPolicy.AS_NEEDED );
+			tabViewComponentsPasswordAttrScrollPane.setContent( tabViewComponentsPasswordAttrPane );
+		}
+		return( tabViewComponentsPasswordAttrScrollPane );
+	}
+
+	public ScrollPane getTabViewComponentsEMConfAttrScrollPane() {
+		if( tabViewComponentsEMConfAttrScrollPane == null ) {
+			ICFSecSecUserObj focus = (ICFSecSecUserObj)getJavaFXFocusAsSecUser();
+			ICFSecSecUserEMConfObj refEMConf =
+				( focus != null )
+					? focus.getOptionalComponentsEMConf()
+					: null;
+			tabViewComponentsEMConfAttrPane = javafxSchema.getSecUserEMConfFactory().newAttrPane( cfFormManager, refEMConf );
+			tabViewComponentsEMConfAttrScrollPane = new ScrollPane();
+			tabViewComponentsEMConfAttrScrollPane.setFitToWidth( true );
+			tabViewComponentsEMConfAttrScrollPane.setHbarPolicy( ScrollBarPolicy.NEVER );
+			tabViewComponentsEMConfAttrScrollPane.setVbarPolicy( ScrollBarPolicy.AS_NEEDED );
+			tabViewComponentsEMConfAttrScrollPane.setContent( tabViewComponentsEMConfAttrPane );
+		}
+		return( tabViewComponentsEMConfAttrScrollPane );
+	}
+
+	public ScrollPane getTabViewComponentsPWResetAttrScrollPane() {
+		if( tabViewComponentsPWResetAttrScrollPane == null ) {
+			ICFSecSecUserObj focus = (ICFSecSecUserObj)getJavaFXFocusAsSecUser();
+			ICFSecSecUserPWResetObj refPWReset =
+				( focus != null )
+					? focus.getOptionalComponentsPWReset()
+					: null;
+			tabViewComponentsPWResetAttrPane = javafxSchema.getSecUserPWResetFactory().newAttrPane( cfFormManager, refPWReset );
+			tabViewComponentsPWResetAttrScrollPane = new ScrollPane();
+			tabViewComponentsPWResetAttrScrollPane.setFitToWidth( true );
+			tabViewComponentsPWResetAttrScrollPane.setHbarPolicy( ScrollBarPolicy.NEVER );
+			tabViewComponentsPWResetAttrScrollPane.setVbarPolicy( ScrollBarPolicy.AS_NEEDED );
+			tabViewComponentsPWResetAttrScrollPane.setContent( tabViewComponentsPWResetAttrPane );
+		}
+		return( tabViewComponentsPWResetAttrScrollPane );
 	}
 
 	protected class RefreshChildrenSysSecGrpMembList
@@ -294,6 +369,15 @@ implements ICFSecJavaFXSecUserPaneCommon
 	public void setPaneMode( CFPane.PaneMode value ) {
 		CFPane.PaneMode oldMode = getPaneMode();
 		super.setPaneMode( value );
+	if( tabViewComponentsPasswordAttrPane != null ) {
+		((ICFSecJavaFXSecUserPasswordPaneCommon)tabViewComponentsPasswordAttrPane).setPaneMode( CFPane.PaneMode.View );
+	}
+	if( tabViewComponentsEMConfAttrPane != null ) {
+		((ICFSecJavaFXSecUserEMConfPaneCommon)tabViewComponentsEMConfAttrPane).setPaneMode( CFPane.PaneMode.View );
+	}
+	if( tabViewComponentsPWResetAttrPane != null ) {
+		((ICFSecJavaFXSecUserPWResetPaneCommon)tabViewComponentsPWResetAttrPane).setPaneMode( CFPane.PaneMode.View );
+	}
 		if( tabViewChildrenSysSecGrpMembListPane != null ) {
 			((ICFSecJavaFXSecSysGrpMembPaneCommon)tabViewChildrenSysSecGrpMembListPane).setPaneMode( value );
 		}

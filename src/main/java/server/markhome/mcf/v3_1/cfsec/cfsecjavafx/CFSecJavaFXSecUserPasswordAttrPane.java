@@ -64,24 +64,6 @@ implements ICFSecJavaFXSecUserPasswordPaneCommon
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	boolean javafxIsInitializing = true;
 
-	protected class SecUserIdCFLabel
-		extends CFLabel
-	{
-		public SecUserIdCFLabel() {
-			super();
-			setText(Inz.s("cfsec.javafx.SecUserPassword.AttrPane.SecUserId.EffLabel"));
-		}
-	}
-
-	protected class SecUserIdEditor
-		extends CFDbKeyHash256Editor
-	{
-		public SecUserIdEditor() {
-			super();
-			setFieldNameInzTag( "cfsec.javafx.SecUserPassword.AttrPane.SecUserId.EffLabel" );
-		}
-	}
-
 	protected class PWSetStampCFLabel
 		extends CFLabel
 	{
@@ -119,8 +101,6 @@ implements ICFSecJavaFXSecUserPasswordPaneCommon
 		}
 	}
 
-	protected SecUserIdCFLabel javafxLabelSecUserId = null;
-	protected SecUserIdEditor javafxEditorSecUserId = null;
 	protected PWSetStampCFLabel javafxLabelPWSetStamp = null;
 	protected PWSetStampEditor javafxEditorPWSetStamp = null;
 	protected PasswordHashCFLabel javafxLabelPasswordHash = null;
@@ -157,17 +137,6 @@ implements ICFSecJavaFXSecUserPasswordPaneCommon
 		column1.setPercentWidth( 100 );
 		getColumnConstraints().addAll( column1 );
 		int gridRow = 0;
-		label = getJavaFXLabelSecUserId();
-		setHalignment( label, HPos.LEFT );
-		setValignment( label, VPos.BOTTOM );
-		add( label, 0, gridRow );
-		gridRow ++;
-
-		ctrl = getJavaFXEditorSecUserId();
-		setHalignment( ctrl, HPos.LEFT );
-		add( ctrl, 0, gridRow );
-		gridRow ++;
-
 		label = getJavaFXLabelPWSetStamp();
 		setHalignment( label, HPos.LEFT );
 		setValignment( label, VPos.BOTTOM );
@@ -248,28 +217,6 @@ implements ICFSecJavaFXSecUserPasswordPaneCommon
 		return( eff );
 	}
 
-	public SecUserIdCFLabel getJavaFXLabelSecUserId() {
-		if( javafxLabelSecUserId == null ) {
-			javafxLabelSecUserId = new SecUserIdCFLabel();
-		}
-		return( javafxLabelSecUserId );
-	}
-
-	public void setJavaFXLabelSecUserId( SecUserIdCFLabel value ) {
-		javafxLabelSecUserId = value;
-	}
-
-	public SecUserIdEditor getJavaFXEditorSecUserId() {
-		if( javafxEditorSecUserId == null ) {
-			javafxEditorSecUserId = new SecUserIdEditor();
-		}
-		return( javafxEditorSecUserId );
-	}
-
-	public void setJavaFXEditorSecUserId( SecUserIdEditor value ) {
-		javafxEditorSecUserId = value;
-	}
-
 	public PWSetStampCFLabel getJavaFXLabelPWSetStamp() {
 		if( javafxLabelPWSetStamp == null ) {
 			javafxLabelPWSetStamp = new PWSetStampCFLabel();
@@ -320,13 +267,6 @@ implements ICFSecJavaFXSecUserPasswordPaneCommon
 		if( getPaneMode() == CFPane.PaneMode.Unknown ) {
 			popObj = null;
 		}
-		if( popObj == null ) {
-			getJavaFXEditorSecUserId().setDbKeyHash256Value( null );
-		}
-		else {
-			getJavaFXEditorSecUserId().setDbKeyHash256Value( popObj.getRequiredSecUserId() );
-		}
-
 		if( popObj == null ) {
 			getJavaFXEditorPWSetStamp().setTimestampValue( null );
 		}
@@ -652,9 +592,6 @@ implements ICFSecJavaFXSecUserPasswordPaneCommon
 			else if( null == focus.getEdit() ) {
 				isEditing = false;
 			}
-		}
-		if( javafxEditorSecUserId != null ) {
-			javafxEditorSecUserId.setDisable( true );
 		}
 		if( javafxEditorPWSetStamp != null ) {
 			javafxEditorPWSetStamp.setDisable( ! isEditing );

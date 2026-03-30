@@ -56,7 +56,7 @@ implements ICFSecJavaFXSecUserPasswordPaneList,
 	public CFSecJavaFXSecUserPasswordPickerForm( ICFFormManager formManager,
 		ICFSecJavaFXSchema argSchema,
 		ICFSecSecUserPasswordObj argFocus,
-		ICFLibAnyObj argContainer,
+		ICFSecSecUserObj argContainer,
 		Collection<ICFSecSecUserPasswordObj> argDataCollection,
 		ICFSecJavaFXSecUserPasswordChosen whenChosen )
 	{
@@ -172,13 +172,13 @@ implements ICFSecJavaFXSecUserPasswordPaneList,
 		}
 	}
 
-	public ICFLibAnyObj getJavaFXContainer() {
+	public ICFSecSecUserObj getJavaFXContainer() {
 		ICFSecJavaFXSecUserPasswordPaneList jplPicker = (ICFSecJavaFXSecUserPasswordPaneList)javafxPickerPane;
-		ICFLibAnyObj cnt = jplPicker.getJavaFXContainer();
+		ICFSecSecUserObj cnt = jplPicker.getJavaFXContainer();
 		return( cnt );
 	}
 
-	public void setJavaFXContainer( ICFLibAnyObj value ) {
+	public void setJavaFXContainer( ICFSecSecUserObj value ) {
 		ICFSecJavaFXSecUserPasswordPaneList jplPicker = (ICFSecJavaFXSecUserPasswordPaneList)javafxPickerPane;
 		jplPicker.setJavaFXContainer( value );
 	}

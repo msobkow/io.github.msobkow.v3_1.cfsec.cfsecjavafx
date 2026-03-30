@@ -1,4 +1,4 @@
-// Description: Java 25 JavaFX Picker Form implementation for SecUserPWHistory.
+// Description: Java 25 JavaFX Picker Form implementation for SecUserEMConf.
 
 /*
  *	server.markhome.mcf.CFSec
@@ -40,28 +40,28 @@ import server.markhome.mcf.v3_1.cfsec.cfsec.*;
 import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 
 /**
- *	CFSecJavaFXSecUserPWHistoryPickerForm JavaFX Picker Form implementation
- *	for SecUserPWHistory.
+ *	CFSecJavaFXSecUserEMConfPickerForm JavaFX Picker Form implementation
+ *	for SecUserEMConf.
  */
-public class CFSecJavaFXSecUserPWHistoryPickerForm
+public class CFSecJavaFXSecUserEMConfPickerForm
 extends CFBorderPane
-implements ICFSecJavaFXSecUserPWHistoryPaneList,
+implements ICFSecJavaFXSecUserEMConfPaneList,
 	ICFForm
 {
 	protected ICFFormManager cfFormManager = null;
 	protected CFBorderPane javafxPickerPane = null;
 	protected ICFSecJavaFXSchema javafxSchema = null;
-	protected ICFSecJavaFXSecUserPWHistoryPageCallback pageCallback;
+	protected ICFSecJavaFXSecUserEMConfPageCallback pageCallback;
 	protected CFButton buttonRefresh = null;
 	protected CFButton buttonMoreData = null;
 	protected boolean endOfData = true;
 
-	public CFSecJavaFXSecUserPWHistoryPickerForm( ICFFormManager formManager,
+	public CFSecJavaFXSecUserEMConfPickerForm( ICFFormManager formManager,
 		ICFSecJavaFXSchema argSchema,
-		ICFSecSecUserPWHistoryObj argFocus,
-		ICFLibAnyObj argContainer,
-		ICFSecJavaFXSecUserPWHistoryPageCallback argPageCallback,
-		ICFSecJavaFXSecUserPWHistoryChosen whenChosen )
+		ICFSecSecUserEMConfObj argFocus,
+		ICFSecSecUserObj argContainer,
+		ICFSecJavaFXSecUserEMConfPageCallback argPageCallback,
+		ICFSecJavaFXSecUserEMConfChosen whenChosen )
 	{
 		super();
 		final String S_ProcName = "construct-schema-focus";
@@ -87,8 +87,8 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList,
 		// argFocus is optional; focus may be set later during execution as
 		// conditions of the runtime change.
 		javafxSchema = argSchema;
-		javafxPickerPane = argSchema.getSecUserPWHistoryFactory().newPickerPane( cfFormManager, argFocus, argContainer, argPageCallback, whenChosen );
-		setJavaFXFocusAsSecUserPWHistory( argFocus );
+		javafxPickerPane = argSchema.getSecUserEMConfFactory().newPickerPane( cfFormManager, argFocus, argContainer, argPageCallback, whenChosen );
+		setJavaFXFocusAsSecUserEMConf( argFocus );
 		setJavaFXContainer( argContainer );
 		setCenter( javafxPickerPane );
 		setPaneMode( CFPane.PaneMode.View );
@@ -123,7 +123,7 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList,
 
 	public void setJavaFXFocus( ICFLibAnyObj value ) {
 		final String S_ProcName = "setJavaFXFocus";
-		if( ( value == null ) || ( value instanceof ICFSecSecUserPWHistoryObj ) ) {
+		if( ( value == null ) || ( value instanceof ICFSecSecUserEMConfObj ) ) {
 			super.setJavaFXFocus( value );
 		}
 		else {
@@ -131,27 +131,27 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList,
 				S_ProcName,
 				"value",
 				value,
-				"ICFSecSecUserPWHistoryObj" );
+				"ICFSecSecUserEMConfObj" );
 		}
-		((ICFSecJavaFXSecUserPWHistoryPaneCommon)javafxPickerPane).setJavaFXFocus( (ICFSecSecUserPWHistoryObj)value );
+		((ICFSecJavaFXSecUserEMConfPaneCommon)javafxPickerPane).setJavaFXFocus( (ICFSecSecUserEMConfObj)value );
 	}
 
-	public ICFSecSecUserPWHistoryObj getJavaFXFocusAsSecUserPWHistory() {
-		return( (ICFSecSecUserPWHistoryObj)getJavaFXFocus() );
+	public ICFSecSecUserEMConfObj getJavaFXFocusAsSecUserEMConf() {
+		return( (ICFSecSecUserEMConfObj)getJavaFXFocus() );
 	}
 
-	public void setJavaFXFocusAsSecUserPWHistory( ICFSecSecUserPWHistoryObj value ) {
+	public void setJavaFXFocusAsSecUserEMConf( ICFSecSecUserEMConfObj value ) {
 		setJavaFXFocus( value );
 	}
 
-	public Collection<ICFSecSecUserPWHistoryObj> getJavaFXDataCollection() {
-		ICFSecJavaFXSecUserPWHistoryPaneList jplPicker = (ICFSecJavaFXSecUserPWHistoryPaneList)javafxPickerPane;
-		Collection<ICFSecSecUserPWHistoryObj> cltn = jplPicker.getJavaFXDataCollection();
+	public Collection<ICFSecSecUserEMConfObj> getJavaFXDataCollection() {
+		ICFSecJavaFXSecUserEMConfPaneList jplPicker = (ICFSecJavaFXSecUserEMConfPaneList)javafxPickerPane;
+		Collection<ICFSecSecUserEMConfObj> cltn = jplPicker.getJavaFXDataCollection();
 		return( cltn );
 	}
 
-	public void setJavaFXDataCollection( Collection<ICFSecSecUserPWHistoryObj> value ) {
-		ICFSecJavaFXSecUserPWHistoryPaneList jplPicker = (ICFSecJavaFXSecUserPWHistoryPaneList)javafxPickerPane;
+	public void setJavaFXDataCollection( Collection<ICFSecSecUserEMConfObj> value ) {
+		ICFSecJavaFXSecUserEMConfPaneList jplPicker = (ICFSecJavaFXSecUserEMConfPaneList)javafxPickerPane;
 		jplPicker.setJavaFXDataCollection( value );
 	}
 
@@ -169,19 +169,19 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList,
 		}
 		super.setPaneMode( value );
 		if( javafxPickerPane != null ) {
-			ICFSecJavaFXSecUserPWHistoryPaneCommon jpanelCommon = (ICFSecJavaFXSecUserPWHistoryPaneCommon)javafxPickerPane;
+			ICFSecJavaFXSecUserEMConfPaneCommon jpanelCommon = (ICFSecJavaFXSecUserEMConfPaneCommon)javafxPickerPane;
 			jpanelCommon.setPaneMode( value );
 		}
 	}
 
-	public ICFLibAnyObj getJavaFXContainer() {
-		ICFSecJavaFXSecUserPWHistoryPaneList jplPicker = (ICFSecJavaFXSecUserPWHistoryPaneList)javafxPickerPane;
-		ICFLibAnyObj cnt = jplPicker.getJavaFXContainer();
+	public ICFSecSecUserObj getJavaFXContainer() {
+		ICFSecJavaFXSecUserEMConfPaneList jplPicker = (ICFSecJavaFXSecUserEMConfPaneList)javafxPickerPane;
+		ICFSecSecUserObj cnt = jplPicker.getJavaFXContainer();
 		return( cnt );
 	}
 
-	public void setJavaFXContainer( ICFLibAnyObj value ) {
-		ICFSecJavaFXSecUserPWHistoryPaneList jplPicker = (ICFSecJavaFXSecUserPWHistoryPaneList)javafxPickerPane;
+	public void setJavaFXContainer( ICFSecSecUserObj value ) {
+		ICFSecJavaFXSecUserEMConfPaneList jplPicker = (ICFSecJavaFXSecUserEMConfPaneList)javafxPickerPane;
 		jplPicker.setJavaFXContainer( value );
 	}
 }

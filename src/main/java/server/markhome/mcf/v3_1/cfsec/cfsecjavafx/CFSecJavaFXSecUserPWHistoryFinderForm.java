@@ -79,13 +79,33 @@ implements ICFSecJavaFXSecUserPWHistoryPaneCommon,
 	protected CFButton buttonEditSelected = null;
 	protected CFButton buttonClose = null;
 	protected CFButton buttonDeleteSelected = null;
-	protected List<ICFSecSecUserPWHistoryObj> listOfSecUserPWHistory = null;
+	protected ICFSecJavaFXSecUserPWHistoryPageCallback pageCallback = null;
+	protected CFButton buttonRefresh = null;
+	protected CFButton buttonMoreData = null;
+	protected boolean endOfData = true;
 	protected ObservableList<ICFSecSecUserPWHistoryObj> observableListOfSecUserPWHistory = null;
 	protected TableColumn<ICFSecSecUserPWHistoryObj, CFLibDbKeyHash256> tableColumnSecUserId = null;
 	protected TableColumn<ICFSecSecUserPWHistoryObj, LocalDateTime> tableColumnPWSetStamp = null;
 	protected TableColumn<ICFSecSecUserPWHistoryObj, LocalDateTime> tableColumnPWReplacedStamp = null;
 	protected TableColumn<ICFSecSecUserPWHistoryObj, String> tableColumnPasswordHash = null;
 	protected TableView<ICFSecSecUserPWHistoryObj> dataTable = null;
+
+	protected class PageDataSecUserPWHistoryList
+	implements ICFSecJavaFXSecUserPWHistoryPageCallback
+	{
+		public PageDataSecUserPWHistoryList() {
+		}
+
+		public List<ICFSecSecUserPWHistoryObj> pageData( CFLibDbKeyHash256 priorSecUserId,
+		LocalDateTime priorPWSetStamp )
+		{
+			List<ICFSecSecUserPWHistoryObj> dataList;
+			ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
+			dataList = schemaObj.getSecUserPWHistoryTableObj().pageAllSecUserPWHistory(priorSecUserId,
+					priorPWSetStamp );
+			return( dataList );
+		}
+	}
 
 	class ViewEditClosedCallback implements ICFFormClosedCallback {
 		public ViewEditClosedCallback() {
@@ -153,6 +173,7 @@ implements ICFSecJavaFXSecUserPWHistoryPaneCommon,
 				"argSchema" );
 		}
 		javafxSchema = argSchema;
+		pageCallback = new PageDataSecUserPWHistoryList();
 		dataTable = new TableView<ICFSecSecUserPWHistoryObj>();
 		tableColumnSecUserId = new TableColumn<ICFSecSecUserPWHistoryObj,CFLibDbKeyHash256>( "Security User Id" );
 		tableColumnSecUserId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPWHistoryObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
@@ -325,6 +346,68 @@ implements ICFSecJavaFXSecUserPWHistoryPaneCommon,
 	public CFHBox getHBoxMenu() {
 		if( hboxMenu == null ) {
 			hboxMenu = new CFHBox( 10 );
+
+			buttonRefresh = new CFButton();
+			buttonRefresh.setMinWidth( 200 );
+			buttonRefresh.setText( "Refresh" );
+			buttonRefresh.setOnAction( new EventHandler<ActionEvent>() {
+				@Override public void handle( ActionEvent e ) {
+					final String S_ProcName = "handle";
+					try {
+						refreshMe();
+					}
+					catch( Throwable t ) {
+						CFConsole.formException( S_FormName, ((CFButton)e.getSource()).getText(), t );
+					}
+				}
+			});
+			hboxMenu.getChildren().add( buttonRefresh );
+
+			buttonMoreData = new CFButton();
+			buttonMoreData.setMinWidth( 200 );
+			buttonMoreData.setText( "MoreData" );
+			buttonMoreData.setOnAction( new EventHandler<ActionEvent>() {
+				@Override public void handle( ActionEvent e ) {
+					final String S_ProcName = "handle";
+					try {
+						ICFSecSecUserPWHistoryObj lastObj = null;
+						if( ( observableListOfSecUserPWHistory != null ) && ( observableListOfSecUserPWHistory.size() > 0 ) ) {
+							lastObj = observableListOfSecUserPWHistory.get( observableListOfSecUserPWHistory.size() - 1 );
+						}
+						List<ICFSecSecUserPWHistoryObj> page;
+						if( lastObj != null ) {
+							page = pageCallback.pageData( lastObj.getRequiredSecUserId(),
+							lastObj.getRequiredPWSetStamp() );
+						}
+						else {
+							page = pageCallback.pageData( null,
+							null );
+						}
+						Iterator<ICFSecSecUserPWHistoryObj> iter = page.iterator();
+						while( iter.hasNext() ) {
+							observableListOfSecUserPWHistory.add( iter.next() );
+						}
+						if( page.size() < 25 ) {
+							observableListOfSecUserPWHistory.sort( compareSecUserPWHistoryByQualName );
+							endOfData = true;
+						}
+						else {
+							endOfData = false;
+						}
+						if( dataTable != null ) {
+							dataTable.setItems( observableListOfSecUserPWHistory );
+							// Hack from stackoverflow to fix JavaFX TableView refresh issue
+							((TableColumn)dataTable.getColumns().get(0)).setVisible( false );
+							((TableColumn)dataTable.getColumns().get(0)).setVisible( true );
+						}
+						adjustFinderButtons();
+					}
+					catch( Throwable t ) {
+						CFConsole.formException( S_FormName, ((CFButton)e.getSource()).getText(), t );
+					}
+				}
+			});
+			hboxMenu.getChildren().add( buttonMoreData );
 
 			buttonAddSecUserPWHistory = new CFButton();
 			buttonAddSecUserPWHistory.setMinWidth( 200 );
@@ -540,6 +623,12 @@ implements ICFSecJavaFXSecUserPWHistoryPaneCommon,
 			disableState = true;
 		}
 
+		if( buttonRefresh != null ) {
+			buttonRefresh.setDisable( false );
+		}
+		if( buttonMoreData != null ) {
+			buttonMoreData.setDisable( endOfData );
+		}
 		if( buttonViewSelected != null ) {
 			buttonViewSelected.setDisable( disableState );
 		}
@@ -596,26 +685,28 @@ implements ICFSecJavaFXSecUserPWHistoryPaneCommon,
 
 	protected SecUserPWHistoryByQualNameComparator compareSecUserPWHistoryByQualName = new SecUserPWHistoryByQualNameComparator();
 
-	public void loadData( boolean forceReload ) {
-		ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
-		if( ( listOfSecUserPWHistory == null ) || forceReload ) {
-			observableListOfSecUserPWHistory = null;
-			listOfSecUserPWHistory = schemaObj.getSecUserPWHistoryTableObj().readAllSecUserPWHistory( javafxIsInitializing );
-			if( listOfSecUserPWHistory != null ) {
-				observableListOfSecUserPWHistory = FXCollections.observableArrayList( listOfSecUserPWHistory );
+	public void refreshMe() {
+		final String S_ProcName = "refreshMe";
+		observableListOfSecUserPWHistory = FXCollections.observableArrayList();
+		List<ICFSecSecUserPWHistoryObj> page = pageCallback.pageData( null,
+							null );
+		Iterator<ICFSecSecUserPWHistoryObj> iter = page.iterator();
+		while( iter.hasNext() ) {
+			observableListOfSecUserPWHistory.add( iter.next() );
+		}
+		if( page.size() < 25 ) {
 				observableListOfSecUserPWHistory.sort( compareSecUserPWHistoryByQualName );
-			}
-			else {
-				observableListOfSecUserPWHistory = FXCollections.observableArrayList();
-			}
+			endOfData = true;
+		}
+		else {
+			endOfData = false;
+		}
+		if( dataTable != null ) {
 			dataTable.setItems( observableListOfSecUserPWHistory );
 			// Hack from stackoverflow to fix JavaFX TableView refresh issue
 			((TableColumn)dataTable.getColumns().get(0)).setVisible( false );
 			((TableColumn)dataTable.getColumns().get(0)).setVisible( true );
 		}
-	}
-
-	public void refreshMe() {
-		loadData( true );
+		adjustFinderButtons();
 	}
 }

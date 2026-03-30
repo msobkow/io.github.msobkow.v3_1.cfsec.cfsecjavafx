@@ -75,15 +75,11 @@ implements ICFSecJavaFXSecUserPaneList
 	protected CFButton buttonEditSelected = null;
 	protected CFButton buttonDeleteSelected = null;
 	protected TableView<ICFSecSecUserObj> dataTable = null;
-	protected TableColumn<ICFSecSecUserObj, CFLibDbKeyHash256> tableColumnSecUserId = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnLoginId = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnDfltSysGrpName = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnDfltClusGrpName = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnDfltTentGrpName = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnEMailAddress = null;
-	protected TableColumn<ICFSecSecUserObj, CFLibUuid6> tableColumnEMailConfirmUuid6 = null;
-	protected TableColumn<ICFSecSecUserObj, String> tableColumnPasswordHash = null;
-	protected TableColumn<ICFSecSecUserObj, CFLibUuid6> tableColumnPasswordResetUuid6 = null;
 
 	public final String S_ColumnNames[] = { "Name" };
 	protected ICFFormManager cfFormManager = null;
@@ -172,29 +168,6 @@ implements ICFSecJavaFXSecUserPaneList
 		javafxSortByChain = sortByChain;
 		pageCallback = argPageCallback;
 		dataTable = new TableView<ICFSecSecUserObj>();
-		tableColumnSecUserId = new TableColumn<ICFSecSecUserObj,CFLibDbKeyHash256>( "Security User Id" );
-		tableColumnSecUserId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
-			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecUserObj, CFLibDbKeyHash256> p ) {
-				ICFSecSecUserObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					CFLibDbKeyHash256 value = obj.getRequiredSecUserId();
-					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnSecUserId.setCellFactory( new Callback<TableColumn<ICFSecSecUserObj,CFLibDbKeyHash256>,TableCell<ICFSecSecUserObj,CFLibDbKeyHash256>>() {
-			@Override public TableCell<ICFSecSecUserObj,CFLibDbKeyHash256> call(
-				TableColumn<ICFSecSecUserObj,CFLibDbKeyHash256> arg)
-			{
-				return new CFDbKeyHash256TableCell<ICFSecSecUserObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnSecUserId );
 		tableColumnLoginId = new TableColumn<ICFSecSecUserObj,String>( "Login Id" );
 		tableColumnLoginId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,String>,ObservableValue<String> >() {
 			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserObj, String> p ) {
@@ -218,7 +191,7 @@ implements ICFSecJavaFXSecUserPaneList
 			}
 		});
 		dataTable.getColumns().add( tableColumnLoginId );
-		tableColumnDfltSysGrpName = new TableColumn<ICFSecSecUserObj,String>( "Name" );
+		tableColumnDfltSysGrpName = new TableColumn<ICFSecSecUserObj,String>( "Default System Group Name" );
 		tableColumnDfltSysGrpName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,String>,ObservableValue<String> >() {
 			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserObj, String> p ) {
 				ICFSecSecUserObj obj = p.getValue();
@@ -226,7 +199,7 @@ implements ICFSecJavaFXSecUserPaneList
 					return( null );
 				}
 				else {
-					String value = obj.getRequiredDfltSysGrpName();
+					String value = obj.getOptionalDfltSysGrpName();
 					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
 					observable.setValue( value );
 					return( observable );
@@ -241,7 +214,7 @@ implements ICFSecJavaFXSecUserPaneList
 			}
 		});
 		dataTable.getColumns().add( tableColumnDfltSysGrpName );
-		tableColumnDfltClusGrpName = new TableColumn<ICFSecSecUserObj,String>( "Name" );
+		tableColumnDfltClusGrpName = new TableColumn<ICFSecSecUserObj,String>( "Default Cluster Group Name" );
 		tableColumnDfltClusGrpName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,String>,ObservableValue<String> >() {
 			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserObj, String> p ) {
 				ICFSecSecUserObj obj = p.getValue();
@@ -249,7 +222,7 @@ implements ICFSecJavaFXSecUserPaneList
 					return( null );
 				}
 				else {
-					String value = obj.getRequiredDfltClusGrpName();
+					String value = obj.getOptionalDfltClusGrpName();
 					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
 					observable.setValue( value );
 					return( observable );
@@ -264,7 +237,7 @@ implements ICFSecJavaFXSecUserPaneList
 			}
 		});
 		dataTable.getColumns().add( tableColumnDfltClusGrpName );
-		tableColumnDfltTentGrpName = new TableColumn<ICFSecSecUserObj,String>( "Name" );
+		tableColumnDfltTentGrpName = new TableColumn<ICFSecSecUserObj,String>( "Default Tenant Group Name" );
 		tableColumnDfltTentGrpName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,String>,ObservableValue<String> >() {
 			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserObj, String> p ) {
 				ICFSecSecUserObj obj = p.getValue();
@@ -272,7 +245,7 @@ implements ICFSecJavaFXSecUserPaneList
 					return( null );
 				}
 				else {
-					String value = obj.getRequiredDfltTentGrpName();
+					String value = obj.getOptionalDfltTentGrpName();
 					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
 					observable.setValue( value );
 					return( observable );
@@ -310,75 +283,6 @@ implements ICFSecJavaFXSecUserPaneList
 			}
 		});
 		dataTable.getColumns().add( tableColumnEMailAddress );
-		tableColumnEMailConfirmUuid6 = new TableColumn<ICFSecSecUserObj,CFLibUuid6>( "EMail Confirm UUID6" );
-		tableColumnEMailConfirmUuid6.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,CFLibUuid6>,ObservableValue<CFLibUuid6> >() {
-			public ObservableValue<CFLibUuid6> call( CellDataFeatures<ICFSecSecUserObj, CFLibUuid6> p ) {
-				ICFSecSecUserObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					CFLibUuid6 value = obj.getOptionalEMailConfirmUuid6();
-					ReadOnlyObjectWrapper<CFLibUuid6> observable = new ReadOnlyObjectWrapper<CFLibUuid6>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnEMailConfirmUuid6.setCellFactory( new Callback<TableColumn<ICFSecSecUserObj,CFLibUuid6>,TableCell<ICFSecSecUserObj,CFLibUuid6>>() {
-			@Override public TableCell<ICFSecSecUserObj,CFLibUuid6> call(
-				TableColumn<ICFSecSecUserObj,CFLibUuid6> arg)
-			{
-				return new CFUuid6TableCell<ICFSecSecUserObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnEMailConfirmUuid6 );
-		tableColumnPasswordHash = new TableColumn<ICFSecSecUserObj,String>( "Password Hash" );
-		tableColumnPasswordHash.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,String>,ObservableValue<String> >() {
-			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserObj, String> p ) {
-				ICFSecSecUserObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					String value = obj.getRequiredPasswordHash();
-					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnPasswordHash.setCellFactory( new Callback<TableColumn<ICFSecSecUserObj,String>,TableCell<ICFSecSecUserObj,String>>() {
-			@Override public TableCell<ICFSecSecUserObj,String> call(
-				TableColumn<ICFSecSecUserObj,String> arg)
-			{
-				return new CFStringTableCell<ICFSecSecUserObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnPasswordHash );
-		tableColumnPasswordResetUuid6 = new TableColumn<ICFSecSecUserObj,CFLibUuid6>( "Password Reset UUID6" );
-		tableColumnPasswordResetUuid6.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,CFLibUuid6>,ObservableValue<CFLibUuid6> >() {
-			public ObservableValue<CFLibUuid6> call( CellDataFeatures<ICFSecSecUserObj, CFLibUuid6> p ) {
-				ICFSecSecUserObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					CFLibUuid6 value = obj.getOptionalPasswordResetUuid6();
-					ReadOnlyObjectWrapper<CFLibUuid6> observable = new ReadOnlyObjectWrapper<CFLibUuid6>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnPasswordResetUuid6.setCellFactory( new Callback<TableColumn<ICFSecSecUserObj,CFLibUuid6>,TableCell<ICFSecSecUserObj,CFLibUuid6>>() {
-			@Override public TableCell<ICFSecSecUserObj,CFLibUuid6> call(
-				TableColumn<ICFSecSecUserObj,CFLibUuid6> arg)
-			{
-				return new CFUuid6TableCell<ICFSecSecUserObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnPasswordResetUuid6 );
 		dataTable.getSelectionModel().selectedItemProperty().addListener(
 			new ChangeListener<ICFSecSecUserObj>() {
 				@Override public void changed( ObservableValue<? extends ICFSecSecUserObj> observable,

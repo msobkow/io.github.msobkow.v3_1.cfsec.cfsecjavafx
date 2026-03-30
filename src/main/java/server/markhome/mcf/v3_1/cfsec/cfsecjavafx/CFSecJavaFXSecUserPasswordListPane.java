@@ -72,7 +72,6 @@ implements ICFSecJavaFXSecUserPasswordPaneList
 	protected CFButton buttonEditSelected = null;
 	protected CFButton buttonDeleteSelected = null;
 	protected TableView<ICFSecSecUserPasswordObj> dataTable = null;
-	protected TableColumn<ICFSecSecUserPasswordObj, CFLibDbKeyHash256> tableColumnSecUserId = null;
 	protected TableColumn<ICFSecSecUserPasswordObj, LocalDateTime> tableColumnPWSetStamp = null;
 	protected TableColumn<ICFSecSecUserPasswordObj, String> tableColumnPasswordHash = null;
 
@@ -80,7 +79,7 @@ implements ICFSecJavaFXSecUserPasswordPaneList
 	protected ICFFormManager cfFormManager = null;
 	protected boolean javafxIsInitializing = true;
 	protected boolean javafxSortByChain = false;
-	protected ICFLibAnyObj javafxContainer = null;
+	protected ICFSecSecUserObj javafxContainer = null;
 	protected ICFRefreshCallback javafxRefreshCallback = null;
 	class ViewEditClosedCallback implements ICFFormClosedCallback {
 		public ViewEditClosedCallback() {
@@ -133,7 +132,7 @@ implements ICFSecJavaFXSecUserPasswordPaneList
 
 	public CFSecJavaFXSecUserPasswordListPane( ICFFormManager formManager,
 		ICFSecJavaFXSchema argSchema,
-		ICFLibAnyObj argContainer,
+		ICFSecSecUserObj argContainer,
 		ICFSecSecUserPasswordObj argFocus,
 		Collection<ICFSecSecUserPasswordObj> argDataCollection,
 		ICFRefreshCallback refreshCallback,
@@ -163,29 +162,6 @@ implements ICFSecJavaFXSecUserPasswordPaneList
 		javafxSortByChain = sortByChain;
 		setJavaFXDataCollection( argDataCollection );
 		dataTable = new TableView<ICFSecSecUserPasswordObj>();
-		tableColumnSecUserId = new TableColumn<ICFSecSecUserPasswordObj,CFLibDbKeyHash256>( "Security User Id" );
-		tableColumnSecUserId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPasswordObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
-			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecUserPasswordObj, CFLibDbKeyHash256> p ) {
-				ICFSecSecUserPasswordObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					CFLibDbKeyHash256 value = obj.getRequiredSecUserId();
-					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnSecUserId.setCellFactory( new Callback<TableColumn<ICFSecSecUserPasswordObj,CFLibDbKeyHash256>,TableCell<ICFSecSecUserPasswordObj,CFLibDbKeyHash256>>() {
-			@Override public TableCell<ICFSecSecUserPasswordObj,CFLibDbKeyHash256> call(
-				TableColumn<ICFSecSecUserPasswordObj,CFLibDbKeyHash256> arg)
-			{
-				return new CFDbKeyHash256TableCell<ICFSecSecUserPasswordObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnSecUserId );
 		tableColumnPWSetStamp = new TableColumn<ICFSecSecUserPasswordObj,LocalDateTime>( "Password set at" );
 		tableColumnPWSetStamp.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPasswordObj,LocalDateTime>,ObservableValue<LocalDateTime> >() {
 			public ObservableValue<LocalDateTime> call( CellDataFeatures<ICFSecSecUserPasswordObj, LocalDateTime> p ) {
@@ -412,6 +388,14 @@ implements ICFSecJavaFXSecUserPasswordPaneList
 								0,
 								"edit" );
 						}
+								ICFSecSecUserObj container = (ICFSecSecUserObj)( getJavaFXContainer() );
+								if( container == null ) {
+									throw new CFLibNullArgumentException( getClass(),
+										S_ProcName,
+										0,
+										"JavaFXContainer" );
+								}
+								edit.setRequiredContainerUser( container );
 						CFBorderPane frame = javafxSchema.getSecUserPasswordFactory().newAddForm( cfFormManager, obj, getViewEditClosedCallback(), true );
 						ICFSecJavaFXSecUserPasswordPaneCommon jpanelCommon = (ICFSecJavaFXSecUserPasswordPaneCommon)frame;
 						jpanelCommon.setJavaFXFocus( obj );
@@ -548,11 +532,11 @@ implements ICFSecJavaFXSecUserPasswordPaneList
 		return( hboxMenu );
 	}
 
-	public ICFLibAnyObj getJavaFXContainer() {
+	public ICFSecSecUserObj getJavaFXContainer() {
 		return( javafxContainer );
 	}
 
-	public void setJavaFXContainer( ICFLibAnyObj value ) {
+	public void setJavaFXContainer( ICFSecSecUserObj value ) {
 		javafxContainer = value;
 	}
 

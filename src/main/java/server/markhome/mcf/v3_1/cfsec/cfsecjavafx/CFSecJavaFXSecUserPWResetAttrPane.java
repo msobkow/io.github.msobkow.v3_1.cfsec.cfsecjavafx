@@ -1,4 +1,4 @@
-// Description: Java 25 JavaFX Attribute Pane implementation for SecUser.
+// Description: Java 25 JavaFX Attribute Pane implementation for SecUserPWReset.
 
 /*
  *	server.markhome.mcf.CFSec
@@ -53,124 +53,81 @@ import server.markhome.mcf.v3_1.cfsec.cfsec.*;
 import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 
 /**
- *	CFSecJavaFXSecUserAttrPane JavaFX Attribute Pane implementation
- *	for SecUser.
+ *	CFSecJavaFXSecUserPWResetAttrPane JavaFX Attribute Pane implementation
+ *	for SecUserPWReset.
  */
-public class CFSecJavaFXSecUserAttrPane
+public class CFSecJavaFXSecUserPWResetAttrPane
 extends CFGridPane
-implements ICFSecJavaFXSecUserPaneCommon
+implements ICFSecJavaFXSecUserPWResetPaneCommon
 {
 	protected ICFFormManager cfFormManager = null;
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	boolean javafxIsInitializing = true;
 
-	protected class LoginIdCFLabel
+	protected class SentToEMailAddrCFLabel
 		extends CFLabel
 	{
-		public LoginIdCFLabel() {
+		public SentToEMailAddrCFLabel() {
 			super();
-			setText(Inz.s("cfsec.javafx.SecUser.AttrPane.LoginId.EffLabel"));
+			setText(Inz.s("cfsec.javafx.SecUserPWReset.AttrPane.SentToEMailAddr.EffLabel"));
 		}
 	}
 
-	protected class LoginIdEditor
+	protected class SentToEMailAddrEditor
 		extends CFStringEditor
 	{
-		public LoginIdEditor() {
-			super();
-			setMaxLen( 32 );
-			setFieldNameInzTag( "cfsec.javafx.SecUser.AttrPane.LoginId.EffLabel" );
-		}
-	}
-
-	protected class DfltSysGrpNameCFLabel
-		extends CFLabel
-	{
-		public DfltSysGrpNameCFLabel() {
-			super();
-			setText(Inz.s("cfsec.javafx.SecUser.AttrPane.DfltSysGrpName.EffLabel"));
-		}
-	}
-
-	protected class DfltSysGrpNameEditor
-		extends CFStringEditor
-	{
-		public DfltSysGrpNameEditor() {
-			super();
-			setMaxLen( 64 );
-			setFieldNameInzTag( "cfsec.javafx.SecUser.AttrPane.DfltSysGrpName.EffLabel" );
-		}
-	}
-
-	protected class DfltClusGrpNameCFLabel
-		extends CFLabel
-	{
-		public DfltClusGrpNameCFLabel() {
-			super();
-			setText(Inz.s("cfsec.javafx.SecUser.AttrPane.DfltClusGrpName.EffLabel"));
-		}
-	}
-
-	protected class DfltClusGrpNameEditor
-		extends CFStringEditor
-	{
-		public DfltClusGrpNameEditor() {
-			super();
-			setMaxLen( 64 );
-			setFieldNameInzTag( "cfsec.javafx.SecUser.AttrPane.DfltClusGrpName.EffLabel" );
-		}
-	}
-
-	protected class DfltTentGrpNameCFLabel
-		extends CFLabel
-	{
-		public DfltTentGrpNameCFLabel() {
-			super();
-			setText(Inz.s("cfsec.javafx.SecUser.AttrPane.DfltTentGrpName.EffLabel"));
-		}
-	}
-
-	protected class DfltTentGrpNameEditor
-		extends CFStringEditor
-	{
-		public DfltTentGrpNameEditor() {
-			super();
-			setMaxLen( 64 );
-			setFieldNameInzTag( "cfsec.javafx.SecUser.AttrPane.DfltTentGrpName.EffLabel" );
-		}
-	}
-
-	protected class EMailAddressCFLabel
-		extends CFLabel
-	{
-		public EMailAddressCFLabel() {
-			super();
-			setText(Inz.s("cfsec.javafx.SecUser.AttrPane.EMailAddress.EffLabel"));
-		}
-	}
-
-	protected class EMailAddressEditor
-		extends CFStringEditor
-	{
-		public EMailAddressEditor() {
+		public SentToEMailAddrEditor() {
 			super();
 			setMaxLen( 512 );
-			setFieldNameInzTag( "cfsec.javafx.SecUser.AttrPane.EMailAddress.EffLabel" );
+			setFieldNameInzTag( "cfsec.javafx.SecUserPWReset.AttrPane.SentToEMailAddr.EffLabel" );
 		}
 	}
 
-	protected LoginIdCFLabel javafxLabelLoginId = null;
-	protected LoginIdEditor javafxEditorLoginId = null;
-	protected DfltSysGrpNameCFLabel javafxLabelDfltSysGrpName = null;
-	protected DfltSysGrpNameEditor javafxEditorDfltSysGrpName = null;
-	protected DfltClusGrpNameCFLabel javafxLabelDfltClusGrpName = null;
-	protected DfltClusGrpNameEditor javafxEditorDfltClusGrpName = null;
-	protected DfltTentGrpNameCFLabel javafxLabelDfltTentGrpName = null;
-	protected DfltTentGrpNameEditor javafxEditorDfltTentGrpName = null;
-	protected EMailAddressCFLabel javafxLabelEMailAddress = null;
-	protected EMailAddressEditor javafxEditorEMailAddress = null;
+	protected class PasswordResetUuid6CFLabel
+		extends CFLabel
+	{
+		public PasswordResetUuid6CFLabel() {
+			super();
+			setText(Inz.s("cfsec.javafx.SecUserPWReset.AttrPane.PasswordResetUuid6.EffLabel"));
+		}
+	}
 
-	public CFSecJavaFXSecUserAttrPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecUserObj argFocus ) {
+	protected class PasswordResetUuid6Editor
+		extends CFUuid6Editor
+	{
+		public PasswordResetUuid6Editor() {
+			super();
+			setFieldNameInzTag( "cfsec.javafx.SecUserPWReset.AttrPane.PasswordResetUuid6.EffLabel" );
+		}
+	}
+
+	protected class NewAccountCFLabel
+		extends CFLabel
+	{
+		public NewAccountCFLabel() {
+			super();
+			setText(Inz.s("cfsec.javafx.SecUserPWReset.AttrPane.NewAccount.EffLabel"));
+		}
+	}
+
+	protected class NewAccountEditor
+		extends CFBoolEditor
+	{
+		public NewAccountEditor() {
+			super();
+			setIsNullable( false );
+			setFieldNameInzTag( "cfsec.javafx.SecUserPWReset.AttrPane.NewAccount.EffLabel" );
+		}
+	}
+
+	protected SentToEMailAddrCFLabel javafxLabelSentToEMailAddr = null;
+	protected SentToEMailAddrEditor javafxEditorSentToEMailAddr = null;
+	protected PasswordResetUuid6CFLabel javafxLabelPasswordResetUuid6 = null;
+	protected PasswordResetUuid6Editor javafxEditorPasswordResetUuid6 = null;
+	protected NewAccountCFLabel javafxLabelNewAccount = null;
+	protected NewAccountEditor javafxEditorNewAccount = null;
+
+	public CFSecJavaFXSecUserPWResetAttrPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecUserPWResetObj argFocus ) {
 		super();
 		Control ctrl;
 		CFLabel label;
@@ -192,7 +149,7 @@ implements ICFSecJavaFXSecUserPaneCommon
 		// argFocus is optional; focus may be set later during execution as
 		// conditions of the runtime change.
 		javafxSchema = argSchema;
-		setJavaFXFocusAsSecUser( argFocus );
+		setJavaFXFocusAsSecUserPWReset( argFocus );
 		setPadding( new Insets(5) );
 		setHgap( 5 );
 		setVgap( 5 );
@@ -201,57 +158,35 @@ implements ICFSecJavaFXSecUserPaneCommon
 		column1.setPercentWidth( 100 );
 		getColumnConstraints().addAll( column1 );
 		int gridRow = 0;
-		label = getJavaFXLabelLoginId();
+		label = getJavaFXLabelSentToEMailAddr();
 		setHalignment( label, HPos.LEFT );
 		setValignment( label, VPos.BOTTOM );
 		add( label, 0, gridRow );
 		gridRow ++;
 
-		ctrl = getJavaFXEditorLoginId();
+		ctrl = getJavaFXEditorSentToEMailAddr();
 		setHalignment( ctrl, HPos.LEFT );
 		add( ctrl, 0, gridRow );
 		gridRow ++;
 
-		label = getJavaFXLabelDfltSysGrpName();
+		label = getJavaFXLabelPasswordResetUuid6();
 		setHalignment( label, HPos.LEFT );
 		setValignment( label, VPos.BOTTOM );
 		add( label, 0, gridRow );
 		gridRow ++;
 
-		ctrl = getJavaFXEditorDfltSysGrpName();
+		ctrl = getJavaFXEditorPasswordResetUuid6();
 		setHalignment( ctrl, HPos.LEFT );
 		add( ctrl, 0, gridRow );
 		gridRow ++;
 
-		label = getJavaFXLabelDfltClusGrpName();
+		label = getJavaFXLabelNewAccount();
 		setHalignment( label, HPos.LEFT );
 		setValignment( label, VPos.BOTTOM );
 		add( label, 0, gridRow );
 		gridRow ++;
 
-		ctrl = getJavaFXEditorDfltClusGrpName();
-		setHalignment( ctrl, HPos.LEFT );
-		add( ctrl, 0, gridRow );
-		gridRow ++;
-
-		label = getJavaFXLabelDfltTentGrpName();
-		setHalignment( label, HPos.LEFT );
-		setValignment( label, VPos.BOTTOM );
-		add( label, 0, gridRow );
-		gridRow ++;
-
-		ctrl = getJavaFXEditorDfltTentGrpName();
-		setHalignment( ctrl, HPos.LEFT );
-		add( ctrl, 0, gridRow );
-		gridRow ++;
-
-		label = getJavaFXLabelEMailAddress();
-		setHalignment( label, HPos.LEFT );
-		setValignment( label, VPos.BOTTOM );
-		add( label, 0, gridRow );
-		gridRow ++;
-
-		ctrl = getJavaFXEditorEMailAddress();
+		ctrl = getJavaFXEditorNewAccount();
 		setHalignment( ctrl, HPos.LEFT );
 		add( ctrl, 0, gridRow );
 		gridRow ++;
@@ -282,7 +217,7 @@ implements ICFSecJavaFXSecUserPaneCommon
 
 	public void setJavaFXFocus( ICFLibAnyObj value ) {
 		final String S_ProcName = "setJavaFXFocus";
-		if( ( value == null ) || ( value instanceof ICFSecSecUserObj ) ) {
+		if( ( value == null ) || ( value instanceof ICFSecSecUserPWResetObj ) ) {
 			super.setJavaFXFocus( value );
 		}
 		else {
@@ -290,189 +225,131 @@ implements ICFSecJavaFXSecUserPaneCommon
 				S_ProcName,
 				"value",
 				value,
-				"ICFSecSecUserObj" );
+				"ICFSecSecUserPWResetObj" );
 		}
 		populateFields();
 		adjustComponentEnableStates();
 	}
 
-	public ICFSecSecUserObj getJavaFXFocusAsSecUser() {
-		return( (ICFSecSecUserObj)getJavaFXFocus() );
+	public ICFSecSecUserPWResetObj getJavaFXFocusAsSecUserPWReset() {
+		return( (ICFSecSecUserPWResetObj)getJavaFXFocus() );
 	}
 
-	public void setJavaFXFocusAsSecUser( ICFSecSecUserObj value ) {
+	public void setJavaFXFocusAsSecUserPWReset( ICFSecSecUserPWResetObj value ) {
 		setJavaFXFocus( value );
 	}
 
-	public ICFSecSecUserObj getEffJavaFXFocus() {
-		ICFSecSecUserObj eff = (ICFSecSecUserObj)getJavaFXFocus();
+	public ICFSecSecUserPWResetObj getEffJavaFXFocus() {
+		ICFSecSecUserPWResetObj eff = (ICFSecSecUserPWResetObj)getJavaFXFocus();
 		if( eff != null ) {
 			if( null != eff.getEdit() ) {
-				eff = (ICFSecSecUserObj)eff.getEdit();
+				eff = (ICFSecSecUserPWResetObj)eff.getEdit();
 			}
 		}
 		return( eff );
 	}
 
-	public LoginIdCFLabel getJavaFXLabelLoginId() {
-		if( javafxLabelLoginId == null ) {
-			javafxLabelLoginId = new LoginIdCFLabel();
+	public SentToEMailAddrCFLabel getJavaFXLabelSentToEMailAddr() {
+		if( javafxLabelSentToEMailAddr == null ) {
+			javafxLabelSentToEMailAddr = new SentToEMailAddrCFLabel();
 		}
-		return( javafxLabelLoginId );
+		return( javafxLabelSentToEMailAddr );
 	}
 
-	public void setJavaFXLabelLoginId( LoginIdCFLabel value ) {
-		javafxLabelLoginId = value;
+	public void setJavaFXLabelSentToEMailAddr( SentToEMailAddrCFLabel value ) {
+		javafxLabelSentToEMailAddr = value;
 	}
 
-	public LoginIdEditor getJavaFXEditorLoginId() {
-		if( javafxEditorLoginId == null ) {
-			javafxEditorLoginId = new LoginIdEditor();
+	public SentToEMailAddrEditor getJavaFXEditorSentToEMailAddr() {
+		if( javafxEditorSentToEMailAddr == null ) {
+			javafxEditorSentToEMailAddr = new SentToEMailAddrEditor();
 		}
-		return( javafxEditorLoginId );
+		return( javafxEditorSentToEMailAddr );
 	}
 
-	public void setJavaFXEditorLoginId( LoginIdEditor value ) {
-		javafxEditorLoginId = value;
+	public void setJavaFXEditorSentToEMailAddr( SentToEMailAddrEditor value ) {
+		javafxEditorSentToEMailAddr = value;
 	}
 
-	public DfltSysGrpNameCFLabel getJavaFXLabelDfltSysGrpName() {
-		if( javafxLabelDfltSysGrpName == null ) {
-			javafxLabelDfltSysGrpName = new DfltSysGrpNameCFLabel();
+	public PasswordResetUuid6CFLabel getJavaFXLabelPasswordResetUuid6() {
+		if( javafxLabelPasswordResetUuid6 == null ) {
+			javafxLabelPasswordResetUuid6 = new PasswordResetUuid6CFLabel();
 		}
-		return( javafxLabelDfltSysGrpName );
+		return( javafxLabelPasswordResetUuid6 );
 	}
 
-	public void setJavaFXLabelDfltSysGrpName( DfltSysGrpNameCFLabel value ) {
-		javafxLabelDfltSysGrpName = value;
+	public void setJavaFXLabelPasswordResetUuid6( PasswordResetUuid6CFLabel value ) {
+		javafxLabelPasswordResetUuid6 = value;
 	}
 
-	public DfltSysGrpNameEditor getJavaFXEditorDfltSysGrpName() {
-		if( javafxEditorDfltSysGrpName == null ) {
-			javafxEditorDfltSysGrpName = new DfltSysGrpNameEditor();
+	public PasswordResetUuid6Editor getJavaFXEditorPasswordResetUuid6() {
+		if( javafxEditorPasswordResetUuid6 == null ) {
+			javafxEditorPasswordResetUuid6 = new PasswordResetUuid6Editor();
 		}
-		return( javafxEditorDfltSysGrpName );
+		return( javafxEditorPasswordResetUuid6 );
 	}
 
-	public void setJavaFXEditorDfltSysGrpName( DfltSysGrpNameEditor value ) {
-		javafxEditorDfltSysGrpName = value;
+	public void setJavaFXEditorPasswordResetUuid6( PasswordResetUuid6Editor value ) {
+		javafxEditorPasswordResetUuid6 = value;
 	}
 
-	public DfltClusGrpNameCFLabel getJavaFXLabelDfltClusGrpName() {
-		if( javafxLabelDfltClusGrpName == null ) {
-			javafxLabelDfltClusGrpName = new DfltClusGrpNameCFLabel();
+	public NewAccountCFLabel getJavaFXLabelNewAccount() {
+		if( javafxLabelNewAccount == null ) {
+			javafxLabelNewAccount = new NewAccountCFLabel();
 		}
-		return( javafxLabelDfltClusGrpName );
+		return( javafxLabelNewAccount );
 	}
 
-	public void setJavaFXLabelDfltClusGrpName( DfltClusGrpNameCFLabel value ) {
-		javafxLabelDfltClusGrpName = value;
+	public void setJavaFXLabelNewAccount( NewAccountCFLabel value ) {
+		javafxLabelNewAccount = value;
 	}
 
-	public DfltClusGrpNameEditor getJavaFXEditorDfltClusGrpName() {
-		if( javafxEditorDfltClusGrpName == null ) {
-			javafxEditorDfltClusGrpName = new DfltClusGrpNameEditor();
+	public NewAccountEditor getJavaFXEditorNewAccount() {
+		if( javafxEditorNewAccount == null ) {
+			javafxEditorNewAccount = new NewAccountEditor();
 		}
-		return( javafxEditorDfltClusGrpName );
+		return( javafxEditorNewAccount );
 	}
 
-	public void setJavaFXEditorDfltClusGrpName( DfltClusGrpNameEditor value ) {
-		javafxEditorDfltClusGrpName = value;
-	}
-
-	public DfltTentGrpNameCFLabel getJavaFXLabelDfltTentGrpName() {
-		if( javafxLabelDfltTentGrpName == null ) {
-			javafxLabelDfltTentGrpName = new DfltTentGrpNameCFLabel();
-		}
-		return( javafxLabelDfltTentGrpName );
-	}
-
-	public void setJavaFXLabelDfltTentGrpName( DfltTentGrpNameCFLabel value ) {
-		javafxLabelDfltTentGrpName = value;
-	}
-
-	public DfltTentGrpNameEditor getJavaFXEditorDfltTentGrpName() {
-		if( javafxEditorDfltTentGrpName == null ) {
-			javafxEditorDfltTentGrpName = new DfltTentGrpNameEditor();
-		}
-		return( javafxEditorDfltTentGrpName );
-	}
-
-	public void setJavaFXEditorDfltTentGrpName( DfltTentGrpNameEditor value ) {
-		javafxEditorDfltTentGrpName = value;
-	}
-
-	public EMailAddressCFLabel getJavaFXLabelEMailAddress() {
-		if( javafxLabelEMailAddress == null ) {
-			javafxLabelEMailAddress = new EMailAddressCFLabel();
-		}
-		return( javafxLabelEMailAddress );
-	}
-
-	public void setJavaFXLabelEMailAddress( EMailAddressCFLabel value ) {
-		javafxLabelEMailAddress = value;
-	}
-
-	public EMailAddressEditor getJavaFXEditorEMailAddress() {
-		if( javafxEditorEMailAddress == null ) {
-			javafxEditorEMailAddress = new EMailAddressEditor();
-		}
-		return( javafxEditorEMailAddress );
-	}
-
-	public void setJavaFXEditorEMailAddress( EMailAddressEditor value ) {
-		javafxEditorEMailAddress = value;
+	public void setJavaFXEditorNewAccount( NewAccountEditor value ) {
+		javafxEditorNewAccount = value;
 	}
 
 	public void populateFields()
 	{
-		ICFSecSecUserObj popObj = getEffJavaFXFocus();
+		ICFSecSecUserPWResetObj popObj = getEffJavaFXFocus();
 		if( getPaneMode() == CFPane.PaneMode.Unknown ) {
 			popObj = null;
 		}
 		if( popObj == null ) {
-			getJavaFXEditorLoginId().setStringValue( null );
+			getJavaFXEditorSentToEMailAddr().setStringValue( null );
 		}
 		else {
-			getJavaFXEditorLoginId().setStringValue( popObj.getRequiredLoginId() );
+			getJavaFXEditorSentToEMailAddr().setStringValue( popObj.getRequiredSentToEMailAddr() );
 		}
 
 		if( popObj == null ) {
-			getJavaFXEditorDfltSysGrpName().setStringValue( null );
+			getJavaFXEditorPasswordResetUuid6().setUuid6Value( null );
 		}
 		else {
-			getJavaFXEditorDfltSysGrpName().setStringValue( popObj.getOptionalDfltSysGrpName() );
+			getJavaFXEditorPasswordResetUuid6().setUuid6Value( popObj.getRequiredPasswordResetUuid6() );
 		}
 
 		if( popObj == null ) {
-			getJavaFXEditorDfltClusGrpName().setStringValue( null );
+			getJavaFXEditorNewAccount().setBooleanValue( null );
 		}
 		else {
-			getJavaFXEditorDfltClusGrpName().setStringValue( popObj.getOptionalDfltClusGrpName() );
-		}
-
-		if( popObj == null ) {
-			getJavaFXEditorDfltTentGrpName().setStringValue( null );
-		}
-		else {
-			getJavaFXEditorDfltTentGrpName().setStringValue( popObj.getOptionalDfltTentGrpName() );
-		}
-
-		if( popObj == null ) {
-			getJavaFXEditorEMailAddress().setStringValue( null );
-		}
-		else {
-			getJavaFXEditorEMailAddress().setStringValue( popObj.getRequiredEMailAddress() );
+			getJavaFXEditorNewAccount().setBooleanValue( popObj.getRequiredNewAccount() );
 		}
 	}
 
 	public void postFields()
 	{
 		final String S_ProcName = "postFields";
-		ICFSecSecUserObj focus = getJavaFXFocusAsSecUser();
-		ICFSecSecUserEditObj editObj;
+		ICFSecSecUserPWResetObj focus = getJavaFXFocusAsSecUserPWReset();
+		ICFSecSecUserPWResetEditObj editObj;
 		if( focus != null ) {
-			editObj = (ICFSecSecUserEditObj)(focus.getEdit());
+			editObj = (ICFSecSecUserPWResetEditObj)(focus.getEdit());
 		}
 		else {
 			editObj = null;
@@ -484,40 +361,16 @@ implements ICFSecJavaFXSecUserPaneCommon
 				Inz.x("cflibjavafx.common.PaneIsUnfocusedOrNotEditing") );
 		}
 
-		if( getJavaFXEditorLoginId().getStringValue() == null ) {
-			editObj.setRequiredLoginId( "" );
+		if( getJavaFXEditorSentToEMailAddr().getStringValue() == null ) {
+			editObj.setRequiredSentToEMailAddr( "" );
 		}
 		else {
-			editObj.setRequiredLoginId( getJavaFXEditorLoginId().getStringValue() );
+			editObj.setRequiredSentToEMailAddr( getJavaFXEditorSentToEMailAddr().getStringValue() );
 		}
 
-		if( ( getJavaFXEditorDfltSysGrpName().getStringValue() != null ) && ( getJavaFXEditorDfltSysGrpName().getStringValue().length() <= 0 ) ) {
-			editObj.setOptionalDfltSysGrpName( null );
-		}
-		else {
-			editObj.setOptionalDfltSysGrpName( getJavaFXEditorDfltSysGrpName().getStringValue() );
-		}
+		editObj.setRequiredPasswordResetUuid6( getJavaFXEditorPasswordResetUuid6().getUuid6Value() );
 
-		if( ( getJavaFXEditorDfltClusGrpName().getStringValue() != null ) && ( getJavaFXEditorDfltClusGrpName().getStringValue().length() <= 0 ) ) {
-			editObj.setOptionalDfltClusGrpName( null );
-		}
-		else {
-			editObj.setOptionalDfltClusGrpName( getJavaFXEditorDfltClusGrpName().getStringValue() );
-		}
-
-		if( ( getJavaFXEditorDfltTentGrpName().getStringValue() != null ) && ( getJavaFXEditorDfltTentGrpName().getStringValue().length() <= 0 ) ) {
-			editObj.setOptionalDfltTentGrpName( null );
-		}
-		else {
-			editObj.setOptionalDfltTentGrpName( getJavaFXEditorDfltTentGrpName().getStringValue() );
-		}
-
-		if( getJavaFXEditorEMailAddress().getStringValue() == null ) {
-			editObj.setRequiredEMailAddress( "" );
-		}
-		else {
-			editObj.setRequiredEMailAddress( getJavaFXEditorEMailAddress().getStringValue() );
-		}
+		editObj.setRequiredNewAccount( getJavaFXEditorNewAccount().getBooleanValue() );
 	}
 
 	public void setPaneMode( CFPane.PaneMode value ) {
@@ -526,7 +379,7 @@ implements ICFSecJavaFXSecUserPaneCommon
 		if( oldValue == value ) {
 			return;
 		}
-		ICFSecSecUserObj focus = getJavaFXFocusAsSecUser();
+		ICFSecSecUserPWResetObj focus = getJavaFXFocusAsSecUserPWReset();
 		if( ( value != CFPane.PaneMode.Unknown ) && ( value != CFPane.PaneMode.View ) ) {
 			if( focus == null ) {
 				throw new CFLibNullArgumentException( getClass(),
@@ -535,9 +388,9 @@ implements ICFSecJavaFXSecUserPaneCommon
 					"javaFXFocus" );
 			}
 		}
-		ICFSecSecUserEditObj editObj;
+		ICFSecSecUserPWResetEditObj editObj;
 		if( focus != null ) {
-			editObj  = (ICFSecSecUserEditObj)focus.getEdit();
+			editObj  = (ICFSecSecUserPWResetEditObj)focus.getEdit();
 		}
 		else {
 			editObj = null;
@@ -568,7 +421,7 @@ implements ICFSecJavaFXSecUserPaneCommon
 										Inz.x("cflibjavafx.common.MustBeNew"),
 										Inz.s("cflibjavafx.common.MustBeNew") );
 								}
-								editObj = (ICFSecSecUserEditObj)focus.beginEdit();
+								editObj = (ICFSecSecUserPWResetEditObj)focus.beginEdit();
 								if( editObj == null ) {
 									throw new CFLibUsageException( getClass(),
 										S_ProcName,
@@ -636,7 +489,7 @@ implements ICFSecJavaFXSecUserPaneCommon
 				switch( oldValue ) {
 					case Unknown:
 						if( editObj == null ) {
-							editObj = (ICFSecSecUserEditObj)focus.beginEdit();
+							editObj = (ICFSecSecUserPWResetEditObj)focus.beginEdit();
 							if( editObj == null ) {
 								throw new CFLibUsageException( getClass(),
 									S_ProcName,
@@ -647,7 +500,7 @@ implements ICFSecJavaFXSecUserPaneCommon
 						break;
 					case View:
 						if( editObj == null ) {
-							editObj = (ICFSecSecUserEditObj)focus.beginEdit();
+							editObj = (ICFSecSecUserPWResetEditObj)focus.beginEdit();
 							if( editObj == null ) {
 								throw new CFLibUsageException( getClass(),
 									S_ProcName,
@@ -658,7 +511,7 @@ implements ICFSecJavaFXSecUserPaneCommon
 						break;
 					case Edit:
 						if( editObj == null ) {
-							editObj = (ICFSecSecUserEditObj)focus.beginEdit();
+							editObj = (ICFSecSecUserPWResetEditObj)focus.beginEdit();
 							if( editObj == null ) {
 								throw new CFLibUsageException( getClass(),
 									S_ProcName,
@@ -693,7 +546,7 @@ implements ICFSecJavaFXSecUserPaneCommon
 				if( editObj != null ) {
 					postFields();
 					if( editObj.getIsNew() ) {
-						focus = (ICFSecSecUserObj)editObj.create();
+						focus = (ICFSecSecUserPWResetObj)editObj.create();
 						setJavaFXFocus( focus );
 					}
 					else {
@@ -708,7 +561,7 @@ implements ICFSecJavaFXSecUserPaneCommon
 					case View:
 						if( focus != null ) {
 							if( editObj == null ) {
-								editObj = (ICFSecSecUserEditObj)focus.beginEdit();
+								editObj = (ICFSecSecUserPWResetEditObj)focus.beginEdit();
 								if( editObj == null ) {
 								throw new CFLibUsageException( getClass(),
 									S_ProcName,
@@ -721,7 +574,7 @@ implements ICFSecJavaFXSecUserPaneCommon
 					case Edit:
 						if( focus != null ) {
 							if( editObj == null ) {
-								editObj = (ICFSecSecUserEditObj)focus.beginEdit();
+								editObj = (ICFSecSecUserPWResetEditObj)focus.beginEdit();
 								if( editObj == null ) {
 								throw new CFLibUsageException( getClass(),
 									S_ProcName,
@@ -738,7 +591,7 @@ implements ICFSecJavaFXSecUserPaneCommon
 							String.format(Inz.s("cflibjavafx.common.CannotTransitionOldValueToDelete"), oldValue) );
 					case Delete:
 						if( editObj == null ) {
-							editObj = (ICFSecSecUserEditObj)focus.beginEdit();
+							editObj = (ICFSecSecUserPWResetEditObj)focus.beginEdit();
 							if( editObj == null ) {
 								throw new CFLibUsageException( getClass(),
 									S_ProcName,
@@ -795,7 +648,7 @@ implements ICFSecJavaFXSecUserPaneCommon
 				break;
 		}
 		if( isEditing ) {
-			ICFSecSecUserObj focus = getJavaFXFocusAsSecUser();
+			ICFSecSecUserPWResetObj focus = getJavaFXFocusAsSecUserPWReset();
 			if( focus == null ) {
 				isEditing = false;
 			}
@@ -803,20 +656,14 @@ implements ICFSecJavaFXSecUserPaneCommon
 				isEditing = false;
 			}
 		}
-		if( javafxEditorLoginId != null ) {
-			javafxEditorLoginId.setDisable( ! isEditing );
+		if( javafxEditorSentToEMailAddr != null ) {
+			javafxEditorSentToEMailAddr.setDisable( ! isEditing );
 		}
-		if( javafxEditorDfltSysGrpName != null ) {
-			javafxEditorDfltSysGrpName.setDisable( ! isEditing );
+		if( javafxEditorPasswordResetUuid6 != null ) {
+			javafxEditorPasswordResetUuid6.setDisable( ! isEditing );
 		}
-		if( javafxEditorDfltClusGrpName != null ) {
-			javafxEditorDfltClusGrpName.setDisable( ! isEditing );
-		}
-		if( javafxEditorDfltTentGrpName != null ) {
-			javafxEditorDfltTentGrpName.setDisable( ! isEditing );
-		}
-		if( javafxEditorEMailAddress != null ) {
-			javafxEditorEMailAddress.setDisable( ! isEditing );
+		if( javafxEditorNewAccount != null ) {
+			javafxEditorNewAccount.setDisable( ! isEditing );
 		}
 	}
 }

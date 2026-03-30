@@ -1,4 +1,4 @@
-// Description: Java 25 JavaFX Pane Common Interface for SecUserPassword.
+// Description: Java 25 JavaFX Pane Common Interface for SecUserEMConf.
 
 /*
  *	server.markhome.mcf.CFSec
@@ -40,15 +40,10 @@ import server.markhome.mcf.v3_1.cfsec.cfsec.*;
 import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 
 /**
- *	ICFSecJavaFXSecUserPasswordPaneList JavaFX Interface
- *	for SecUserPassword data collections.  It is presumed that the
- *	JavaFXFocus is the currently selected single member of
- *	the collection associated with this list view, or null
- *	if no element has been selected from the data collection..
+ *	ICFSecJavaFXSecUserEMConfPageCallback JavaFX Interface
+ *	for SecUserEMConf.
  */
-public interface ICFSecJavaFXSecUserPasswordPaneList
-extends
-	ICFSecJavaFXSecUserPasswordPaneCommon,
-	ICFPaneList<ICFSecSecUserObj,ICFSecSecUserPasswordObj>
+public interface ICFSecJavaFXSecUserEMConfPageCallback
 {
+	public List<ICFSecSecUserEMConfObj> pageData( CFLibDbKeyHash256 priorSecUserId );
 }

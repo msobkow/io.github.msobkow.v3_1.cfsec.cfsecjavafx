@@ -1,4 +1,4 @@
-// Description: Java 25 JavaFX Picker of Obj Pane implementation for SecUserPWHistory.
+// Description: Java 25 JavaFX Picker of Obj Pane implementation for SecUserEMConf.
 
 /*
  *	server.markhome.mcf.CFSec
@@ -56,40 +56,40 @@ import server.markhome.mcf.v3_1.cfsec.cfsec.*;
 import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 
 /**
- *	CFSecJavaFXSecUserPWHistoryPickerPane JavaFX Pick Obj Pane implementation
- *	for SecUserPWHistory.
+ *	CFSecJavaFXSecUserEMConfPickerPane JavaFX Pick Obj Pane implementation
+ *	for SecUserEMConf.
  */
-public class CFSecJavaFXSecUserPWHistoryPickerPane
+public class CFSecJavaFXSecUserEMConfPickerPane
 extends CFBorderPane
-implements ICFSecJavaFXSecUserPWHistoryPaneList
+implements ICFSecJavaFXSecUserEMConfPaneList
 {
-	public static String S_FormName = "Choose Security User Password History";
+	public static String S_FormName = "Choose Email confirmation";
 	protected ICFSecJavaFXSchema javafxSchema = null;
-	protected ICFSecJavaFXSecUserPWHistoryPageCallback pageCallback;
+	protected ICFSecJavaFXSecUserEMConfPageCallback pageCallback;
 	protected CFButton buttonRefresh = null;
 	protected CFButton buttonMoreData = null;
 	protected boolean endOfData = true;
-	protected ObservableList<ICFSecSecUserPWHistoryObj> observableListOfSecUserPWHistory = null;
-	protected TableColumn<ICFSecSecUserPWHistoryObj, CFLibDbKeyHash256> tableColumnSecUserId = null;
-	protected TableColumn<ICFSecSecUserPWHistoryObj, LocalDateTime> tableColumnPWSetStamp = null;
-	protected TableColumn<ICFSecSecUserPWHistoryObj, LocalDateTime> tableColumnPWReplacedStamp = null;
-	protected TableColumn<ICFSecSecUserPWHistoryObj, String> tableColumnPasswordHash = null;
-	protected TableView<ICFSecSecUserPWHistoryObj> dataTable = null;
+	protected ObservableList<ICFSecSecUserEMConfObj> observableListOfSecUserEMConf = null;
+	protected TableColumn<ICFSecSecUserEMConfObj, String> tableColumnConfirmEMailAddr = null;
+	protected TableColumn<ICFSecSecUserEMConfObj, LocalDateTime> tableColumnEMailSentStamp = null;
+	protected TableColumn<ICFSecSecUserEMConfObj, CFLibUuid6> tableColumnEMConfirmationUuid6 = null;
+	protected TableColumn<ICFSecSecUserEMConfObj, Boolean> tableColumnNewAccount = null;
+	protected TableView<ICFSecSecUserEMConfObj> dataTable = null;
 	protected CFHBox hboxMenu = null;
 	public final String S_ColumnNames[] = { "Name" };
 	protected ICFFormManager cfFormManager = null;
-	protected ICFSecJavaFXSecUserPWHistoryChosen invokeWhenChosen = null;
-	protected ICFLibAnyObj javafxContainer = null;
+	protected ICFSecJavaFXSecUserEMConfChosen invokeWhenChosen = null;
+	protected ICFSecSecUserObj javafxContainer = null;
 	protected CFButton buttonCancel = null;
 	protected CFButton buttonChooseNone = null;
 	protected CFButton buttonChooseSelected = null;
 	protected ScrollPane scrollMenu = null;
-	public CFSecJavaFXSecUserPWHistoryPickerPane( ICFFormManager formManager,
+	public CFSecJavaFXSecUserEMConfPickerPane( ICFFormManager formManager,
 		ICFSecJavaFXSchema argSchema,
-		ICFSecSecUserPWHistoryObj argFocus,
-		ICFLibAnyObj argContainer,
-		ICFSecJavaFXSecUserPWHistoryPageCallback argPageCallback,
-		ICFSecJavaFXSecUserPWHistoryChosen whenChosen )
+		ICFSecSecUserEMConfObj argFocus,
+		ICFSecSecUserObj argContainer,
+		ICFSecJavaFXSecUserEMConfPageCallback argPageCallback,
+		ICFSecJavaFXSecUserEMConfChosen whenChosen )
 	{
 		super();
 		final String S_ProcName = "construct-schema-focus";
@@ -119,104 +119,105 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 		javaFXFocus = argFocus;
 		javafxContainer = argContainer;
 		pageCallback = argPageCallback;
-		dataTable = new TableView<ICFSecSecUserPWHistoryObj>();
-		tableColumnSecUserId = new TableColumn<ICFSecSecUserPWHistoryObj,CFLibDbKeyHash256>( "Security User Id" );
-		tableColumnSecUserId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPWHistoryObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
-			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecUserPWHistoryObj, CFLibDbKeyHash256> p ) {
-				ICFSecSecUserPWHistoryObj obj = p.getValue();
+		dataTable = new TableView<ICFSecSecUserEMConfObj>();
+		tableColumnConfirmEMailAddr = new TableColumn<ICFSecSecUserEMConfObj,String>( "Confirm EMail Address" );
+		tableColumnConfirmEMailAddr.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserEMConfObj,String>,ObservableValue<String> >() {
+			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserEMConfObj, String> p ) {
+				ICFSecSecUserEMConfObj obj = p.getValue();
 				if( obj == null ) {
 					return( null );
 				}
 				else {
-					CFLibDbKeyHash256 value = obj.getRequiredSecUserId();
-					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnSecUserId.setCellFactory( new Callback<TableColumn<ICFSecSecUserPWHistoryObj,CFLibDbKeyHash256>,TableCell<ICFSecSecUserPWHistoryObj,CFLibDbKeyHash256>>() {
-			@Override public TableCell<ICFSecSecUserPWHistoryObj,CFLibDbKeyHash256> call(
-				TableColumn<ICFSecSecUserPWHistoryObj,CFLibDbKeyHash256> arg)
-			{
-				return new CFDbKeyHash256TableCell<ICFSecSecUserPWHistoryObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnSecUserId );
-		tableColumnPWSetStamp = new TableColumn<ICFSecSecUserPWHistoryObj,LocalDateTime>( "Password set at" );
-		tableColumnPWSetStamp.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPWHistoryObj,LocalDateTime>,ObservableValue<LocalDateTime> >() {
-			public ObservableValue<LocalDateTime> call( CellDataFeatures<ICFSecSecUserPWHistoryObj, LocalDateTime> p ) {
-				ICFSecSecUserPWHistoryObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					LocalDateTime value = obj.getRequiredPWSetStamp();
-					ReadOnlyObjectWrapper<LocalDateTime> observable = new ReadOnlyObjectWrapper<LocalDateTime>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnPWSetStamp.setCellFactory( new Callback<TableColumn<ICFSecSecUserPWHistoryObj,LocalDateTime>,TableCell<ICFSecSecUserPWHistoryObj,LocalDateTime>>() {
-			@Override public TableCell<ICFSecSecUserPWHistoryObj,LocalDateTime> call(
-				TableColumn<ICFSecSecUserPWHistoryObj,LocalDateTime> arg)
-			{
-				return new CFTimestampTableCell<ICFSecSecUserPWHistoryObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnPWSetStamp );
-		tableColumnPWReplacedStamp = new TableColumn<ICFSecSecUserPWHistoryObj,LocalDateTime>( "Password set at" );
-		tableColumnPWReplacedStamp.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPWHistoryObj,LocalDateTime>,ObservableValue<LocalDateTime> >() {
-			public ObservableValue<LocalDateTime> call( CellDataFeatures<ICFSecSecUserPWHistoryObj, LocalDateTime> p ) {
-				ICFSecSecUserPWHistoryObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					LocalDateTime value = obj.getRequiredPWReplacedStamp();
-					ReadOnlyObjectWrapper<LocalDateTime> observable = new ReadOnlyObjectWrapper<LocalDateTime>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnPWReplacedStamp.setCellFactory( new Callback<TableColumn<ICFSecSecUserPWHistoryObj,LocalDateTime>,TableCell<ICFSecSecUserPWHistoryObj,LocalDateTime>>() {
-			@Override public TableCell<ICFSecSecUserPWHistoryObj,LocalDateTime> call(
-				TableColumn<ICFSecSecUserPWHistoryObj,LocalDateTime> arg)
-			{
-				return new CFTimestampTableCell<ICFSecSecUserPWHistoryObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnPWReplacedStamp );
-		tableColumnPasswordHash = new TableColumn<ICFSecSecUserPWHistoryObj,String>( "Password Hash" );
-		tableColumnPasswordHash.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserPWHistoryObj,String>,ObservableValue<String> >() {
-			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserPWHistoryObj, String> p ) {
-				ICFSecSecUserPWHistoryObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					String value = obj.getRequiredPasswordHash();
+					String value = obj.getRequiredConfirmEMailAddr();
 					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
 					observable.setValue( value );
 					return( observable );
 				}
 			}
 		});
-		tableColumnPasswordHash.setCellFactory( new Callback<TableColumn<ICFSecSecUserPWHistoryObj,String>,TableCell<ICFSecSecUserPWHistoryObj,String>>() {
-			@Override public TableCell<ICFSecSecUserPWHistoryObj,String> call(
-				TableColumn<ICFSecSecUserPWHistoryObj,String> arg)
+		tableColumnConfirmEMailAddr.setCellFactory( new Callback<TableColumn<ICFSecSecUserEMConfObj,String>,TableCell<ICFSecSecUserEMConfObj,String>>() {
+			@Override public TableCell<ICFSecSecUserEMConfObj,String> call(
+				TableColumn<ICFSecSecUserEMConfObj,String> arg)
 			{
-				return new CFStringTableCell<ICFSecSecUserPWHistoryObj>();
+				return new CFStringTableCell<ICFSecSecUserEMConfObj>();
 			}
 		});
-		dataTable.getColumns().add( tableColumnPasswordHash );
+		dataTable.getColumns().add( tableColumnConfirmEMailAddr );
+		tableColumnEMailSentStamp = new TableColumn<ICFSecSecUserEMConfObj,LocalDateTime>( "Confirmation EMail Sent At" );
+		tableColumnEMailSentStamp.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserEMConfObj,LocalDateTime>,ObservableValue<LocalDateTime> >() {
+			public ObservableValue<LocalDateTime> call( CellDataFeatures<ICFSecSecUserEMConfObj, LocalDateTime> p ) {
+				ICFSecSecUserEMConfObj obj = p.getValue();
+				if( obj == null ) {
+					return( null );
+				}
+				else {
+					LocalDateTime value = obj.getRequiredEMailSentStamp();
+					ReadOnlyObjectWrapper<LocalDateTime> observable = new ReadOnlyObjectWrapper<LocalDateTime>();
+					observable.setValue( value );
+					return( observable );
+				}
+			}
+		});
+		tableColumnEMailSentStamp.setCellFactory( new Callback<TableColumn<ICFSecSecUserEMConfObj,LocalDateTime>,TableCell<ICFSecSecUserEMConfObj,LocalDateTime>>() {
+			@Override public TableCell<ICFSecSecUserEMConfObj,LocalDateTime> call(
+				TableColumn<ICFSecSecUserEMConfObj,LocalDateTime> arg)
+			{
+				return new CFTimestampTableCell<ICFSecSecUserEMConfObj>();
+			}
+		});
+		dataTable.getColumns().add( tableColumnEMailSentStamp );
+		tableColumnEMConfirmationUuid6 = new TableColumn<ICFSecSecUserEMConfObj,CFLibUuid6>( "EMail Confirmation UUID6" );
+		tableColumnEMConfirmationUuid6.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserEMConfObj,CFLibUuid6>,ObservableValue<CFLibUuid6> >() {
+			public ObservableValue<CFLibUuid6> call( CellDataFeatures<ICFSecSecUserEMConfObj, CFLibUuid6> p ) {
+				ICFSecSecUserEMConfObj obj = p.getValue();
+				if( obj == null ) {
+					return( null );
+				}
+				else {
+					CFLibUuid6 value = obj.getRequiredEMConfirmationUuid6();
+					ReadOnlyObjectWrapper<CFLibUuid6> observable = new ReadOnlyObjectWrapper<CFLibUuid6>();
+					observable.setValue( value );
+					return( observable );
+				}
+			}
+		});
+		tableColumnEMConfirmationUuid6.setCellFactory( new Callback<TableColumn<ICFSecSecUserEMConfObj,CFLibUuid6>,TableCell<ICFSecSecUserEMConfObj,CFLibUuid6>>() {
+			@Override public TableCell<ICFSecSecUserEMConfObj,CFLibUuid6> call(
+				TableColumn<ICFSecSecUserEMConfObj,CFLibUuid6> arg)
+			{
+				return new CFUuid6TableCell<ICFSecSecUserEMConfObj>();
+			}
+		});
+		dataTable.getColumns().add( tableColumnEMConfirmationUuid6 );
+		tableColumnNewAccount = new TableColumn<ICFSecSecUserEMConfObj,Boolean>( "Confirmation email is for new account?" );
+		tableColumnNewAccount.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserEMConfObj,Boolean>,ObservableValue<Boolean> >() {
+			public ObservableValue<Boolean> call( CellDataFeatures<ICFSecSecUserEMConfObj, Boolean> p ) {
+				ICFSecSecUserEMConfObj obj = p.getValue();
+				if( obj == null ) {
+					return( null );
+				}
+				else {
+					boolean value = obj.getRequiredNewAccount();
+					Boolean wrapped = Boolean.valueOf( value );
+					ReadOnlyObjectWrapper<Boolean> observable = new ReadOnlyObjectWrapper<Boolean>();
+					observable.setValue( wrapped );
+					return( observable );
+				}
+			}
+		});
+		tableColumnNewAccount.setCellFactory( new Callback<TableColumn<ICFSecSecUserEMConfObj,Boolean>,TableCell<ICFSecSecUserEMConfObj,Boolean>>() {
+			@Override public TableCell<ICFSecSecUserEMConfObj,Boolean> call(
+				TableColumn<ICFSecSecUserEMConfObj,Boolean> arg)
+			{
+				return new CFBoolTableCell<ICFSecSecUserEMConfObj>();
+			}
+		});
+		dataTable.getColumns().add( tableColumnNewAccount );
 		dataTable.getSelectionModel().selectedItemProperty().addListener(
-			new ChangeListener<ICFSecSecUserPWHistoryObj>() {
-				@Override public void changed( ObservableValue<? extends ICFSecSecUserPWHistoryObj> observable,
-					ICFSecSecUserPWHistoryObj oldValue,
-					ICFSecSecUserPWHistoryObj newValue )
+			new ChangeListener<ICFSecSecUserEMConfObj>() {
+				@Override public void changed( ObservableValue<? extends ICFSecSecUserEMConfObj> observable,
+					ICFSecSecUserEMConfObj oldValue,
+					ICFSecSecUserEMConfObj newValue )
 				{
 					setJavaFXFocus( newValue );
 					if( buttonChooseSelected != null ) {
@@ -237,22 +238,21 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 				@Override public void handle( ActionEvent e ) {
 					final String S_ProcName = "handle";
 					try {
-						observableListOfSecUserPWHistory = FXCollections.observableArrayList();
-						List<ICFSecSecUserPWHistoryObj> page = pageCallback.pageData( null,
-							null );
-						Iterator<ICFSecSecUserPWHistoryObj> iter = page.iterator();
+						observableListOfSecUserEMConf = FXCollections.observableArrayList();
+						List<ICFSecSecUserEMConfObj> page = pageCallback.pageData( null );
+						Iterator<ICFSecSecUserEMConfObj> iter = page.iterator();
 						while( iter.hasNext() ) {
-							observableListOfSecUserPWHistory.add( iter.next() );
+							observableListOfSecUserEMConf.add( iter.next() );
 						}
 						if( page.size() < 25 ) {
-							observableListOfSecUserPWHistory.sort( compareSecUserPWHistoryByQualName );
+							observableListOfSecUserEMConf.sort( compareSecUserEMConfByQualName );
 							endOfData = true;
 						}
 						else {
 							endOfData = false;
 						}
 						if( dataTable != null ) {
-							dataTable.setItems( observableListOfSecUserPWHistory );
+							dataTable.setItems( observableListOfSecUserEMConf );
 							// Hack from stackoverflow to fix JavaFX TableView refresh issue
 							((TableColumn)dataTable.getColumns().get(0)).setVisible( false );
 							((TableColumn)dataTable.getColumns().get(0)).setVisible( true );
@@ -273,32 +273,30 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 				@Override public void handle( ActionEvent e ) {
 					final String S_ProcName = "handle";
 					try {
-						ICFSecSecUserPWHistoryObj lastObj = null;
-						if( ( observableListOfSecUserPWHistory != null ) && ( observableListOfSecUserPWHistory.size() > 0 ) ) {
-							lastObj = observableListOfSecUserPWHistory.get( observableListOfSecUserPWHistory.size() - 1 );
+						ICFSecSecUserEMConfObj lastObj = null;
+						if( ( observableListOfSecUserEMConf != null ) && ( observableListOfSecUserEMConf.size() > 0 ) ) {
+							lastObj = observableListOfSecUserEMConf.get( observableListOfSecUserEMConf.size() - 1 );
 						}
-						List<ICFSecSecUserPWHistoryObj> page;
+						List<ICFSecSecUserEMConfObj> page;
 						if( lastObj != null ) {
-							page = pageCallback.pageData( lastObj.getRequiredSecUserId(),
-							lastObj.getRequiredPWSetStamp() );
+							page = pageCallback.pageData( lastObj.getRequiredSecUserId() );
 						}
 						else {
-							page = pageCallback.pageData( null,
-							null );
+							page = pageCallback.pageData( null );
 						}
-						Iterator<ICFSecSecUserPWHistoryObj> iter = page.iterator();
+						Iterator<ICFSecSecUserEMConfObj> iter = page.iterator();
 						while( iter.hasNext() ) {
-							observableListOfSecUserPWHistory.add( iter.next() );
+							observableListOfSecUserEMConf.add( iter.next() );
 						}
 						if( page.size() < 25 ) {
-							observableListOfSecUserPWHistory.sort( compareSecUserPWHistoryByQualName );
+							observableListOfSecUserEMConf.sort( compareSecUserEMConfByQualName );
 							endOfData = true;
 						}
 						else {
 							endOfData = false;
 						}
 						if( dataTable != null ) {
-							dataTable.setItems( observableListOfSecUserPWHistory );
+							dataTable.setItems( observableListOfSecUserEMConf );
 							// Hack from stackoverflow to fix JavaFX TableView refresh issue
 							((TableColumn)dataTable.getColumns().get(0)).setVisible( false );
 							((TableColumn)dataTable.getColumns().get(0)).setVisible( true );
@@ -341,7 +339,7 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 							0,
 							"schemaObj" );
 					}
-					invokeWhenChosen.choseSecUserPWHistory( null );
+					invokeWhenChosen.choseSecUserEMConf( null );
 					cfFormManager.closeCurrentForm();
 				}
 				catch( Throwable t ) {
@@ -364,8 +362,8 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 							0,
 							"schemaObj" );
 					}
-					ICFSecSecUserPWHistoryObj selectedInstance = getJavaFXFocusAsSecUserPWHistory();
-					invokeWhenChosen.choseSecUserPWHistory( selectedInstance );
+					ICFSecSecUserEMConfObj selectedInstance = getJavaFXFocusAsSecUserEMConf();
+					invokeWhenChosen.choseSecUserEMConf( selectedInstance );
 					cfFormManager.closeCurrentForm();
 				}
 				catch( Throwable t ) {
@@ -410,7 +408,7 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 
 	public void setJavaFXFocus( ICFLibAnyObj value ) {
 		final String S_ProcName = "setJavaFXFocus";
-		if( ( value == null ) || ( value instanceof ICFSecSecUserPWHistoryObj ) ) {
+		if( ( value == null ) || ( value instanceof ICFSecSecUserEMConfObj ) ) {
 			super.setJavaFXFocus( value );
 		}
 		else {
@@ -418,28 +416,28 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 				S_ProcName,
 				"value",
 				value,
-				"ICFSecSecUserPWHistoryObj" );
+				"ICFSecSecUserEMConfObj" );
 		}
 		if( dataTable == null ) {
 			return;
 		}
 	}
 
-	public ICFSecSecUserPWHistoryObj getJavaFXFocusAsSecUserPWHistory() {
-		return( (ICFSecSecUserPWHistoryObj)getJavaFXFocus() );
+	public ICFSecSecUserEMConfObj getJavaFXFocusAsSecUserEMConf() {
+		return( (ICFSecSecUserEMConfObj)getJavaFXFocus() );
 	}
 
-	public void setJavaFXFocusAsSecUserPWHistory( ICFSecSecUserPWHistoryObj value ) {
+	public void setJavaFXFocusAsSecUserEMConf( ICFSecSecUserEMConfObj value ) {
 		setJavaFXFocus( value );
 	}
 
-	public class SecUserPWHistoryByQualNameComparator
-	implements Comparator<ICFSecSecUserPWHistoryObj>
+	public class SecUserEMConfByQualNameComparator
+	implements Comparator<ICFSecSecUserEMConfObj>
 	{
-		public SecUserPWHistoryByQualNameComparator() {
+		public SecUserEMConfByQualNameComparator() {
 		}
 
-		public int compare( ICFSecSecUserPWHistoryObj lhs, ICFSecSecUserPWHistoryObj rhs ) {
+		public int compare( ICFSecSecUserEMConfObj lhs, ICFSecSecUserEMConfObj rhs ) {
 			if( lhs == null ) {
 				if( rhs == null ) {
 					return( 0 );
@@ -472,27 +470,27 @@ implements ICFSecJavaFXSecUserPWHistoryPaneList
 		}
 	}
 
-	protected SecUserPWHistoryByQualNameComparator compareSecUserPWHistoryByQualName = new SecUserPWHistoryByQualNameComparator();
+	protected SecUserEMConfByQualNameComparator compareSecUserEMConfByQualName = new SecUserEMConfByQualNameComparator();
 
-	public Collection<ICFSecSecUserPWHistoryObj> getJavaFXDataCollection() {
+	public Collection<ICFSecSecUserEMConfObj> getJavaFXDataCollection() {
 		return( null );
 	}
 
-	public void setJavaFXDataCollection( Collection<ICFSecSecUserPWHistoryObj> value ) {
+	public void setJavaFXDataCollection( Collection<ICFSecSecUserEMConfObj> value ) {
 		// Use page data instead
 	}
 
-	public ICFLibAnyObj getJavaFXContainer() {
+	public ICFSecSecUserObj getJavaFXContainer() {
 		return( javafxContainer );
 	}
 
-	public void setJavaFXContainer( ICFLibAnyObj value ) {
+	public void setJavaFXContainer( ICFSecSecUserObj value ) {
 		javafxContainer = value;
 	}
 
 	public void adjustListButtons() {
 		boolean enableState;
-		ICFSecSecUserPWHistoryObj selectedObj = getJavaFXFocusAsSecUserPWHistory();
+		ICFSecSecUserEMConfObj selectedObj = getJavaFXFocusAsSecUserEMConf();
 		if( selectedObj == null ) {
 			enableState = false;
 		}

@@ -1,4 +1,4 @@
-// Description: Java 25 JavaFX Display Element Factory Interface for SecUserPassword.
+// Description: Java 25 JavaFX Display Element Factory Interface for SecUserPWReset.
 
 /*
  *	server.markhome.mcf.CFSec
@@ -40,41 +40,41 @@ import server.markhome.mcf.v3_1.cfsec.cfsec.*;
 import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 
 /**
- *	ICFSecJavaFXSecUserPasswordFactory JavaFX Display Element Factory Interface
- *	for SecUserPassword.
+ *	ICFSecJavaFXSecUserPWResetFactory JavaFX Display Element Factory Interface
+ *	for SecUserPWReset.
  */
-public interface ICFSecJavaFXSecUserPasswordFactory
+public interface ICFSecJavaFXSecUserPWResetFactory
 {
-	public CFGridPane newAttrPane( ICFFormManager formManager, ICFSecSecUserPasswordObj javaFXFocus );
+	public CFGridPane newAttrPane( ICFFormManager formManager, ICFSecSecUserPWResetObj javaFXFocus );
 
 	public CFBorderPane newListPane( ICFFormManager formManager,
 		ICFSecSecUserObj argContainer,
-		ICFSecSecUserPasswordObj argFocus,
-		Collection<ICFSecSecUserPasswordObj> argDataCollection,
+		ICFSecSecUserPWResetObj argFocus,
+		ICFSecJavaFXSecUserPWResetPageCallback argPageCallback,
 		ICFRefreshCallback refreshCallback,
 		boolean sortByChain );
 
 	public CFBorderPane newPickerPane( ICFFormManager formManager,
-		ICFSecSecUserPasswordObj argFocus,
+		ICFSecSecUserPWResetObj argFocus,
 		ICFSecSecUserObj argContainer,
-		Collection<ICFSecSecUserPasswordObj> argDataCollection,
-		ICFSecJavaFXSecUserPasswordChosen whenChosen );
+		ICFSecJavaFXSecUserPWResetPageCallback argPageCallback,
+		ICFSecJavaFXSecUserPWResetChosen whenChosen );
 
-	public CFTabPane newEltTabPane( ICFFormManager formManger, ICFSecSecUserPasswordObj javaFXFocus );
+	public CFTabPane newEltTabPane( ICFFormManager formManger, ICFSecSecUserPWResetObj javaFXFocus );
 
-	public CFBorderPane newAskDeleteForm( ICFFormManager formManager, ICFSecSecUserPasswordObj javaFXFocus, ICFDeleteCallback callback );
+	public CFBorderPane newAskDeleteForm( ICFFormManager formManager, ICFSecSecUserPWResetObj javaFXFocus, ICFDeleteCallback callback );
 
-	public CFSplitPane newAddPane( ICFFormManager formManger, ICFSecSecUserPasswordObj javaFXFocus );
+	public CFSplitPane newAddPane( ICFFormManager formManger, ICFSecSecUserPWResetObj javaFXFocus );
 
-	public CFSplitPane newViewEditPane( ICFFormManager formManger, ICFSecSecUserPasswordObj javaFXFocus );
+	public CFSplitPane newViewEditPane( ICFFormManager formManger, ICFSecSecUserPWResetObj javaFXFocus );
 
 	public CFBorderPane newPickerForm( ICFFormManager formManager,
-		ICFSecSecUserPasswordObj javaFXFocus,
+		ICFSecSecUserPWResetObj javaFXFocus,
 		ICFSecSecUserObj argContainer,
-		Collection<ICFSecSecUserPasswordObj> argDataCollection,
-		ICFSecJavaFXSecUserPasswordChosen whenChosen );
+		ICFSecJavaFXSecUserPWResetPageCallback argPageCallback,
+		ICFSecJavaFXSecUserPWResetChosen whenChosen );
 
-	public CFBorderPane newAddForm( ICFFormManager formManager, ICFSecSecUserPasswordObj javaFXFocus, ICFFormClosedCallback closeCallback, boolean allowSave );
+	public CFBorderPane newAddForm( ICFFormManager formManager, ICFSecSecUserPWResetObj javaFXFocus, ICFFormClosedCallback closeCallback, boolean allowSave );
 
-	public CFBorderPane newViewEditForm( ICFFormManager formManager, ICFSecSecUserPasswordObj javaFXFocus, ICFFormClosedCallback closeCallback, boolean cameFromAdd );
+	public CFBorderPane newViewEditForm( ICFFormManager formManager, ICFSecSecUserPWResetObj javaFXFocus, ICFFormClosedCallback closeCallback, boolean cameFromAdd );
 }
