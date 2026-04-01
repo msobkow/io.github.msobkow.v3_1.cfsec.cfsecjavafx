@@ -75,6 +75,7 @@ implements ICFSecJavaFXSecUserPaneList
 	protected CFButton buttonEditSelected = null;
 	protected CFButton buttonDeleteSelected = null;
 	protected TableView<ICFSecSecUserObj> dataTable = null;
+	protected TableColumn<ICFSecSecUserObj, CFLibDbKeyHash256> tableColumnSecUserId = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnLoginId = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnDfltSysGrpName = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnDfltClusGrpName = null;
@@ -168,6 +169,29 @@ implements ICFSecJavaFXSecUserPaneList
 		javafxSortByChain = sortByChain;
 		pageCallback = argPageCallback;
 		dataTable = new TableView<ICFSecSecUserObj>();
+		tableColumnSecUserId = new TableColumn<ICFSecSecUserObj,CFLibDbKeyHash256>( "Security User Id" );
+		tableColumnSecUserId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
+			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecUserObj, CFLibDbKeyHash256> p ) {
+				ICFSecSecUserObj obj = p.getValue();
+				if( obj == null ) {
+					return( null );
+				}
+				else {
+					CFLibDbKeyHash256 value = obj.getRequiredSecUserId();
+					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
+					observable.setValue( value );
+					return( observable );
+				}
+			}
+		});
+		tableColumnSecUserId.setCellFactory( new Callback<TableColumn<ICFSecSecUserObj,CFLibDbKeyHash256>,TableCell<ICFSecSecUserObj,CFLibDbKeyHash256>>() {
+			@Override public TableCell<ICFSecSecUserObj,CFLibDbKeyHash256> call(
+				TableColumn<ICFSecSecUserObj,CFLibDbKeyHash256> arg)
+			{
+				return new CFDbKeyHash256TableCell<ICFSecSecUserObj>();
+			}
+		});
+		dataTable.getColumns().add( tableColumnSecUserId );
 		tableColumnLoginId = new TableColumn<ICFSecSecUserObj,String>( "Login Id" );
 		tableColumnLoginId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,String>,ObservableValue<String> >() {
 			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserObj, String> p ) {

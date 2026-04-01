@@ -64,6 +64,24 @@ implements ICFSecJavaFXSecUserPaneCommon
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	boolean javafxIsInitializing = true;
 
+	protected class SecUserIdCFLabel
+		extends CFLabel
+	{
+		public SecUserIdCFLabel() {
+			super();
+			setText(Inz.s("cfsec.javafx.SecUser.AttrPane.SecUserId.EffLabel"));
+		}
+	}
+
+	protected class SecUserIdEditor
+		extends CFDbKeyHash256Editor
+	{
+		public SecUserIdEditor() {
+			super();
+			setFieldNameInzTag( "cfsec.javafx.SecUser.AttrPane.SecUserId.EffLabel" );
+		}
+	}
+
 	protected class LoginIdCFLabel
 		extends CFLabel
 	{
@@ -159,6 +177,8 @@ implements ICFSecJavaFXSecUserPaneCommon
 		}
 	}
 
+	protected SecUserIdCFLabel javafxLabelSecUserId = null;
+	protected SecUserIdEditor javafxEditorSecUserId = null;
 	protected LoginIdCFLabel javafxLabelLoginId = null;
 	protected LoginIdEditor javafxEditorLoginId = null;
 	protected DfltSysGrpNameCFLabel javafxLabelDfltSysGrpName = null;
@@ -201,6 +221,17 @@ implements ICFSecJavaFXSecUserPaneCommon
 		column1.setPercentWidth( 100 );
 		getColumnConstraints().addAll( column1 );
 		int gridRow = 0;
+		label = getJavaFXLabelSecUserId();
+		setHalignment( label, HPos.LEFT );
+		setValignment( label, VPos.BOTTOM );
+		add( label, 0, gridRow );
+		gridRow ++;
+
+		ctrl = getJavaFXEditorSecUserId();
+		setHalignment( ctrl, HPos.LEFT );
+		add( ctrl, 0, gridRow );
+		gridRow ++;
+
 		label = getJavaFXLabelLoginId();
 		setHalignment( label, HPos.LEFT );
 		setValignment( label, VPos.BOTTOM );
@@ -312,6 +343,28 @@ implements ICFSecJavaFXSecUserPaneCommon
 			}
 		}
 		return( eff );
+	}
+
+	public SecUserIdCFLabel getJavaFXLabelSecUserId() {
+		if( javafxLabelSecUserId == null ) {
+			javafxLabelSecUserId = new SecUserIdCFLabel();
+		}
+		return( javafxLabelSecUserId );
+	}
+
+	public void setJavaFXLabelSecUserId( SecUserIdCFLabel value ) {
+		javafxLabelSecUserId = value;
+	}
+
+	public SecUserIdEditor getJavaFXEditorSecUserId() {
+		if( javafxEditorSecUserId == null ) {
+			javafxEditorSecUserId = new SecUserIdEditor();
+		}
+		return( javafxEditorSecUserId );
+	}
+
+	public void setJavaFXEditorSecUserId( SecUserIdEditor value ) {
+		javafxEditorSecUserId = value;
 	}
 
 	public LoginIdCFLabel getJavaFXLabelLoginId() {
@@ -430,6 +483,13 @@ implements ICFSecJavaFXSecUserPaneCommon
 		if( getPaneMode() == CFPane.PaneMode.Unknown ) {
 			popObj = null;
 		}
+		if( popObj == null ) {
+			getJavaFXEditorSecUserId().setDbKeyHash256Value( null );
+		}
+		else {
+			getJavaFXEditorSecUserId().setDbKeyHash256Value( popObj.getRequiredSecUserId() );
+		}
+
 		if( popObj == null ) {
 			getJavaFXEditorLoginId().setStringValue( null );
 		}
@@ -802,6 +862,9 @@ implements ICFSecJavaFXSecUserPaneCommon
 			else if( null == focus.getEdit() ) {
 				isEditing = false;
 			}
+		}
+		if( javafxEditorSecUserId != null ) {
+			javafxEditorSecUserId.setDisable( true );
 		}
 		if( javafxEditorLoginId != null ) {
 			javafxEditorLoginId.setDisable( ! isEditing );
