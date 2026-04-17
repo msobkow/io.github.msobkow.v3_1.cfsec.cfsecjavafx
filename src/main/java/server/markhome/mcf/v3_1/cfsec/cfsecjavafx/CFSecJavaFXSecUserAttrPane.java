@@ -64,6 +64,15 @@ implements ICFSecJavaFXSecUserPaneCommon
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	boolean javafxIsInitializing = true;
 
+	protected ObservableList<String> observableListOfAccountStatus =
+		FXCollections.observableArrayList(
+			"System",
+			"VerifyingEmail",
+			"CreatingDevKey",
+			"NormalUser",
+			"ResettingPassword",
+			"Locked" );
+
 	protected class SecUserIdCFLabel
 		extends CFLabel
 	{
@@ -98,6 +107,24 @@ implements ICFSecJavaFXSecUserPaneCommon
 			super();
 			setMaxLen( 32 );
 			setFieldNameInzTag( "cfsec.javafx.SecUser.AttrPane.LoginId.EffLabel" );
+		}
+	}
+
+	protected class AccountStatusCFLabel
+		extends CFLabel
+	{
+		public AccountStatusCFLabel() {
+			super();
+			setText(Inz.s("cfsec.javafx.SecUser.AttrPane.AccountStatus.EffLabel"));
+		}
+	}
+
+	protected class AccountStatusEditor
+		extends ComboBox<String>
+	{
+		public AccountStatusEditor() {
+			super();
+			setItems( observableListOfAccountStatus );
 		}
 	}
 
@@ -181,6 +208,8 @@ implements ICFSecJavaFXSecUserPaneCommon
 	protected SecUserIdEditor javafxEditorSecUserId = null;
 	protected LoginIdCFLabel javafxLabelLoginId = null;
 	protected LoginIdEditor javafxEditorLoginId = null;
+	protected AccountStatusCFLabel javafxLabelAccountStatus = null;
+	protected AccountStatusEditor javafxEditorAccountStatus = null;
 	protected DfltSysGrpNameCFLabel javafxLabelDfltSysGrpName = null;
 	protected DfltSysGrpNameEditor javafxEditorDfltSysGrpName = null;
 	protected DfltClusGrpNameCFLabel javafxLabelDfltClusGrpName = null;
@@ -239,6 +268,17 @@ implements ICFSecJavaFXSecUserPaneCommon
 		gridRow ++;
 
 		ctrl = getJavaFXEditorLoginId();
+		setHalignment( ctrl, HPos.LEFT );
+		add( ctrl, 0, gridRow );
+		gridRow ++;
+
+		label = getJavaFXLabelAccountStatus();
+		setHalignment( label, HPos.LEFT );
+		setValignment( label, VPos.BOTTOM );
+		add( label, 0, gridRow );
+		gridRow ++;
+
+		ctrl = getJavaFXEditorAccountStatus();
 		setHalignment( ctrl, HPos.LEFT );
 		add( ctrl, 0, gridRow );
 		gridRow ++;
@@ -389,6 +429,28 @@ implements ICFSecJavaFXSecUserPaneCommon
 		javafxEditorLoginId = value;
 	}
 
+	public AccountStatusCFLabel getJavaFXLabelAccountStatus() {
+		if( javafxLabelAccountStatus == null ) {
+			javafxLabelAccountStatus = new AccountStatusCFLabel();
+		}
+		return( javafxLabelAccountStatus );
+	}
+
+	public void setJavaFXLabelAccountStatus( AccountStatusCFLabel value ) {
+		javafxLabelAccountStatus = value;
+	}
+
+	public AccountStatusEditor getJavaFXEditorAccountStatus() {
+		if( javafxEditorAccountStatus == null ) {
+			javafxEditorAccountStatus = new AccountStatusEditor();
+		}
+		return( javafxEditorAccountStatus );
+	}
+
+	public void setJavaFXEditorAccountStatus( AccountStatusEditor value ) {
+		javafxEditorAccountStatus = value;
+	}
+
 	public DfltSysGrpNameCFLabel getJavaFXLabelDfltSysGrpName() {
 		if( javafxLabelDfltSysGrpName == null ) {
 			javafxLabelDfltSysGrpName = new DfltSysGrpNameCFLabel();
@@ -498,6 +560,16 @@ implements ICFSecJavaFXSecUserPaneCommon
 		}
 
 		if( popObj == null ) {
+			getJavaFXEditorAccountStatus().setValue( null );
+		}
+		else {
+			getJavaFXEditorAccountStatus().setValue(
+				( popObj.getRequiredAccountStatus() == null )
+					? null
+					: popObj.getRequiredAccountStatus().toString() );
+		}
+
+		if( popObj == null ) {
 			getJavaFXEditorDfltSysGrpName().setStringValue( null );
 		}
 		else {
@@ -550,6 +622,10 @@ implements ICFSecJavaFXSecUserPaneCommon
 		else {
 			editObj.setRequiredLoginId( getJavaFXEditorLoginId().getStringValue() );
 		}
+
+		String straccountstatus = getJavaFXEditorAccountStatus().getValue();
+		ICFSecSchema.SecAccountStatusEnum curaccountstatus = ICFSecSchema.parseSecAccountStatusEnum( "AccountStatus", straccountstatus );
+		editObj.setRequiredAccountStatus( curaccountstatus );
 
 		if( ( getJavaFXEditorDfltSysGrpName().getStringValue() != null ) && ( getJavaFXEditorDfltSysGrpName().getStringValue().length() <= 0 ) ) {
 			editObj.setOptionalDfltSysGrpName( null );
@@ -868,6 +944,9 @@ implements ICFSecJavaFXSecUserPaneCommon
 		}
 		if( javafxEditorLoginId != null ) {
 			javafxEditorLoginId.setDisable( ! isEditing );
+		}
+		if( javafxEditorAccountStatus != null ) {
+			javafxEditorAccountStatus.setDisable( ! isEditing );
 		}
 		if( javafxEditorDfltSysGrpName != null ) {
 			javafxEditorDfltSysGrpName.setDisable( ! isEditing );

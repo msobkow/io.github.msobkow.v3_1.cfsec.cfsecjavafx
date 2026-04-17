@@ -77,6 +77,7 @@ implements ICFSecJavaFXSecUserPaneList
 	protected TableView<ICFSecSecUserObj> dataTable = null;
 	protected TableColumn<ICFSecSecUserObj, CFLibDbKeyHash256> tableColumnSecUserId = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnLoginId = null;
+	protected TableColumn<ICFSecSecUserObj, ICFSecSchema.SecAccountStatusEnum> tableColumnAccountStatus = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnDfltSysGrpName = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnDfltClusGrpName = null;
 	protected TableColumn<ICFSecSecUserObj, String> tableColumnDfltTentGrpName = null;
@@ -215,6 +216,29 @@ implements ICFSecJavaFXSecUserPaneList
 			}
 		});
 		dataTable.getColumns().add( tableColumnLoginId );
+		tableColumnAccountStatus = new TableColumn<ICFSecSecUserObj,ICFSecSchema.SecAccountStatusEnum>( "Account Status" );
+		tableColumnAccountStatus.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,ICFSecSchema.SecAccountStatusEnum>,ObservableValue<ICFSecSchema.SecAccountStatusEnum> >() {
+			public ObservableValue<ICFSecSchema.SecAccountStatusEnum> call( CellDataFeatures<ICFSecSecUserObj, ICFSecSchema.SecAccountStatusEnum> p ) {
+				ICFSecSecUserObj obj = p.getValue();
+				if( obj == null ) {
+					return( null );
+				}
+				else {
+					ICFSecSchema.SecAccountStatusEnum value = obj.getRequiredAccountStatus();
+					ReadOnlyObjectWrapper<ICFSecSchema.SecAccountStatusEnum> observable = new ReadOnlyObjectWrapper<ICFSecSchema.SecAccountStatusEnum>();
+					observable.setValue( value );
+					return( observable );
+				}
+			}
+		});
+		tableColumnAccountStatus.setCellFactory( new Callback<TableColumn<ICFSecSecUserObj,ICFSecSchema.SecAccountStatusEnum>,TableCell<ICFSecSecUserObj,ICFSecSchema.SecAccountStatusEnum>>() {
+			@Override public TableCell<ICFSecSecUserObj,ICFSecSchema.SecAccountStatusEnum> call(
+				TableColumn<ICFSecSecUserObj,ICFSecSchema.SecAccountStatusEnum> arg)
+			{
+				return new CFEnumTableCell<ICFSecSecUserObj,ICFSecSchema.SecAccountStatusEnum>();
+			}
+		});
+		dataTable.getColumns().add( tableColumnAccountStatus );
 		tableColumnDfltSysGrpName = new TableColumn<ICFSecSecUserObj,String>( "Default System Group Name" );
 		tableColumnDfltSysGrpName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecUserObj,String>,ObservableValue<String> >() {
 			public ObservableValue<String> call( CellDataFeatures<ICFSecSecUserObj, String> p ) {
