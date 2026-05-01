@@ -69,25 +69,8 @@ implements ICFSecJavaFXSecSysGrpPaneCommon
 			"System",
 			"Global",
 			"Cluster",
-			"Tenant" );
-
-	protected class SecSysGrpIdCFLabel
-		extends CFLabel
-	{
-		public SecSysGrpIdCFLabel() {
-			super();
-			setText(Inz.s("cfsec.javafx.SecSysGrp.AttrPane.SecSysGrpId.EffLabel"));
-		}
-	}
-
-	protected class SecSysGrpIdEditor
-		extends CFDbKeyHash256Editor
-	{
-		public SecSysGrpIdEditor() {
-			super();
-			setFieldNameInzTag( "cfsec.javafx.SecSysGrp.AttrPane.SecSysGrpId.EffLabel" );
-		}
-	}
+			"Tenant",
+			"Role" );
 
 	protected class NameCFLabel
 		extends CFLabel
@@ -126,8 +109,6 @@ implements ICFSecJavaFXSecSysGrpPaneCommon
 		}
 	}
 
-	protected SecSysGrpIdCFLabel javafxLabelSecSysGrpId = null;
-	protected SecSysGrpIdEditor javafxEditorSecSysGrpId = null;
 	protected NameCFLabel javafxLabelName = null;
 	protected NameEditor javafxEditorName = null;
 	protected SecLevelCFLabel javafxLabelSecLevel = null;
@@ -164,17 +145,6 @@ implements ICFSecJavaFXSecSysGrpPaneCommon
 		column1.setPercentWidth( 100 );
 		getColumnConstraints().addAll( column1 );
 		int gridRow = 0;
-		label = getJavaFXLabelSecSysGrpId();
-		setHalignment( label, HPos.LEFT );
-		setValignment( label, VPos.BOTTOM );
-		add( label, 0, gridRow );
-		gridRow ++;
-
-		ctrl = getJavaFXEditorSecSysGrpId();
-		setHalignment( ctrl, HPos.LEFT );
-		add( ctrl, 0, gridRow );
-		gridRow ++;
-
 		label = getJavaFXLabelName();
 		setHalignment( label, HPos.LEFT );
 		setValignment( label, VPos.BOTTOM );
@@ -255,28 +225,6 @@ implements ICFSecJavaFXSecSysGrpPaneCommon
 		return( eff );
 	}
 
-	public SecSysGrpIdCFLabel getJavaFXLabelSecSysGrpId() {
-		if( javafxLabelSecSysGrpId == null ) {
-			javafxLabelSecSysGrpId = new SecSysGrpIdCFLabel();
-		}
-		return( javafxLabelSecSysGrpId );
-	}
-
-	public void setJavaFXLabelSecSysGrpId( SecSysGrpIdCFLabel value ) {
-		javafxLabelSecSysGrpId = value;
-	}
-
-	public SecSysGrpIdEditor getJavaFXEditorSecSysGrpId() {
-		if( javafxEditorSecSysGrpId == null ) {
-			javafxEditorSecSysGrpId = new SecSysGrpIdEditor();
-		}
-		return( javafxEditorSecSysGrpId );
-	}
-
-	public void setJavaFXEditorSecSysGrpId( SecSysGrpIdEditor value ) {
-		javafxEditorSecSysGrpId = value;
-	}
-
 	public NameCFLabel getJavaFXLabelName() {
 		if( javafxLabelName == null ) {
 			javafxLabelName = new NameCFLabel();
@@ -327,13 +275,6 @@ implements ICFSecJavaFXSecSysGrpPaneCommon
 		if( getPaneMode() == CFPane.PaneMode.Unknown ) {
 			popObj = null;
 		}
-		if( popObj == null ) {
-			getJavaFXEditorSecSysGrpId().setDbKeyHash256Value( null );
-		}
-		else {
-			getJavaFXEditorSecSysGrpId().setDbKeyHash256Value( popObj.getRequiredSecSysGrpId() );
-		}
-
 		if( popObj == null ) {
 			getJavaFXEditorName().setStringValue( null );
 		}
@@ -664,9 +605,6 @@ implements ICFSecJavaFXSecSysGrpPaneCommon
 			else if( null == focus.getEdit() ) {
 				isEditing = false;
 			}
-		}
-		if( javafxEditorSecSysGrpId != null ) {
-			javafxEditorSecSysGrpId.setDisable( true );
 		}
 		if( javafxEditorName != null ) {
 			javafxEditorName.setDisable( ! isEditing );

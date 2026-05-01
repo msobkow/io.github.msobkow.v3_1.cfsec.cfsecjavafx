@@ -67,7 +67,6 @@ implements ICFSecJavaFXSecSysGrpPaneList
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	protected Collection<ICFSecSecSysGrpObj> javafxDataCollection = null;
 	protected ObservableList<ICFSecSecSysGrpObj> observableListOfSecSysGrp = null;
-	protected TableColumn<ICFSecSecSysGrpObj, CFLibDbKeyHash256> tableColumnSecSysGrpId = null;
 	protected TableColumn<ICFSecSecSysGrpObj, String> tableColumnName = null;
 	protected TableColumn<ICFSecSecSysGrpObj, ICFSecSchema.SecLevelEnum> tableColumnSecLevel = null;
 	protected TableView<ICFSecSecSysGrpObj> dataTable = null;
@@ -116,29 +115,6 @@ implements ICFSecJavaFXSecSysGrpPaneList
 		javafxContainer = argContainer;
 		setJavaFXDataCollection( argDataCollection );
 		dataTable = new TableView<ICFSecSecSysGrpObj>();
-		tableColumnSecSysGrpId = new TableColumn<ICFSecSecSysGrpObj,CFLibDbKeyHash256>( "System Security Group Id" );
-		tableColumnSecSysGrpId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecSysGrpObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
-			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecSysGrpObj, CFLibDbKeyHash256> p ) {
-				ICFSecSecSysGrpObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					CFLibDbKeyHash256 value = obj.getRequiredSecSysGrpId();
-					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnSecSysGrpId.setCellFactory( new Callback<TableColumn<ICFSecSecSysGrpObj,CFLibDbKeyHash256>,TableCell<ICFSecSecSysGrpObj,CFLibDbKeyHash256>>() {
-			@Override public TableCell<ICFSecSecSysGrpObj,CFLibDbKeyHash256> call(
-				TableColumn<ICFSecSecSysGrpObj,CFLibDbKeyHash256> arg)
-			{
-				return new CFDbKeyHash256TableCell<ICFSecSecSysGrpObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnSecSysGrpId );
 		tableColumnName = new TableColumn<ICFSecSecSysGrpObj,String>( "Name" );
 		tableColumnName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecSysGrpObj,String>,ObservableValue<String> >() {
 			public ObservableValue<String> call( CellDataFeatures<ICFSecSecSysGrpObj, String> p ) {

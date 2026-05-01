@@ -58,10 +58,13 @@ implements ICFSecJavaFXClusterPaneCommon
 	protected CFTab tabComponentsTenant = null;
 	public final String LABEL_TabComponentsSecGroupList = "Optional Components Security Group";
 	protected CFTab tabComponentsSecGroup = null;
+	public final String LABEL_TabComponentsSecRoleList = "Optional Components Security Role";
+	protected CFTab tabComponentsSecRole = null;
 	public final String LABEL_TabComponentsSysClusterList = "Optional Components System Cluster";
 	protected CFTab tabComponentsSysCluster = null;
 	protected CFBorderPane tabViewComponentsTenantListPane = null;
 	protected CFBorderPane tabViewComponentsSecGroupListPane = null;
+	protected CFBorderPane tabViewComponentsSecRoleListPane = null;
 	protected CFBorderPane tabViewComponentsSysClusterListPane = null;
 
 	public CFSecJavaFXClusterEltTabPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecClusterObj argFocus ) {
@@ -93,6 +96,10 @@ implements ICFSecJavaFXClusterPaneCommon
 		tabComponentsSecGroup.setText( LABEL_TabComponentsSecGroupList );
 		tabComponentsSecGroup.setContent( getTabViewComponentsSecGroupListPane() );
 		getTabs().add( tabComponentsSecGroup );
+		tabComponentsSecRole = new CFTab();
+		tabComponentsSecRole.setText( LABEL_TabComponentsSecRoleList );
+		tabComponentsSecRole.setContent( getTabViewComponentsSecRoleListPane() );
+		getTabs().add( tabComponentsSecRole );
 		tabComponentsSysCluster = new CFTab();
 		tabComponentsSysCluster.setText( LABEL_TabComponentsSysClusterList );
 		tabComponentsSysCluster.setContent( getTabViewComponentsSysClusterListPane() );
@@ -227,6 +234,44 @@ implements ICFSecJavaFXClusterPaneCommon
 		return( tabViewComponentsSecGroupListPane );
 	}
 
+	protected class RefreshComponentsSecRoleList
+	implements ICFRefreshCallback
+	{
+		public RefreshComponentsSecRoleList() {
+		}
+
+		public void refreshMe() {
+			Collection<ICFSecSecClusRoleObj> dataCollection;
+			ICFSecClusterObj focus = (ICFSecClusterObj)getJavaFXFocusAsCluster();
+			if( focus != null ) {
+				dataCollection = focus.getOptionalComponentsSecRole( javafxIsInitializing );
+			}
+			else {
+				dataCollection = null;
+			}
+			CFBorderPane pane = getTabViewComponentsSecRoleListPane();
+			ICFSecJavaFXSecClusRolePaneList jpList = (ICFSecJavaFXSecClusRolePaneList)pane;
+			jpList.setJavaFXDataCollection( dataCollection );
+		}
+	}
+
+	public CFBorderPane getTabViewComponentsSecRoleListPane() {
+		if( tabViewComponentsSecRoleListPane == null ) {
+			ICFSecClusterObj focus = (ICFSecClusterObj)getJavaFXFocusAsCluster();
+			Collection<ICFSecSecClusRoleObj> dataCollection;
+			if( focus != null ) {
+				dataCollection = focus.getOptionalComponentsSecRole( javafxIsInitializing );
+			}
+			else {
+				dataCollection = null;
+			}
+			ICFLibAnyObj javafxContainer;
+			javafxContainer = null;
+			tabViewComponentsSecRoleListPane = javafxSchema.getSecClusRoleFactory().newListPane( cfFormManager, javafxContainer, null, dataCollection, new RefreshComponentsSecRoleList(), false );
+		}
+		return( tabViewComponentsSecRoleListPane );
+	}
+
 	protected class RefreshComponentsSysClusterList
 	implements ICFRefreshCallback
 	{
@@ -278,6 +323,9 @@ implements ICFSecJavaFXClusterPaneCommon
 		}
 		if( tabViewComponentsSecGroupListPane != null ) {
 			((ICFSecJavaFXSecClusGrpPaneCommon)tabViewComponentsSecGroupListPane).setPaneMode( value );
+		}
+		if( tabViewComponentsSecRoleListPane != null ) {
+			((ICFSecJavaFXSecClusRolePaneCommon)tabViewComponentsSecRoleListPane).setPaneMode( value );
 		}
 		if( tabViewComponentsSysClusterListPane != null ) {
 			((ICFSecJavaFXSysClusterPaneCommon)tabViewComponentsSysClusterListPane).setPaneMode( value );
