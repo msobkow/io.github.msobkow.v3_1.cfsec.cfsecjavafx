@@ -65,7 +65,7 @@ implements ICFSecJavaFXSecClusRoleMembFactory
 	}
 
 	public CFBorderPane newListPane( ICFFormManager formManager,
-		ICFLibAnyObj argContainer,
+		ICFSecSecClusRoleObj argContainer,
 		ICFSecSecClusRoleMembObj argFocus,
 		ICFSecJavaFXSecClusRoleMembPageCallback argPageCallback,
 		ICFRefreshCallback refreshCallback,
@@ -83,7 +83,7 @@ implements ICFSecJavaFXSecClusRoleMembFactory
 
 	public CFBorderPane newPickerPane( ICFFormManager formManager,
 		ICFSecSecClusRoleMembObj argFocus,
-		ICFLibAnyObj argContainer,
+		ICFSecSecClusRoleObj argContainer,
 		ICFSecJavaFXSecClusRoleMembPageCallback argPageCallback,
 		ICFSecJavaFXSecClusRoleMembChosen whenChosen )
 	{
@@ -116,14 +116,9 @@ implements ICFSecJavaFXSecClusRoleMembFactory
 		return( retnew );
 	}
 
-	public CFBorderPane newFinderForm( ICFFormManager formManager ) {
-		CFSecJavaFXSecClusRoleMembFinderForm retnew = new CFSecJavaFXSecClusRoleMembFinderForm( formManager, javafxSchema );
-		return( retnew );
-	}
-
 	public CFBorderPane newPickerForm( ICFFormManager formManager,
 		ICFSecSecClusRoleMembObj argFocus,
-		ICFLibAnyObj argContainer,
+		ICFSecSecClusRoleObj argContainer,
 		ICFSecJavaFXSecClusRoleMembPageCallback argPageCallback,
 		ICFSecJavaFXSecClusRoleMembChosen whenChosen )
 	{

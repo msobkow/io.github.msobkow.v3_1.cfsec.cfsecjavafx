@@ -54,6 +54,7 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	protected ScrollPane attrScrollPane = null;
 	protected CFGridPane attrPane = null;
+	protected CFTabPane eltTabPane = null;
 
 	public CFSecJavaFXSecClusRoleViewEditPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecClusRoleObj argFocus ) {
 		super();
@@ -81,8 +82,10 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 		attrScrollPane.setHbarPolicy( ScrollBarPolicy.NEVER );
 		attrScrollPane.setVbarPolicy( ScrollBarPolicy.AS_NEEDED );
 		attrScrollPane.setContent( attrPane );
+		eltTabPane = argSchema.getSecClusRoleFactory().newEltTabPane( cfFormManager, argFocus );
 		setOrientation( Orientation.VERTICAL );
 		getItems().add( attrScrollPane );
+		getItems().add( eltTabPane );
 	}
 
 	public ICFFormManager getCFFormManager() {
@@ -119,6 +122,9 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 		if( attrPane != null ) {
 			attrPane.setJavaFXFocus( value );
 		}
+		if( eltTabPane != null ) {
+			eltTabPane.setJavaFXFocus( value );
+		}
 	}
 
 	public void setJavaFXFocusAsSecClusRole( ICFSecSecClusRoleObj value ) {
@@ -137,10 +143,12 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 		try {
 			super.setPaneMode( value );
 			((ICFSecJavaFXSecClusRolePaneCommon)attrPane).setPaneMode( value );
+			((ICFSecJavaFXSecClusRolePaneCommon)eltTabPane).setPaneMode( value );
 		}
 		catch( Throwable t ) {
 			super.setPaneMode( oldMode );
 			((ICFSecJavaFXSecClusRolePaneCommon)attrPane).setPaneMode( oldMode );
+			((ICFSecJavaFXSecClusRolePaneCommon)eltTabPane).setPaneMode( oldMode );
 			throw t;
 		}
 	}

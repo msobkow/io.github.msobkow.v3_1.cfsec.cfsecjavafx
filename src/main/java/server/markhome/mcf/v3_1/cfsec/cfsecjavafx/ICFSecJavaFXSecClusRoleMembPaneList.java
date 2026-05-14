@@ -49,6 +49,6 @@ import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 public interface ICFSecJavaFXSecClusRoleMembPaneList
 extends
 	ICFSecJavaFXSecClusRoleMembPaneCommon,
-	ICFPaneList<ICFLibAnyObj,ICFSecSecClusRoleMembObj>
+	ICFPaneList<ICFSecSecClusRoleObj,ICFSecSecClusRoleMembObj>
 {
 }

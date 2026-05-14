@@ -54,6 +54,9 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 	protected ICFFormManager cfFormManager = null;
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	protected boolean javafxIsInitializing = true;
+	public final String LABEL_TabChildrenMembByGrpList = "Optional Children Members of Group";
+	protected CFTab tabChildrenMembByGrp = null;
+	protected CFBorderPane tabViewChildrenMembByGrpListPane = null;
 
 	public CFSecJavaFXSecClusRoleEltTabPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecClusRoleObj argFocus ) {
 		super();
@@ -76,6 +79,10 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 		javafxSchema = argSchema;
 		setJavaFXFocusAsSecClusRole( argFocus );
 		// Wire the newly constructed Panes/Tabs to this TabPane
+		tabChildrenMembByGrp = new CFTab();
+		tabChildrenMembByGrp.setText( LABEL_TabChildrenMembByGrpList );
+		tabChildrenMembByGrp.setContent( getTabViewChildrenMembByGrpListPane() );
+		getTabs().add( tabChildrenMembByGrp );
 		javafxIsInitializing = false;
 	}
 
@@ -120,8 +127,61 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 		return( (ICFSecSecClusRoleObj)getJavaFXFocus() );
 	}
 
+	protected class RefreshChildrenMembByGrpList
+	implements ICFRefreshCallback
+	{
+		public RefreshChildrenMembByGrpList() {
+		}
+
+		public void refreshMe() {
+			// Use page data instead
+		}
+	}
+
+	protected class PageDataChildrenMembByGrpList
+	implements ICFSecJavaFXSecClusRoleMembPageCallback
+	{
+		public PageDataChildrenMembByGrpList() {
+		}
+
+		public List<ICFSecSecClusRoleMembObj> pageData( CFLibDbKeyHash256 priorSecClusRoleId,
+		String priorLoginId )
+		{
+			List<ICFSecSecClusRoleMembObj> dataList;
+			ICFSecSecClusRoleObj focus = (ICFSecSecClusRoleObj)getJavaFXFocusAsSecClusRole();
+			if( focus != null ) {
+				ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
+				dataList = schemaObj.getSecClusRoleMembTableObj().pageSecClusRoleMembByClusRoleIdx( focus.getRequiredSecClusRoleId(),
+					priorSecClusRoleId,
+					priorLoginId );
+			}
+			else {
+				dataList = new ArrayList<ICFSecSecClusRoleMembObj>();
+			}
+			return( dataList );
+		}
+	}
+
+	public CFBorderPane getTabViewChildrenMembByGrpListPane() {
+		if( tabViewChildrenMembByGrpListPane == null ) {
+			ICFSecSecClusRoleObj focus = (ICFSecSecClusRoleObj)getJavaFXFocusAsSecClusRole();
+			ICFSecSecClusRoleObj javafxContainer;
+			if( ( focus != null ) && ( focus instanceof ICFSecSecClusRoleObj ) ) {
+				javafxContainer = (ICFSecSecClusRoleObj)focus;
+			}
+			else {
+				javafxContainer = null;
+			}
+			tabViewChildrenMembByGrpListPane = javafxSchema.getSecClusRoleMembFactory().newListPane( cfFormManager, javafxContainer, null, new PageDataChildrenMembByGrpList(), new RefreshChildrenMembByGrpList(), false );
+		}
+		return( tabViewChildrenMembByGrpListPane );
+	}
+
 	public void setPaneMode( CFPane.PaneMode value ) {
 		CFPane.PaneMode oldMode = getPaneMode();
 		super.setPaneMode( value );
+		if( tabViewChildrenMembByGrpListPane != null ) {
+			((ICFSecJavaFXSecClusRoleMembPaneCommon)tabViewChildrenMembByGrpListPane).setPaneMode( value );
+		}
 	}
 }

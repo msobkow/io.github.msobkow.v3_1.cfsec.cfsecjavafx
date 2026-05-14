@@ -82,24 +82,6 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 		}
 	}
 
-	protected class ClusterIdCFLabel
-		extends CFLabel
-	{
-		public ClusterIdCFLabel() {
-			super();
-			setText(Inz.s("cfsec.javafx.SecClusRole.AttrPane.ClusterId.EffLabel"));
-		}
-	}
-
-	protected class ClusterIdEditor
-		extends CFDbKeyHash256Editor
-	{
-		public ClusterIdEditor() {
-			super();
-			setFieldNameInzTag( "cfsec.javafx.SecClusRole.AttrPane.ClusterId.EffLabel" );
-		}
-	}
-
 	protected class NameCFLabel
 		extends CFLabel
 	{
@@ -121,8 +103,6 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 
 	protected SecClusRoleIdCFLabel javafxLabelSecClusRoleId = null;
 	protected SecClusRoleIdEditor javafxEditorSecClusRoleId = null;
-	protected ClusterIdCFLabel javafxLabelClusterId = null;
-	protected ClusterIdEditor javafxEditorClusterId = null;
 	protected NameCFLabel javafxLabelName = null;
 	protected NameEditor javafxEditorName = null;
 
@@ -164,17 +144,6 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 		gridRow ++;
 
 		ctrl = getJavaFXEditorSecClusRoleId();
-		setHalignment( ctrl, HPos.LEFT );
-		add( ctrl, 0, gridRow );
-		gridRow ++;
-
-		label = getJavaFXLabelClusterId();
-		setHalignment( label, HPos.LEFT );
-		setValignment( label, VPos.BOTTOM );
-		add( label, 0, gridRow );
-		gridRow ++;
-
-		ctrl = getJavaFXEditorClusterId();
 		setHalignment( ctrl, HPos.LEFT );
 		add( ctrl, 0, gridRow );
 		gridRow ++;
@@ -270,28 +239,6 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 		javafxEditorSecClusRoleId = value;
 	}
 
-	public ClusterIdCFLabel getJavaFXLabelClusterId() {
-		if( javafxLabelClusterId == null ) {
-			javafxLabelClusterId = new ClusterIdCFLabel();
-		}
-		return( javafxLabelClusterId );
-	}
-
-	public void setJavaFXLabelClusterId( ClusterIdCFLabel value ) {
-		javafxLabelClusterId = value;
-	}
-
-	public ClusterIdEditor getJavaFXEditorClusterId() {
-		if( javafxEditorClusterId == null ) {
-			javafxEditorClusterId = new ClusterIdEditor();
-		}
-		return( javafxEditorClusterId );
-	}
-
-	public void setJavaFXEditorClusterId( ClusterIdEditor value ) {
-		javafxEditorClusterId = value;
-	}
-
 	public NameCFLabel getJavaFXLabelName() {
 		if( javafxLabelName == null ) {
 			javafxLabelName = new NameCFLabel();
@@ -328,13 +275,6 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 		}
 
 		if( popObj == null ) {
-			getJavaFXEditorClusterId().setDbKeyHash256Value( null );
-		}
-		else {
-			getJavaFXEditorClusterId().setDbKeyHash256Value( popObj.getRequiredClusterId() );
-		}
-
-		if( popObj == null ) {
 			getJavaFXEditorName().setStringValue( null );
 		}
 		else {
@@ -359,8 +299,6 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 				Inz.s("cflibjavafx.common.PaneIsUnfocusedOrNotEditing"),
 				Inz.x("cflibjavafx.common.PaneIsUnfocusedOrNotEditing") );
 		}
-
-		editObj.setRequiredClusterId( getJavaFXEditorClusterId().getDbKeyHash256Value() );
 
 		if( getJavaFXEditorName().getStringValue() == null ) {
 			editObj.setRequiredName( "" );
@@ -655,9 +593,6 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 		}
 		if( javafxEditorSecClusRoleId != null ) {
 			javafxEditorSecClusRoleId.setDisable( true );
-		}
-		if( javafxEditorClusterId != null ) {
-			javafxEditorClusterId.setDisable( ! isEditing );
 		}
 		if( javafxEditorName != null ) {
 			javafxEditorName.setDisable( ! isEditing );

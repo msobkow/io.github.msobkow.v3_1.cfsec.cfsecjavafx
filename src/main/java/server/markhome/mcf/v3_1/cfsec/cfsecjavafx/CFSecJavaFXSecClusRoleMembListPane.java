@@ -75,14 +75,13 @@ implements ICFSecJavaFXSecClusRoleMembPaneList
 	protected CFButton buttonEditSelected = null;
 	protected CFButton buttonDeleteSelected = null;
 	protected TableView<ICFSecSecClusRoleMembObj> dataTable = null;
-	protected TableColumn<ICFSecSecClusRoleMembObj, CFLibDbKeyHash256> tableColumnSecClusRoleId = null;
-	protected TableColumn<ICFSecSecClusRoleMembObj, String> tableColumnLoginId = null;
+	protected TableColumn<ICFSecSecClusRoleMembObj, ICFSecSecUserObj> tableColumnParentUser = null;
 
 	public final String S_ColumnNames[] = { "Name" };
 	protected ICFFormManager cfFormManager = null;
 	protected boolean javafxIsInitializing = true;
 	protected boolean javafxSortByChain = false;
-	protected ICFLibAnyObj javafxContainer = null;
+	protected ICFSecSecClusRoleObj javafxContainer = null;
 	protected ICFRefreshCallback javafxRefreshCallback = null;
 	class ViewEditClosedCallback implements ICFFormClosedCallback {
 		public ViewEditClosedCallback() {
@@ -135,7 +134,7 @@ implements ICFSecJavaFXSecClusRoleMembPaneList
 
 	public CFSecJavaFXSecClusRoleMembListPane( ICFFormManager formManager,
 		ICFSecJavaFXSchema argSchema,
-		ICFLibAnyObj argContainer,
+		ICFSecSecClusRoleObj argContainer,
 		ICFSecSecClusRoleMembObj argFocus,
 		ICFSecJavaFXSecClusRoleMembPageCallback argPageCallback,
 		ICFRefreshCallback refreshCallback,
@@ -165,52 +164,29 @@ implements ICFSecJavaFXSecClusRoleMembPaneList
 		javafxSortByChain = sortByChain;
 		pageCallback = argPageCallback;
 		dataTable = new TableView<ICFSecSecClusRoleMembObj>();
-		tableColumnSecClusRoleId = new TableColumn<ICFSecSecClusRoleMembObj,CFLibDbKeyHash256>( "Cluster Security Role Id" );
-		tableColumnSecClusRoleId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusRoleMembObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
-			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecClusRoleMembObj, CFLibDbKeyHash256> p ) {
+		tableColumnParentUser = new TableColumn<ICFSecSecClusRoleMembObj, ICFSecSecUserObj>( "User" );
+		tableColumnParentUser.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusRoleMembObj,ICFSecSecUserObj>,ObservableValue<ICFSecSecUserObj> >() {
+			public ObservableValue<ICFSecSecUserObj> call( CellDataFeatures<ICFSecSecClusRoleMembObj, ICFSecSecUserObj> p ) {
 				ICFSecSecClusRoleMembObj obj = p.getValue();
 				if( obj == null ) {
 					return( null );
 				}
 				else {
-					CFLibDbKeyHash256 value = obj.getRequiredSecClusRoleId();
-					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
-					observable.setValue( value );
+					ICFSecSecUserObj ref = obj.getRequiredParentUser();
+					ReadOnlyObjectWrapper<ICFSecSecUserObj> observable = new ReadOnlyObjectWrapper<ICFSecSecUserObj>();
+					observable.setValue( ref );
 					return( observable );
 				}
 			}
 		});
-		tableColumnSecClusRoleId.setCellFactory( new Callback<TableColumn<ICFSecSecClusRoleMembObj,CFLibDbKeyHash256>,TableCell<ICFSecSecClusRoleMembObj,CFLibDbKeyHash256>>() {
-			@Override public TableCell<ICFSecSecClusRoleMembObj,CFLibDbKeyHash256> call(
-				TableColumn<ICFSecSecClusRoleMembObj,CFLibDbKeyHash256> arg)
+		tableColumnParentUser.setCellFactory( new Callback<TableColumn<ICFSecSecClusRoleMembObj,ICFSecSecUserObj>,TableCell<ICFSecSecClusRoleMembObj,ICFSecSecUserObj>>() {
+			@Override public TableCell<ICFSecSecClusRoleMembObj,ICFSecSecUserObj> call(
+				TableColumn<ICFSecSecClusRoleMembObj,ICFSecSecUserObj> arg)
 			{
-				return new CFDbKeyHash256TableCell<ICFSecSecClusRoleMembObj>();
+				return new CFReferenceTableCell<ICFSecSecClusRoleMembObj,ICFSecSecUserObj>();
 			}
 		});
-		dataTable.getColumns().add( tableColumnSecClusRoleId );
-		tableColumnLoginId = new TableColumn<ICFSecSecClusRoleMembObj,String>( "Login Id" );
-		tableColumnLoginId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusRoleMembObj,String>,ObservableValue<String> >() {
-			public ObservableValue<String> call( CellDataFeatures<ICFSecSecClusRoleMembObj, String> p ) {
-				ICFSecSecClusRoleMembObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					String value = obj.getRequiredLoginId();
-					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnLoginId.setCellFactory( new Callback<TableColumn<ICFSecSecClusRoleMembObj,String>,TableCell<ICFSecSecClusRoleMembObj,String>>() {
-			@Override public TableCell<ICFSecSecClusRoleMembObj,String> call(
-				TableColumn<ICFSecSecClusRoleMembObj,String> arg)
-			{
-				return new CFStringTableCell<ICFSecSecClusRoleMembObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnLoginId );
+		dataTable.getColumns().add( tableColumnParentUser );
 		dataTable.getSelectionModel().selectedItemProperty().addListener(
 			new ChangeListener<ICFSecSecClusRoleMembObj>() {
 				@Override public void changed( ObservableValue<? extends ICFSecSecClusRoleMembObj> observable,
@@ -438,6 +414,14 @@ implements ICFSecJavaFXSecClusRoleMembPaneList
 								0,
 								"edit" );
 						}
+								ICFSecSecClusRoleObj container = (ICFSecSecClusRoleObj)( getJavaFXContainer() );
+								if( container == null ) {
+									throw new CFLibNullArgumentException( getClass(),
+										S_ProcName,
+										0,
+										"JavaFXContainer" );
+								}
+								edit.setRequiredContainerRole( container );
 						CFBorderPane frame = javafxSchema.getSecClusRoleMembFactory().newAddForm( cfFormManager, obj, getViewEditClosedCallback(), true );
 						ICFSecJavaFXSecClusRoleMembPaneCommon jpanelCommon = (ICFSecJavaFXSecClusRoleMembPaneCommon)frame;
 						jpanelCommon.setJavaFXFocus( obj );
@@ -574,11 +558,11 @@ implements ICFSecJavaFXSecClusRoleMembPaneList
 		return( hboxMenu );
 	}
 
-	public ICFLibAnyObj getJavaFXContainer() {
+	public ICFSecSecClusRoleObj getJavaFXContainer() {
 		return( javafxContainer );
 	}
 
-	public void setJavaFXContainer( ICFLibAnyObj value ) {
+	public void setJavaFXContainer( ICFSecSecClusRoleObj value ) {
 		javafxContainer = value;
 	}
 

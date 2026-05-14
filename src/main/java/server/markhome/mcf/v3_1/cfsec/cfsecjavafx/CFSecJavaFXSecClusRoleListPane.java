@@ -73,7 +73,6 @@ implements ICFSecJavaFXSecClusRolePaneList
 	protected CFButton buttonDeleteSelected = null;
 	protected TableView<ICFSecSecClusRoleObj> dataTable = null;
 	protected TableColumn<ICFSecSecClusRoleObj, CFLibDbKeyHash256> tableColumnSecClusRoleId = null;
-	protected TableColumn<ICFSecSecClusRoleObj, CFLibDbKeyHash256> tableColumnClusterId = null;
 	protected TableColumn<ICFSecSecClusRoleObj, String> tableColumnName = null;
 
 	public final String S_ColumnNames[] = { "Name" };
@@ -186,29 +185,6 @@ implements ICFSecJavaFXSecClusRolePaneList
 			}
 		});
 		dataTable.getColumns().add( tableColumnSecClusRoleId );
-		tableColumnClusterId = new TableColumn<ICFSecSecClusRoleObj,CFLibDbKeyHash256>( "Cluster Id" );
-		tableColumnClusterId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusRoleObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
-			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecClusRoleObj, CFLibDbKeyHash256> p ) {
-				ICFSecSecClusRoleObj obj = p.getValue();
-				if( obj == null ) {
-					return( null );
-				}
-				else {
-					CFLibDbKeyHash256 value = obj.getRequiredClusterId();
-					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
-					observable.setValue( value );
-					return( observable );
-				}
-			}
-		});
-		tableColumnClusterId.setCellFactory( new Callback<TableColumn<ICFSecSecClusRoleObj,CFLibDbKeyHash256>,TableCell<ICFSecSecClusRoleObj,CFLibDbKeyHash256>>() {
-			@Override public TableCell<ICFSecSecClusRoleObj,CFLibDbKeyHash256> call(
-				TableColumn<ICFSecSecClusRoleObj,CFLibDbKeyHash256> arg)
-			{
-				return new CFDbKeyHash256TableCell<ICFSecSecClusRoleObj>();
-			}
-		});
-		dataTable.getColumns().add( tableColumnClusterId );
 		tableColumnName = new TableColumn<ICFSecSecClusRoleObj,String>( "Name" );
 		tableColumnName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusRoleObj,String>,ObservableValue<String> >() {
 			public ObservableValue<String> call( CellDataFeatures<ICFSecSecClusRoleObj, String> p ) {
@@ -412,6 +388,8 @@ implements ICFSecJavaFXSecClusRolePaneList
 								0,
 								"edit" );
 						}
+								ICFSecClusterObj secCluster = schemaObj.getSecCluster();
+								edit.setRequiredOwnerCluster( secCluster );
 						CFBorderPane frame = javafxSchema.getSecClusRoleFactory().newAddForm( cfFormManager, obj, getViewEditClosedCallback(), true );
 						ICFSecJavaFXSecClusRolePaneCommon jpanelCommon = (ICFSecJavaFXSecClusRolePaneCommon)frame;
 						jpanelCommon.setJavaFXFocus( obj );
