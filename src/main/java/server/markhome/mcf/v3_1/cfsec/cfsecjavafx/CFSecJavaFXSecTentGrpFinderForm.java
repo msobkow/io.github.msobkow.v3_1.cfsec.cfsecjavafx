@@ -82,7 +82,7 @@ implements ICFSecJavaFXSecTentGrpPaneCommon,
 	protected List<ICFSecSecTentGrpObj> listOfSecTentGrp = null;
 	protected ObservableList<ICFSecSecTentGrpObj> observableListOfSecTentGrp = null;
 	protected TableColumn<ICFSecSecTentGrpObj, CFLibDbKeyHash256> tableColumnSecTentGrpId = null;
-	protected TableColumn<ICFSecSecTentGrpObj, String> tableColumnName = null;
+	protected TableColumn<ICFSecSecTentGrpObj, ICFSecSecSysGrpObj> tableColumnParentSysGrp = null;
 	protected TableView<ICFSecSecTentGrpObj> dataTable = null;
 
 	class ViewEditClosedCallback implements ICFFormClosedCallback {
@@ -175,29 +175,29 @@ implements ICFSecJavaFXSecTentGrpPaneCommon,
 			}
 		});
 		dataTable.getColumns().add( tableColumnSecTentGrpId );
-		tableColumnName = new TableColumn<ICFSecSecTentGrpObj,String>( "Name" );
-		tableColumnName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecTentGrpObj,String>,ObservableValue<String> >() {
-			public ObservableValue<String> call( CellDataFeatures<ICFSecSecTentGrpObj, String> p ) {
+		tableColumnParentSysGrp = new TableColumn<ICFSecSecTentGrpObj, ICFSecSecSysGrpObj>( "Reference system group" );
+		tableColumnParentSysGrp.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecTentGrpObj,ICFSecSecSysGrpObj>,ObservableValue<ICFSecSecSysGrpObj> >() {
+			public ObservableValue<ICFSecSecSysGrpObj> call( CellDataFeatures<ICFSecSecTentGrpObj, ICFSecSecSysGrpObj> p ) {
 				ICFSecSecTentGrpObj obj = p.getValue();
 				if( obj == null ) {
 					return( null );
 				}
 				else {
-					String value = obj.getRequiredName();
-					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
-					observable.setValue( value );
+					ICFSecSecSysGrpObj ref = obj.getRequiredParentSysGrp();
+					ReadOnlyObjectWrapper<ICFSecSecSysGrpObj> observable = new ReadOnlyObjectWrapper<ICFSecSecSysGrpObj>();
+					observable.setValue( ref );
 					return( observable );
 				}
 			}
 		});
-		tableColumnName.setCellFactory( new Callback<TableColumn<ICFSecSecTentGrpObj,String>,TableCell<ICFSecSecTentGrpObj,String>>() {
-			@Override public TableCell<ICFSecSecTentGrpObj,String> call(
-				TableColumn<ICFSecSecTentGrpObj,String> arg)
+		tableColumnParentSysGrp.setCellFactory( new Callback<TableColumn<ICFSecSecTentGrpObj,ICFSecSecSysGrpObj>,TableCell<ICFSecSecTentGrpObj,ICFSecSecSysGrpObj>>() {
+			@Override public TableCell<ICFSecSecTentGrpObj,ICFSecSecSysGrpObj> call(
+				TableColumn<ICFSecSecTentGrpObj,ICFSecSecSysGrpObj> arg)
 			{
-				return new CFStringTableCell<ICFSecSecTentGrpObj>();
+				return new CFReferenceTableCell<ICFSecSecTentGrpObj,ICFSecSecSysGrpObj>();
 			}
 		});
-		dataTable.getColumns().add( tableColumnName );
+		dataTable.getColumns().add( tableColumnParentSysGrp );
 		dataTable.getSelectionModel().selectedItemProperty().addListener(
 			new ChangeListener<ICFSecSecTentGrpObj>() {
 				@Override public void changed( ObservableValue<? extends ICFSecSecTentGrpObj> observable,
