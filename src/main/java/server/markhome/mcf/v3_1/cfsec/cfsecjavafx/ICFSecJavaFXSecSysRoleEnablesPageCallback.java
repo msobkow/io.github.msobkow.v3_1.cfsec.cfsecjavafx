@@ -1,4 +1,4 @@
-// Description: Java 25 JavaFX Pane Common Interface for SecClusRole.
+// Description: Java 25 JavaFX Pane Common Interface for SecSysRoleEnables.
 
 /*
  *	server.markhome.mcf.CFSec
@@ -40,15 +40,11 @@ import server.markhome.mcf.v3_1.cfsec.cfsec.*;
 import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 
 /**
- *	ICFSecJavaFXSecClusRolePaneList JavaFX Interface
- *	for SecClusRole data collections.  It is presumed that the
- *	JavaFXFocus is the currently selected single member of
- *	the collection associated with this list view, or null
- *	if no element has been selected from the data collection..
+ *	ICFSecJavaFXSecSysRoleEnablesPageCallback JavaFX Interface
+ *	for SecSysRoleEnables.
  */
-public interface ICFSecJavaFXSecClusRolePaneList
-extends
-	ICFSecJavaFXSecClusRolePaneCommon,
-	ICFPaneList<ICFSecSecSysGrpObj,ICFSecSecClusRoleObj>
+public interface ICFSecJavaFXSecSysRoleEnablesPageCallback
 {
+	public List<ICFSecSecSysRoleEnablesObj> pageData( CFLibDbKeyHash256 priorSecSysRoleId,
+		String priorEnableName );
 }

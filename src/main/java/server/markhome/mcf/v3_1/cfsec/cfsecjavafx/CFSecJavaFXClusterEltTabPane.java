@@ -265,8 +265,13 @@ implements ICFSecJavaFXClusterPaneCommon
 			else {
 				dataCollection = null;
 			}
-			ICFLibAnyObj javafxContainer;
-			javafxContainer = null;
+			ICFSecSecSysGrpObj javafxContainer;
+			if( ( focus != null ) && ( focus instanceof ICFSecSecSysGrpObj ) ) {
+				javafxContainer = (ICFSecSecSysGrpObj)focus;
+			}
+			else {
+				javafxContainer = null;
+			}
 			tabViewComponentsSecRoleListPane = javafxSchema.getSecClusRoleFactory().newListPane( cfFormManager, javafxContainer, null, dataCollection, new RefreshComponentsSecRoleList(), false );
 		}
 		return( tabViewComponentsSecRoleListPane );

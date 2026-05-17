@@ -1,4 +1,4 @@
-// Description: Java 25 JavaFX List of Obj Pane implementation for SecClusRole.
+// Description: Java 25 JavaFX List of Obj Pane implementation for SecSysRole.
 
 /*
  *	server.markhome.mcf.CFSec
@@ -54,31 +54,32 @@ import server.markhome.mcf.v3_1.cfsec.cfsec.*;
 import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 
 /**
- *	CFSecJavaFXSecClusRoleListPane JavaFX List of Obj Pane implementation
- *	for SecClusRole.
+ *	CFSecJavaFXSecSysRoleListPane JavaFX List of Obj Pane implementation
+ *	for SecSysRole.
  */
-public class CFSecJavaFXSecClusRoleListPane
+public class CFSecJavaFXSecSysRoleListPane
 extends CFBorderPane
-implements ICFSecJavaFXSecClusRolePaneList
+implements ICFSecJavaFXSecSysRolePaneList
 {
-	public static String S_FormName = "List Cluster Security Role";
+	public static String S_FormName = "List Security System Role";
 	protected ICFSecJavaFXSchema javafxSchema = null;
-	protected Collection<ICFSecSecClusRoleObj> javafxDataCollection = null;
-	protected ObservableList<ICFSecSecClusRoleObj> observableListOfSecClusRole = null;
+	protected Collection<ICFSecSecSysRoleObj> javafxDataCollection = null;
+	protected ObservableList<ICFSecSecSysRoleObj> observableListOfSecSysRole = null;
 	protected ScrollPane scrollMenu = null;
 	protected CFHBox hboxMenu = null;
-	protected CFButton buttonAddSecClusRole = null;
+	protected CFButton buttonAddSecSysRole = null;
 	protected CFButton buttonViewSelected = null;
 	protected CFButton buttonEditSelected = null;
 	protected CFButton buttonDeleteSelected = null;
-	protected TableView<ICFSecSecClusRoleObj> dataTable = null;
-	protected TableColumn<ICFSecSecClusRoleObj, CFLibDbKeyHash256> tableColumnSecClusRoleId = null;
+	protected TableView<ICFSecSecSysRoleObj> dataTable = null;
+	protected TableColumn<ICFSecSecSysRoleObj, CFLibDbKeyHash256> tableColumnSecSysRoleId = null;
+	protected TableColumn<ICFSecSecSysRoleObj, String> tableColumnName = null;
 
 	public final String S_ColumnNames[] = { "Name" };
 	protected ICFFormManager cfFormManager = null;
 	protected boolean javafxIsInitializing = true;
 	protected boolean javafxSortByChain = false;
-	protected ICFSecSecSysGrpObj javafxContainer = null;
+	protected ICFLibAnyObj javafxContainer = null;
 	protected ICFRefreshCallback javafxRefreshCallback = null;
 	class ViewEditClosedCallback implements ICFFormClosedCallback {
 		public ViewEditClosedCallback() {
@@ -129,11 +130,11 @@ implements ICFSecJavaFXSecClusRolePaneList
 	}
 
 
-	public CFSecJavaFXSecClusRoleListPane( ICFFormManager formManager,
+	public CFSecJavaFXSecSysRoleListPane( ICFFormManager formManager,
 		ICFSecJavaFXSchema argSchema,
-		ICFSecSecSysGrpObj argContainer,
-		ICFSecSecClusRoleObj argFocus,
-		Collection<ICFSecSecClusRoleObj> argDataCollection,
+		ICFLibAnyObj argContainer,
+		ICFSecSecSysRoleObj argFocus,
+		Collection<ICFSecSecSysRoleObj> argDataCollection,
 		ICFRefreshCallback refreshCallback,
 		boolean sortByChain )
 	{
@@ -160,35 +161,58 @@ implements ICFSecJavaFXSecClusRolePaneList
 		javafxRefreshCallback = refreshCallback;
 		javafxSortByChain = sortByChain;
 		setJavaFXDataCollection( argDataCollection );
-		dataTable = new TableView<ICFSecSecClusRoleObj>();
-		tableColumnSecClusRoleId = new TableColumn<ICFSecSecClusRoleObj,CFLibDbKeyHash256>( "Cluster Security Role Id" );
-		tableColumnSecClusRoleId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecClusRoleObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
-			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecClusRoleObj, CFLibDbKeyHash256> p ) {
-				ICFSecSecClusRoleObj obj = p.getValue();
+		dataTable = new TableView<ICFSecSecSysRoleObj>();
+		tableColumnSecSysRoleId = new TableColumn<ICFSecSecSysRoleObj,CFLibDbKeyHash256>( "Security System Role Id" );
+		tableColumnSecSysRoleId.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecSysRoleObj,CFLibDbKeyHash256>,ObservableValue<CFLibDbKeyHash256> >() {
+			public ObservableValue<CFLibDbKeyHash256> call( CellDataFeatures<ICFSecSecSysRoleObj, CFLibDbKeyHash256> p ) {
+				ICFSecSecSysRoleObj obj = p.getValue();
 				if( obj == null ) {
 					return( null );
 				}
 				else {
-					CFLibDbKeyHash256 value = obj.getRequiredSecClusRoleId();
+					CFLibDbKeyHash256 value = obj.getRequiredSecSysRoleId();
 					ReadOnlyObjectWrapper<CFLibDbKeyHash256> observable = new ReadOnlyObjectWrapper<CFLibDbKeyHash256>();
 					observable.setValue( value );
 					return( observable );
 				}
 			}
 		});
-		tableColumnSecClusRoleId.setCellFactory( new Callback<TableColumn<ICFSecSecClusRoleObj,CFLibDbKeyHash256>,TableCell<ICFSecSecClusRoleObj,CFLibDbKeyHash256>>() {
-			@Override public TableCell<ICFSecSecClusRoleObj,CFLibDbKeyHash256> call(
-				TableColumn<ICFSecSecClusRoleObj,CFLibDbKeyHash256> arg)
+		tableColumnSecSysRoleId.setCellFactory( new Callback<TableColumn<ICFSecSecSysRoleObj,CFLibDbKeyHash256>,TableCell<ICFSecSecSysRoleObj,CFLibDbKeyHash256>>() {
+			@Override public TableCell<ICFSecSecSysRoleObj,CFLibDbKeyHash256> call(
+				TableColumn<ICFSecSecSysRoleObj,CFLibDbKeyHash256> arg)
 			{
-				return new CFDbKeyHash256TableCell<ICFSecSecClusRoleObj>();
+				return new CFDbKeyHash256TableCell<ICFSecSecSysRoleObj>();
 			}
 		});
-		dataTable.getColumns().add( tableColumnSecClusRoleId );
+		dataTable.getColumns().add( tableColumnSecSysRoleId );
+		tableColumnName = new TableColumn<ICFSecSecSysRoleObj,String>( "Name" );
+		tableColumnName.setCellValueFactory( new Callback<CellDataFeatures<ICFSecSecSysRoleObj,String>,ObservableValue<String> >() {
+			public ObservableValue<String> call( CellDataFeatures<ICFSecSecSysRoleObj, String> p ) {
+				ICFSecSecSysRoleObj obj = p.getValue();
+				if( obj == null ) {
+					return( null );
+				}
+				else {
+					String value = obj.getRequiredName();
+					ReadOnlyObjectWrapper<String> observable = new ReadOnlyObjectWrapper<String>();
+					observable.setValue( value );
+					return( observable );
+				}
+			}
+		});
+		tableColumnName.setCellFactory( new Callback<TableColumn<ICFSecSecSysRoleObj,String>,TableCell<ICFSecSecSysRoleObj,String>>() {
+			@Override public TableCell<ICFSecSecSysRoleObj,String> call(
+				TableColumn<ICFSecSecSysRoleObj,String> arg)
+			{
+				return new CFStringTableCell<ICFSecSecSysRoleObj>();
+			}
+		});
+		dataTable.getColumns().add( tableColumnName );
 		dataTable.getSelectionModel().selectedItemProperty().addListener(
-			new ChangeListener<ICFSecSecClusRoleObj>() {
-				@Override public void changed( ObservableValue<? extends ICFSecSecClusRoleObj> observable,
-					ICFSecSecClusRoleObj oldValue,
-					ICFSecSecClusRoleObj newValue )
+			new ChangeListener<ICFSecSecSysRoleObj>() {
+				@Override public void changed( ObservableValue<? extends ICFSecSecSysRoleObj> observable,
+					ICFSecSecSysRoleObj oldValue,
+					ICFSecSecSysRoleObj newValue )
 				{
 					setJavaFXFocus( newValue );
 				}
@@ -203,8 +227,8 @@ implements ICFSecJavaFXSecClusRolePaneList
 		setTop( scrollMenu );
 		setCenter( dataTable );
 		javafxIsInitializing = false;
-		if( observableListOfSecClusRole != null ) {
-			dataTable.setItems( observableListOfSecClusRole );
+		if( observableListOfSecSysRole != null ) {
+			dataTable.setItems( observableListOfSecSysRole );
 		}
 		adjustListButtons();
 	}
@@ -235,7 +259,7 @@ implements ICFSecJavaFXSecClusRolePaneList
 
 	public void setJavaFXFocus( ICFLibAnyObj value ) {
 		final String S_ProcName = "setJavaFXFocus";
-		if( ( value == null ) || ( value instanceof ICFSecSecClusRoleObj ) ) {
+		if( ( value == null ) || ( value instanceof ICFSecSecSysRoleObj ) ) {
 			super.setJavaFXFocus( value );
 		}
 		else {
@@ -243,26 +267,26 @@ implements ICFSecJavaFXSecClusRolePaneList
 				S_ProcName,
 				"value",
 				value,
-				"ICFSecSecClusRoleObj" );
+				"ICFSecSecSysRoleObj" );
 		}
 		adjustListButtons();
 	}
 
-	public ICFSecSecClusRoleObj getJavaFXFocusAsSecClusRole() {
-		return( (ICFSecSecClusRoleObj)getJavaFXFocus() );
+	public ICFSecSecSysRoleObj getJavaFXFocusAsSecSysRole() {
+		return( (ICFSecSecSysRoleObj)getJavaFXFocus() );
 	}
 
-	public void setJavaFXFocusAsSecClusRole( ICFSecSecClusRoleObj value ) {
+	public void setJavaFXFocusAsSecSysRole( ICFSecSecSysRoleObj value ) {
 		setJavaFXFocus( value );
 	}
 
-	public class SecClusRoleByQualNameComparator
-	implements Comparator<ICFSecSecClusRoleObj>
+	public class SecSysRoleByQualNameComparator
+	implements Comparator<ICFSecSecSysRoleObj>
 	{
-		public SecClusRoleByQualNameComparator() {
+		public SecSysRoleByQualNameComparator() {
 		}
 
-		public int compare( ICFSecSecClusRoleObj lhs, ICFSecSecClusRoleObj rhs ) {
+		public int compare( ICFSecSecSysRoleObj lhs, ICFSecSecSysRoleObj rhs ) {
 			if( lhs == null ) {
 				if( rhs == null ) {
 					return( 0 );
@@ -295,25 +319,25 @@ implements ICFSecJavaFXSecClusRolePaneList
 		}
 	}
 
-	protected SecClusRoleByQualNameComparator compareSecClusRoleByQualName = new SecClusRoleByQualNameComparator();
+	protected SecSysRoleByQualNameComparator compareSecSysRoleByQualName = new SecSysRoleByQualNameComparator();
 
-	public Collection<ICFSecSecClusRoleObj> getJavaFXDataCollection() {
+	public Collection<ICFSecSecSysRoleObj> getJavaFXDataCollection() {
 		return( javafxDataCollection );
 	}
 
-	public void setJavaFXDataCollection( Collection<ICFSecSecClusRoleObj> value ) {
+	public void setJavaFXDataCollection( Collection<ICFSecSecSysRoleObj> value ) {
 		final String S_ProcName = "setJavaFXDataCollection";
 		javafxDataCollection = value;
-		observableListOfSecClusRole = FXCollections.observableArrayList();
+		observableListOfSecSysRole = FXCollections.observableArrayList();
 		if( javafxDataCollection != null ) {
-				Iterator<ICFSecSecClusRoleObj> iter = javafxDataCollection.iterator();
+				Iterator<ICFSecSecSysRoleObj> iter = javafxDataCollection.iterator();
 				while( iter.hasNext() ) {
-					observableListOfSecClusRole.add( iter.next() );
+					observableListOfSecSysRole.add( iter.next() );
 				}
-				observableListOfSecClusRole.sort( compareSecClusRoleByQualName );
+				observableListOfSecSysRole.sort( compareSecSysRoleByQualName );
 		}
 		if( dataTable != null ) {
-			dataTable.setItems( observableListOfSecClusRole );
+			dataTable.setItems( observableListOfSecSysRole );
 			// Hack from stackoverflow to fix JavaFX TableView refresh issue
 			((TableColumn)dataTable.getColumns().get(0)).setVisible( false );
 			((TableColumn)dataTable.getColumns().get(0)).setVisible( true );
@@ -348,34 +372,24 @@ implements ICFSecJavaFXSecClusRolePaneList
 	public CFHBox getPanelHBoxMenu() {
 		if( hboxMenu == null ) {
 			hboxMenu = new CFHBox( 10 );
-			buttonAddSecClusRole = new CFButton();
-			buttonAddSecClusRole.setMinWidth( 200 );
-			buttonAddSecClusRole.setText( "Add Cluster Security Role" );
-			buttonAddSecClusRole.setOnAction( new EventHandler<ActionEvent>() {
+			buttonAddSecSysRole = new CFButton();
+			buttonAddSecSysRole.setMinWidth( 200 );
+			buttonAddSecSysRole.setText( "Add Security System Role" );
+			buttonAddSecSysRole.setOnAction( new EventHandler<ActionEvent>() {
 				@Override public void handle( ActionEvent e ) {
 					final String S_ProcName = "handle";
 					try {
 						ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
-						ICFSecSecClusRoleObj obj = (ICFSecSecClusRoleObj)schemaObj.getSecClusRoleTableObj().newInstance();
-						ICFSecSecClusRoleEditObj edit = (ICFSecSecClusRoleEditObj)( obj.beginEdit() );
+						ICFSecSecSysRoleObj obj = (ICFSecSecSysRoleObj)schemaObj.getSecSysRoleTableObj().newInstance();
+						ICFSecSecSysRoleEditObj edit = (ICFSecSecSysRoleEditObj)( obj.beginEdit() );
 						if( edit == null ) {
 							throw new CFLibNullArgumentException( getClass(),
 								S_ProcName,
 								0,
 								"edit" );
 						}
-								ICFSecClusterObj secCluster = schemaObj.getSecCluster();
-								edit.setRequiredOwnerCluster( secCluster );
-								ICFSecSecSysGrpObj container = (ICFSecSecSysGrpObj)( getJavaFXContainer() );
-								if( container == null ) {
-									throw new CFLibNullArgumentException( getClass(),
-										S_ProcName,
-										0,
-										"JavaFXContainer" );
-								}
-								edit.setRequiredContainerSysRole( container );
-						CFBorderPane frame = javafxSchema.getSecClusRoleFactory().newAddForm( cfFormManager, obj, getViewEditClosedCallback(), true );
-						ICFSecJavaFXSecClusRolePaneCommon jpanelCommon = (ICFSecJavaFXSecClusRolePaneCommon)frame;
+						CFBorderPane frame = javafxSchema.getSecSysRoleFactory().newAddForm( cfFormManager, obj, getViewEditClosedCallback(), true );
+						ICFSecJavaFXSecSysRolePaneCommon jpanelCommon = (ICFSecJavaFXSecSysRolePaneCommon)frame;
 						jpanelCommon.setJavaFXFocus( obj );
 						jpanelCommon.setPaneMode( CFPane.PaneMode.Add );
 						cfFormManager.pushForm( frame );
@@ -385,7 +399,7 @@ implements ICFSecJavaFXSecClusRolePaneList
 					}
 				}
 			});
-			hboxMenu.getChildren().add( buttonAddSecClusRole );
+			hboxMenu.getChildren().add( buttonAddSecSysRole );
 			buttonViewSelected = new CFButton();
 			buttonViewSelected.setMinWidth( 200 );
 			buttonViewSelected.setText( "View Selected" );
@@ -400,14 +414,14 @@ implements ICFSecJavaFXSecClusRolePaneList
 								0,
 								"schemaObj" );
 						}
-						ICFSecSecClusRoleObj selectedInstance = getJavaFXFocusAsSecClusRole();
+						ICFSecSecSysRoleObj selectedInstance = getJavaFXFocusAsSecSysRole();
 						if( selectedInstance != null ) {
 							int classCode = selectedInstance.getClassCode();
 							ICFSecSchema.ClassMapEntry entry = ICFSecSchema.getClassMapByRuntimeClassCode(classCode);
 							int backingClassCode = entry.getBackingClassCode();
-							if( entry.getSchemaName().equals("CFSec") && backingClassCode == ICFSecSecClusRole.CLASS_CODE ) {
-								CFBorderPane frame = javafxSchema.getSecClusRoleFactory().newViewEditForm( cfFormManager, selectedInstance, getViewEditClosedCallback(), false );
-								((ICFSecJavaFXSecClusRolePaneCommon)frame).setPaneMode( CFPane.PaneMode.View );
+							if( entry.getSchemaName().equals("CFSec") && backingClassCode == ICFSecSecSysRole.CLASS_CODE ) {
+								CFBorderPane frame = javafxSchema.getSecSysRoleFactory().newViewEditForm( cfFormManager, selectedInstance, getViewEditClosedCallback(), false );
+								((ICFSecJavaFXSecSysRolePaneCommon)frame).setPaneMode( CFPane.PaneMode.View );
 								cfFormManager.pushForm( frame );
 							}
 							else {
@@ -415,7 +429,7 @@ implements ICFSecJavaFXSecClusRolePaneList
 									S_ProcName,
 									"selectedInstance",
 									selectedInstance,
-									"ICFSecSecClusRoleObj" );
+									"ICFSecSecSysRoleObj" );
 							}
 						}
 					}
@@ -440,14 +454,14 @@ implements ICFSecJavaFXSecClusRolePaneList
 								0,
 								"schemaObj" );
 						}
-						ICFSecSecClusRoleObj selectedInstance = getJavaFXFocusAsSecClusRole();
+						ICFSecSecSysRoleObj selectedInstance = getJavaFXFocusAsSecSysRole();
 						if( selectedInstance != null ) {
 							int classCode = selectedInstance.getClassCode();
 							ICFSecSchema.ClassMapEntry entry = ICFSecSchema.getClassMapByRuntimeClassCode(classCode);
 							int backingClassCode = entry.getBackingClassCode();
-							if( entry.getSchemaName().equals("CFSec") && backingClassCode == ICFSecSecClusRole.CLASS_CODE ) {
-								CFBorderPane frame = javafxSchema.getSecClusRoleFactory().newViewEditForm( cfFormManager, selectedInstance, getViewEditClosedCallback(), false );
-								((ICFSecJavaFXSecClusRolePaneCommon)frame).setPaneMode( CFPane.PaneMode.Edit );
+							if( entry.getSchemaName().equals("CFSec") && backingClassCode == ICFSecSecSysRole.CLASS_CODE ) {
+								CFBorderPane frame = javafxSchema.getSecSysRoleFactory().newViewEditForm( cfFormManager, selectedInstance, getViewEditClosedCallback(), false );
+								((ICFSecJavaFXSecSysRolePaneCommon)frame).setPaneMode( CFPane.PaneMode.Edit );
 								cfFormManager.pushForm( frame );
 							}
 							else {
@@ -455,7 +469,7 @@ implements ICFSecJavaFXSecClusRolePaneList
 									S_ProcName,
 									"selectedInstance",
 									selectedInstance,
-									"ICFSecSecClusRoleObj" );
+									"ICFSecSecSysRoleObj" );
 							}
 						}
 					}
@@ -480,14 +494,14 @@ implements ICFSecJavaFXSecClusRolePaneList
 								0,
 								"schemaObj" );
 						}
-						ICFSecSecClusRoleObj selectedInstance = getJavaFXFocusAsSecClusRole();
+						ICFSecSecSysRoleObj selectedInstance = getJavaFXFocusAsSecSysRole();
 						if( selectedInstance != null ) {
 							int classCode = selectedInstance.getClassCode();
 							ICFSecSchema.ClassMapEntry entry = ICFSecSchema.getClassMapByRuntimeClassCode(classCode);
 							int backingClassCode = entry.getBackingClassCode();
-							if( entry.getSchemaName().equals("CFSec") && backingClassCode == ICFSecSecClusRole.CLASS_CODE ) {
-								CFBorderPane frame = javafxSchema.getSecClusRoleFactory().newAskDeleteForm( cfFormManager, selectedInstance, getDeleteCallback() );
-								((ICFSecJavaFXSecClusRolePaneCommon)frame).setPaneMode( CFPane.PaneMode.View );
+							if( entry.getSchemaName().equals("CFSec") && backingClassCode == ICFSecSecSysRole.CLASS_CODE ) {
+								CFBorderPane frame = javafxSchema.getSecSysRoleFactory().newAskDeleteForm( cfFormManager, selectedInstance, getDeleteCallback() );
+								((ICFSecJavaFXSecSysRolePaneCommon)frame).setPaneMode( CFPane.PaneMode.View );
 								cfFormManager.pushForm( frame );
 							}
 							else {
@@ -495,7 +509,7 @@ implements ICFSecJavaFXSecClusRolePaneList
 									S_ProcName,
 									"selectedInstance",
 									selectedInstance,
-									"ICFSecSecClusRoleObj" );
+									"ICFSecSecSysRoleObj" );
 							}
 						}
 					}
@@ -510,11 +524,11 @@ implements ICFSecJavaFXSecClusRolePaneList
 		return( hboxMenu );
 	}
 
-	public ICFSecSecSysGrpObj getJavaFXContainer() {
+	public ICFLibAnyObj getJavaFXContainer() {
 		return( javafxContainer );
 	}
 
-	public void setJavaFXContainer( ICFSecSecSysGrpObj value ) {
+	public void setJavaFXContainer( ICFLibAnyObj value ) {
 		javafxContainer = value;
 	}
 
@@ -529,7 +543,7 @@ implements ICFSecJavaFXSecClusRolePaneList
 		boolean inEditState;
 		boolean allowAdds;
 		boolean inAddMode = false;
-		ICFSecSecClusRoleObj selectedObj = getJavaFXFocusAsSecClusRole();
+		ICFSecSecSysRoleObj selectedObj = getJavaFXFocusAsSecSysRole();
 		CFPane.PaneMode mode = getPaneMode();
 		if( mode == CFPane.PaneMode.Edit ) {
 			inEditState = true;
@@ -576,8 +590,8 @@ implements ICFSecJavaFXSecClusRolePaneList
 		if( buttonDeleteSelected != null ) {
 			buttonDeleteSelected.setDisable( ! enableState );
 		}
-		if( buttonAddSecClusRole != null ) {
-			buttonAddSecClusRole.setDisable( ! allowAdds );
+		if( buttonAddSecSysRole != null ) {
+			buttonAddSecSysRole.setDisable( ! allowAdds );
 		}
 
 	}

@@ -1,4 +1,4 @@
-// Description: Java 25 JavaFX Element TabPane implementation for SecClusGrp.
+// Description: Java 25 JavaFX Element TabPane implementation for SecSysRoleEnables.
 
 /*
  *	server.markhome.mcf.CFSec
@@ -44,21 +44,18 @@ import server.markhome.mcf.v3_1.cfsec.cfsec.*;
 import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 
 /**
- *	CFSecJavaFXSecClusGrpEltTabPane JavaFX Element TabPane implementation
- *	for SecClusGrp.
+ *	CFSecJavaFXSecSysRoleEnablesEltTabPane JavaFX Element TabPane implementation
+ *	for SecSysRoleEnables.
  */
-public class CFSecJavaFXSecClusGrpEltTabPane
+public class CFSecJavaFXSecSysRoleEnablesEltTabPane
 extends CFTabPane
-implements ICFSecJavaFXSecClusGrpPaneCommon
+implements ICFSecJavaFXSecSysRoleEnablesPaneCommon
 {
 	protected ICFFormManager cfFormManager = null;
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	protected boolean javafxIsInitializing = true;
-	public final String LABEL_TabChildrenMembByGrpList = "Optional Children Members of Group";
-	protected CFTab tabChildrenMembByGrp = null;
-	protected CFBorderPane tabViewChildrenMembByGrpListPane = null;
 
-	public CFSecJavaFXSecClusGrpEltTabPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecClusGrpObj argFocus ) {
+	public CFSecJavaFXSecSysRoleEnablesEltTabPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecSysRoleEnablesObj argFocus ) {
 		super();
 		final String S_ProcName = "construct-schema-focus";
 		if( formManager == null ) {
@@ -77,12 +74,8 @@ implements ICFSecJavaFXSecClusGrpPaneCommon
 		// argFocus is optional; focus may be set later during execution as
 		// conditions of the runtime change.
 		javafxSchema = argSchema;
-		setJavaFXFocusAsSecClusGrp( argFocus );
+		setJavaFXFocusAsSecSysRoleEnables( argFocus );
 		// Wire the newly constructed Panes/Tabs to this TabPane
-		tabChildrenMembByGrp = new CFTab();
-		tabChildrenMembByGrp.setText( LABEL_TabChildrenMembByGrpList );
-		tabChildrenMembByGrp.setContent( getTabViewChildrenMembByGrpListPane() );
-		getTabs().add( tabChildrenMembByGrp );
 		javafxIsInitializing = false;
 	}
 
@@ -107,7 +100,7 @@ implements ICFSecJavaFXSecClusGrpPaneCommon
 
 	public void setJavaFXFocus( ICFLibAnyObj value ) {
 		final String S_ProcName = "setJavaFXFocus";
-		if( ( value == null ) || ( value instanceof ICFSecSecClusGrpObj ) ) {
+		if( ( value == null ) || ( value instanceof ICFSecSecSysRoleEnablesObj ) ) {
 			super.setJavaFXFocus( value );
 		}
 		else {
@@ -115,73 +108,20 @@ implements ICFSecJavaFXSecClusGrpPaneCommon
 				S_ProcName,
 				"value",
 				value,
-				"ICFSecSecClusGrpObj" );
+				"ICFSecSecSysRoleEnablesObj" );
 		}
 	}
 
-	public void setJavaFXFocusAsSecClusGrp( ICFSecSecClusGrpObj value ) {
+	public void setJavaFXFocusAsSecSysRoleEnables( ICFSecSecSysRoleEnablesObj value ) {
 		setJavaFXFocus( value );
 	}
 
-	public ICFSecSecClusGrpObj getJavaFXFocusAsSecClusGrp() {
-		return( (ICFSecSecClusGrpObj)getJavaFXFocus() );
-	}
-
-	protected class RefreshChildrenMembByGrpList
-	implements ICFRefreshCallback
-	{
-		public RefreshChildrenMembByGrpList() {
-		}
-
-		public void refreshMe() {
-			// Use page data instead
-		}
-	}
-
-	protected class PageDataChildrenMembByGrpList
-	implements ICFSecJavaFXSecClusGrpMembPageCallback
-	{
-		public PageDataChildrenMembByGrpList() {
-		}
-
-		public List<ICFSecSecClusGrpMembObj> pageData( CFLibDbKeyHash256 priorSecClusGrpId,
-		String priorLoginId )
-		{
-			List<ICFSecSecClusGrpMembObj> dataList;
-			ICFSecSecClusGrpObj focus = (ICFSecSecClusGrpObj)getJavaFXFocusAsSecClusGrp();
-			if( focus != null ) {
-				ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
-				dataList = schemaObj.getSecClusGrpMembTableObj().pageSecClusGrpMembByClusGrpIdx( focus.getRequiredSecClusGrpId(),
-					priorSecClusGrpId,
-					priorLoginId );
-			}
-			else {
-				dataList = new ArrayList<ICFSecSecClusGrpMembObj>();
-			}
-			return( dataList );
-		}
-	}
-
-	public CFBorderPane getTabViewChildrenMembByGrpListPane() {
-		if( tabViewChildrenMembByGrpListPane == null ) {
-			ICFSecSecClusGrpObj focus = (ICFSecSecClusGrpObj)getJavaFXFocusAsSecClusGrp();
-			ICFSecSecClusGrpObj javafxContainer;
-			if( ( focus != null ) && ( focus instanceof ICFSecSecClusGrpObj ) ) {
-				javafxContainer = (ICFSecSecClusGrpObj)focus;
-			}
-			else {
-				javafxContainer = null;
-			}
-			tabViewChildrenMembByGrpListPane = javafxSchema.getSecClusGrpMembFactory().newListPane( cfFormManager, javafxContainer, null, new PageDataChildrenMembByGrpList(), new RefreshChildrenMembByGrpList(), false );
-		}
-		return( tabViewChildrenMembByGrpListPane );
+	public ICFSecSecSysRoleEnablesObj getJavaFXFocusAsSecSysRoleEnables() {
+		return( (ICFSecSecSysRoleEnablesObj)getJavaFXFocus() );
 	}
 
 	public void setPaneMode( CFPane.PaneMode value ) {
 		CFPane.PaneMode oldMode = getPaneMode();
 		super.setPaneMode( value );
-		if( tabViewChildrenMembByGrpListPane != null ) {
-			((ICFSecJavaFXSecClusGrpMembPaneCommon)tabViewChildrenMembByGrpListPane).setPaneMode( value );
-		}
 	}
 }

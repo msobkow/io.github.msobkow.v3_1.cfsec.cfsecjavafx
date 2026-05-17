@@ -70,7 +70,9 @@ implements ICFSecJavaFXSecSysGrpPaneCommon
 			"Global",
 			"Cluster",
 			"Tenant",
-			"Role" );
+			"SystemRole",
+			"ClusterRole",
+			"TenantRole" );
 
 	protected class NameCFLabel
 		extends CFLabel

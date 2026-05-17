@@ -373,7 +373,7 @@ implements ICFSecJavaFXSecTentRolePaneList
 										0,
 										"JavaFXContainer" );
 								}
-								edit.setRequiredContainerRole( container );
+								edit.setRequiredContainerSysRole( container );
 						CFBorderPane frame = javafxSchema.getSecTentRoleFactory().newAddForm( cfFormManager, obj, getViewEditClosedCallback(), true );
 						ICFSecJavaFXSecTentRolePaneCommon jpanelCommon = (ICFSecJavaFXSecTentRolePaneCommon)frame;
 						jpanelCommon.setJavaFXFocus( obj );

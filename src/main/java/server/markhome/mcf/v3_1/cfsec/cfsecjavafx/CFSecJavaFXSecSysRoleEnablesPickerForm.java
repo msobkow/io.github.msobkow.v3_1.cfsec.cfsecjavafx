@@ -1,4 +1,4 @@
-// Description: Java 25 JavaFX Picker Form implementation for SecClusRole.
+// Description: Java 25 JavaFX Picker Form implementation for SecSysRoleEnables.
 
 /*
  *	server.markhome.mcf.CFSec
@@ -40,25 +40,28 @@ import server.markhome.mcf.v3_1.cfsec.cfsec.*;
 import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 
 /**
- *	CFSecJavaFXSecClusRolePickerForm JavaFX Picker Form implementation
- *	for SecClusRole.
+ *	CFSecJavaFXSecSysRoleEnablesPickerForm JavaFX Picker Form implementation
+ *	for SecSysRoleEnables.
  */
-public class CFSecJavaFXSecClusRolePickerForm
+public class CFSecJavaFXSecSysRoleEnablesPickerForm
 extends CFBorderPane
-implements ICFSecJavaFXSecClusRolePaneList,
+implements ICFSecJavaFXSecSysRoleEnablesPaneList,
 	ICFForm
 {
 	protected ICFFormManager cfFormManager = null;
 	protected CFBorderPane javafxPickerPane = null;
 	protected ICFSecJavaFXSchema javafxSchema = null;
-	protected Collection<ICFSecSecClusRoleObj> javafxDataCollection = null;
+	protected ICFSecJavaFXSecSysRoleEnablesPageCallback pageCallback;
+	protected CFButton buttonRefresh = null;
+	protected CFButton buttonMoreData = null;
+	protected boolean endOfData = true;
 
-	public CFSecJavaFXSecClusRolePickerForm( ICFFormManager formManager,
+	public CFSecJavaFXSecSysRoleEnablesPickerForm( ICFFormManager formManager,
 		ICFSecJavaFXSchema argSchema,
-		ICFSecSecClusRoleObj argFocus,
-		ICFSecSecSysGrpObj argContainer,
-		Collection<ICFSecSecClusRoleObj> argDataCollection,
-		ICFSecJavaFXSecClusRoleChosen whenChosen )
+		ICFSecSecSysRoleEnablesObj argFocus,
+		ICFSecSecSysRoleObj argContainer,
+		ICFSecJavaFXSecSysRoleEnablesPageCallback argPageCallback,
+		ICFSecJavaFXSecSysRoleEnablesChosen whenChosen )
 	{
 		super();
 		final String S_ProcName = "construct-schema-focus";
@@ -84,9 +87,8 @@ implements ICFSecJavaFXSecClusRolePaneList,
 		// argFocus is optional; focus may be set later during execution as
 		// conditions of the runtime change.
 		javafxSchema = argSchema;
-		javafxPickerPane = argSchema.getSecClusRoleFactory().newPickerPane( cfFormManager, argFocus, argContainer, argDataCollection, whenChosen );
-		setJavaFXFocusAsSecClusRole( argFocus );
-		setJavaFXDataCollection( argDataCollection );
+		javafxPickerPane = argSchema.getSecSysRoleEnablesFactory().newPickerPane( cfFormManager, argFocus, argContainer, argPageCallback, whenChosen );
+		setJavaFXFocusAsSecSysRoleEnables( argFocus );
 		setJavaFXContainer( argContainer );
 		setCenter( javafxPickerPane );
 		setPaneMode( CFPane.PaneMode.View );
@@ -121,7 +123,7 @@ implements ICFSecJavaFXSecClusRolePaneList,
 
 	public void setJavaFXFocus( ICFLibAnyObj value ) {
 		final String S_ProcName = "setJavaFXFocus";
-		if( ( value == null ) || ( value instanceof ICFSecSecClusRoleObj ) ) {
+		if( ( value == null ) || ( value instanceof ICFSecSecSysRoleEnablesObj ) ) {
 			super.setJavaFXFocus( value );
 		}
 		else {
@@ -129,27 +131,27 @@ implements ICFSecJavaFXSecClusRolePaneList,
 				S_ProcName,
 				"value",
 				value,
-				"ICFSecSecClusRoleObj" );
+				"ICFSecSecSysRoleEnablesObj" );
 		}
-		((ICFSecJavaFXSecClusRolePaneCommon)javafxPickerPane).setJavaFXFocus( (ICFSecSecClusRoleObj)value );
+		((ICFSecJavaFXSecSysRoleEnablesPaneCommon)javafxPickerPane).setJavaFXFocus( (ICFSecSecSysRoleEnablesObj)value );
 	}
 
-	public ICFSecSecClusRoleObj getJavaFXFocusAsSecClusRole() {
-		return( (ICFSecSecClusRoleObj)getJavaFXFocus() );
+	public ICFSecSecSysRoleEnablesObj getJavaFXFocusAsSecSysRoleEnables() {
+		return( (ICFSecSecSysRoleEnablesObj)getJavaFXFocus() );
 	}
 
-	public void setJavaFXFocusAsSecClusRole( ICFSecSecClusRoleObj value ) {
+	public void setJavaFXFocusAsSecSysRoleEnables( ICFSecSecSysRoleEnablesObj value ) {
 		setJavaFXFocus( value );
 	}
 
-	public Collection<ICFSecSecClusRoleObj> getJavaFXDataCollection() {
-		ICFSecJavaFXSecClusRolePaneList jplPicker = (ICFSecJavaFXSecClusRolePaneList)javafxPickerPane;
-		Collection<ICFSecSecClusRoleObj> cltn = jplPicker.getJavaFXDataCollection();
+	public Collection<ICFSecSecSysRoleEnablesObj> getJavaFXDataCollection() {
+		ICFSecJavaFXSecSysRoleEnablesPaneList jplPicker = (ICFSecJavaFXSecSysRoleEnablesPaneList)javafxPickerPane;
+		Collection<ICFSecSecSysRoleEnablesObj> cltn = jplPicker.getJavaFXDataCollection();
 		return( cltn );
 	}
 
-	public void setJavaFXDataCollection( Collection<ICFSecSecClusRoleObj> value ) {
-		ICFSecJavaFXSecClusRolePaneList jplPicker = (ICFSecJavaFXSecClusRolePaneList)javafxPickerPane;
+	public void setJavaFXDataCollection( Collection<ICFSecSecSysRoleEnablesObj> value ) {
+		ICFSecJavaFXSecSysRoleEnablesPaneList jplPicker = (ICFSecJavaFXSecSysRoleEnablesPaneList)javafxPickerPane;
 		jplPicker.setJavaFXDataCollection( value );
 	}
 
@@ -167,19 +169,19 @@ implements ICFSecJavaFXSecClusRolePaneList,
 		}
 		super.setPaneMode( value );
 		if( javafxPickerPane != null ) {
-			ICFSecJavaFXSecClusRolePaneCommon jpanelCommon = (ICFSecJavaFXSecClusRolePaneCommon)javafxPickerPane;
+			ICFSecJavaFXSecSysRoleEnablesPaneCommon jpanelCommon = (ICFSecJavaFXSecSysRoleEnablesPaneCommon)javafxPickerPane;
 			jpanelCommon.setPaneMode( value );
 		}
 	}
 
-	public ICFSecSecSysGrpObj getJavaFXContainer() {
-		ICFSecJavaFXSecClusRolePaneList jplPicker = (ICFSecJavaFXSecClusRolePaneList)javafxPickerPane;
-		ICFSecSecSysGrpObj cnt = jplPicker.getJavaFXContainer();
+	public ICFSecSecSysRoleObj getJavaFXContainer() {
+		ICFSecJavaFXSecSysRoleEnablesPaneList jplPicker = (ICFSecJavaFXSecSysRoleEnablesPaneList)javafxPickerPane;
+		ICFSecSecSysRoleObj cnt = jplPicker.getJavaFXContainer();
 		return( cnt );
 	}
 
-	public void setJavaFXContainer( ICFSecSecSysGrpObj value ) {
-		ICFSecJavaFXSecClusRolePaneList jplPicker = (ICFSecJavaFXSecClusRolePaneList)javafxPickerPane;
+	public void setJavaFXContainer( ICFSecSecSysRoleObj value ) {
+		ICFSecJavaFXSecSysRoleEnablesPaneList jplPicker = (ICFSecJavaFXSecSysRoleEnablesPaneList)javafxPickerPane;
 		jplPicker.setJavaFXContainer( value );
 	}
 }

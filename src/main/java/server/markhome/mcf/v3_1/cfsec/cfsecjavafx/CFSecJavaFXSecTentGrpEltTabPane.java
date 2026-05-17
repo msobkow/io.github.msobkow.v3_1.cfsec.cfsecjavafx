@@ -54,11 +54,8 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 	protected ICFFormManager cfFormManager = null;
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	protected boolean javafxIsInitializing = true;
-	public final String LABEL_TabChildrenIncByGrpList = "Optional Children Included by Group";
-	protected CFTab tabChildrenIncByGrp = null;
 	public final String LABEL_TabChildrenMembByGrpList = "Optional Children Members of Group";
 	protected CFTab tabChildrenMembByGrp = null;
-	protected CFBorderPane tabViewChildrenIncByGrpListPane = null;
 	protected CFBorderPane tabViewChildrenMembByGrpListPane = null;
 
 	public CFSecJavaFXSecTentGrpEltTabPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecTentGrpObj argFocus ) {
@@ -82,10 +79,6 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 		javafxSchema = argSchema;
 		setJavaFXFocusAsSecTentGrp( argFocus );
 		// Wire the newly constructed Panes/Tabs to this TabPane
-		tabChildrenIncByGrp = new CFTab();
-		tabChildrenIncByGrp.setText( LABEL_TabChildrenIncByGrpList );
-		tabChildrenIncByGrp.setContent( getTabViewChildrenIncByGrpListPane() );
-		getTabs().add( tabChildrenIncByGrp );
 		tabChildrenMembByGrp = new CFTab();
 		tabChildrenMembByGrp.setText( LABEL_TabChildrenMembByGrpList );
 		tabChildrenMembByGrp.setContent( getTabViewChildrenMembByGrpListPane() );
@@ -132,56 +125,6 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 
 	public ICFSecSecTentGrpObj getJavaFXFocusAsSecTentGrp() {
 		return( (ICFSecSecTentGrpObj)getJavaFXFocus() );
-	}
-
-	protected class RefreshChildrenIncByGrpList
-	implements ICFRefreshCallback
-	{
-		public RefreshChildrenIncByGrpList() {
-		}
-
-		public void refreshMe() {
-			// Use page data instead
-		}
-	}
-
-	protected class PageDataChildrenIncByGrpList
-	implements ICFSecJavaFXSecTentGrpIncPageCallback
-	{
-		public PageDataChildrenIncByGrpList() {
-		}
-
-		public List<ICFSecSecTentGrpIncObj> pageData( CFLibDbKeyHash256 priorSecTentGrpId,
-		String priorInclName )
-		{
-			List<ICFSecSecTentGrpIncObj> dataList;
-			ICFSecSecTentGrpObj focus = (ICFSecSecTentGrpObj)getJavaFXFocusAsSecTentGrp();
-			if( focus != null ) {
-				ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
-				dataList = schemaObj.getSecTentGrpIncTableObj().pageSecTentGrpIncByTentGrpIdx( focus.getRequiredSecTentGrpId(),
-					priorSecTentGrpId,
-					priorInclName );
-			}
-			else {
-				dataList = new ArrayList<ICFSecSecTentGrpIncObj>();
-			}
-			return( dataList );
-		}
-	}
-
-	public CFBorderPane getTabViewChildrenIncByGrpListPane() {
-		if( tabViewChildrenIncByGrpListPane == null ) {
-			ICFSecSecTentGrpObj focus = (ICFSecSecTentGrpObj)getJavaFXFocusAsSecTentGrp();
-			ICFSecSecTentGrpObj javafxContainer;
-			if( ( focus != null ) && ( focus instanceof ICFSecSecTentGrpObj ) ) {
-				javafxContainer = (ICFSecSecTentGrpObj)focus;
-			}
-			else {
-				javafxContainer = null;
-			}
-			tabViewChildrenIncByGrpListPane = javafxSchema.getSecTentGrpIncFactory().newListPane( cfFormManager, javafxContainer, null, new PageDataChildrenIncByGrpList(), new RefreshChildrenIncByGrpList(), false );
-		}
-		return( tabViewChildrenIncByGrpListPane );
 	}
 
 	protected class RefreshChildrenMembByGrpList
@@ -237,9 +180,6 @@ implements ICFSecJavaFXSecTentGrpPaneCommon
 	public void setPaneMode( CFPane.PaneMode value ) {
 		CFPane.PaneMode oldMode = getPaneMode();
 		super.setPaneMode( value );
-		if( tabViewChildrenIncByGrpListPane != null ) {
-			((ICFSecJavaFXSecTentGrpIncPaneCommon)tabViewChildrenIncByGrpListPane).setPaneMode( value );
-		}
 		if( tabViewChildrenMembByGrpListPane != null ) {
 			((ICFSecJavaFXSecTentGrpMembPaneCommon)tabViewChildrenMembByGrpListPane).setPaneMode( value );
 		}

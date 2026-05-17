@@ -1,4 +1,4 @@
-// Description: Java 25 JavaFX Attribute Pane implementation for SecClusRole.
+// Description: Java 25 JavaFX Attribute Pane implementation for SecSysRoleEnables.
 
 /*
  *	server.markhome.mcf.CFSec
@@ -53,39 +53,115 @@ import server.markhome.mcf.v3_1.cfsec.cfsec.*;
 import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 
 /**
- *	CFSecJavaFXSecClusRoleAttrPane JavaFX Attribute Pane implementation
- *	for SecClusRole.
+ *	CFSecJavaFXSecSysRoleEnablesAttrPane JavaFX Attribute Pane implementation
+ *	for SecSysRoleEnables.
  */
-public class CFSecJavaFXSecClusRoleAttrPane
+public class CFSecJavaFXSecSysRoleEnablesAttrPane
 extends CFGridPane
-implements ICFSecJavaFXSecClusRolePaneCommon
+implements ICFSecJavaFXSecSysRoleEnablesPaneCommon
 {
 	protected ICFFormManager cfFormManager = null;
 	protected ICFSecJavaFXSchema javafxSchema = null;
 	boolean javafxIsInitializing = true;
 
-	protected class SecClusRoleIdCFLabel
+	protected class SecSysRoleEnablesGroupCFLabel
 		extends CFLabel
 	{
-		public SecClusRoleIdCFLabel() {
+		public SecSysRoleEnablesGroupCFLabel() {
 			super();
-			setText(Inz.s("cfsec.javafx.SecClusRole.AttrPane.SecClusRoleId.EffLabel"));
+			setText(Inz.s("cfsec.javafx.SecSysRoleEnables.AttrPane.ParentEnableGroup.EffLabel"));
 		}
 	}
 
-	protected class SecClusRoleIdEditor
-		extends CFDbKeyHash256Editor
+	protected class CallbackSecSysRoleEnablesGroupChosen
+	implements ICFSecJavaFXSecSysGrpChosen
 	{
-		public SecClusRoleIdEditor() {
-			super();
-			setFieldNameInzTag( "cfsec.javafx.SecClusRole.AttrPane.SecClusRoleId.EffLabel" );
+		public CallbackSecSysRoleEnablesGroupChosen() {
+		}
+
+		public void choseSecSysGrp( ICFSecSecSysGrpObj value ) {
+			if( javafxReferenceParentEnableGroup != null ) {
+				ICFSecSecSysRoleEnablesObj cur = getJavaFXFocusAsSecSysRoleEnables();
+				if( cur != null ) {
+					ICFSecSecSysRoleEnablesEditObj editObj = (ICFSecSecSysRoleEnablesEditObj)cur.getEdit();
+					if( null != editObj ) {
+						CFPane.PaneMode curMode = getPaneMode();
+						if( ( curMode == CFPane.PaneMode.Add ) || ( curMode == CFPane.PaneMode.Edit ) ) {
+							javafxReferenceParentEnableGroup.setReferencedObject( value );
+							editObj.setRequiredParentEnableGroup( value );
+						}
+					}
+				}
+			}
 		}
 	}
 
-	protected SecClusRoleIdCFLabel javafxLabelSecClusRoleId = null;
-	protected SecClusRoleIdEditor javafxEditorSecClusRoleId = null;
+	protected class SecSysRoleEnablesGroupReferenceCallback
+	implements ICFReferenceCallback
+	{
+		public void chose( ICFLibAnyObj value ) {
+			final String S_ProcName = "chose";
+			Node cont;
+			ICFSecSchemaObj schemaObj = (ICFSecSchemaObj)javafxSchema.getSchema();
+			ICFSecSecSysRoleEnablesObj focus = getEffJavaFXFocus();
+			ICFSecSecSysGrpObj referencedObj = (ICFSecSecSysGrpObj)javafxReferenceParentEnableGroup.getReferencedObject();
+			java.util.List<ICFSecSecSysGrpObj> listOfSecSysGrp = null;
+			listOfSecSysGrp = schemaObj.getSecSysGrpTableObj().readAllSecSysGrp();
+			if( listOfSecSysGrp == null ) {
+				throw new CFLibNullArgumentException( getClass(),
+					S_ProcName,
+					0,
+					"listOfSecSysGrp" );
+			}
+			Collection<ICFSecSecSysGrpObj> cltn = listOfSecSysGrp;
+			CFBorderPane form = javafxSchema.getSecSysGrpFactory().newPickerForm( cfFormManager, referencedObj, null, cltn, new CallbackSecSysRoleEnablesGroupChosen() );
+			((ICFSecJavaFXSecSysGrpPaneCommon)form).setPaneMode( CFPane.PaneMode.View );
+			cfFormManager.pushForm( form );
+		}
 
-	public CFSecJavaFXSecClusRoleAttrPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecClusRoleObj argFocus ) {
+		public void view( ICFLibAnyObj value ) {
+			final String S_ProcName = "actionPerformed";
+			ICFSecSecSysRoleEnablesObj focus = getEffJavaFXFocus();
+			if( focus != null ) {
+				ICFSecSecSysGrpObj referencedObj = (ICFSecSecSysGrpObj)javafxReferenceParentEnableGroup.getReferencedObject();
+				CFBorderPane form = null;
+				if( referencedObj != null ) {
+					int classCode = referencedObj.getClassCode();
+					ICFSecSchema.ClassMapEntry entry = ICFSecSchema.getClassMapByRuntimeClassCode(classCode);
+					int backingClassCode = entry.getBackingClassCode();
+					if( entry.getSchemaName().equals("CFSec") && backingClassCode == ICFSecSecSysGrp.CLASS_CODE ) {
+						form = javafxSchema.getSecSysGrpFactory().newAddForm( cfFormManager, referencedObj, null, true );
+						ICFSecJavaFXSecSysGrpPaneCommon spec = (ICFSecJavaFXSecSysGrpPaneCommon)form;
+						spec.setJavaFXFocus( referencedObj );
+						spec.setPaneMode( CFPane.PaneMode.View );
+					}
+					else {
+						throw new CFLibUnsupportedClassException( getClass(),
+							S_ProcName,
+							"javaFXFocus",
+							focus,
+							"ICFSecSecSysGrpObj" );
+					}
+					cfFormManager.pushForm( form );
+				}
+			}
+		}
+	}
+
+	protected class SecSysRoleEnablesGroupCFReferenceEditor
+		extends CFReferenceEditor
+	{
+		public SecSysRoleEnablesGroupCFReferenceEditor() {
+			super( new SecSysRoleEnablesGroupReferenceCallback() );
+			setFieldNameInzTag( "cfsec.javafx.SecSysRoleEnables.AttrPane.SecSysRoleEnablesGroup.EffLabel" );
+		}
+	}
+
+	protected ICFSecSecSysGrpObj javafxParentEnableGroupObj = null;
+	protected SecSysRoleEnablesGroupCFLabel javafxLabelParentEnableGroup = null;
+	protected SecSysRoleEnablesGroupCFReferenceEditor javafxReferenceParentEnableGroup = null;
+
+	public CFSecJavaFXSecSysRoleEnablesAttrPane( ICFFormManager formManager, ICFSecJavaFXSchema argSchema, ICFSecSecSysRoleEnablesObj argFocus ) {
 		super();
 		Control ctrl;
 		CFLabel label;
@@ -107,7 +183,7 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 		// argFocus is optional; focus may be set later during execution as
 		// conditions of the runtime change.
 		javafxSchema = argSchema;
-		setJavaFXFocusAsSecClusRole( argFocus );
+		setJavaFXFocusAsSecSysRoleEnables( argFocus );
 		setPadding( new Insets(5) );
 		setHgap( 5 );
 		setVgap( 5 );
@@ -116,15 +192,15 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 		column1.setPercentWidth( 100 );
 		getColumnConstraints().addAll( column1 );
 		int gridRow = 0;
-		label = getJavaFXLabelSecClusRoleId();
+		label = getJavaFXLabelParentEnableGroup();
 		setHalignment( label, HPos.LEFT );
 		setValignment( label, VPos.BOTTOM );
 		add( label, 0, gridRow );
 		gridRow ++;
 
-		ctrl = getJavaFXEditorSecClusRoleId();
-		setHalignment( ctrl, HPos.LEFT );
-		add( ctrl, 0, gridRow );
+		reference = getJavaFXReferenceParentEnableGroup();
+		setHalignment( reference, HPos.LEFT );
+		add( reference, 0, gridRow );
 		gridRow ++;
 
 		populateFields();
@@ -153,7 +229,7 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 
 	public void setJavaFXFocus( ICFLibAnyObj value ) {
 		final String S_ProcName = "setJavaFXFocus";
-		if( ( value == null ) || ( value instanceof ICFSecSecClusRoleObj ) ) {
+		if( ( value == null ) || ( value instanceof ICFSecSecSysRoleEnablesObj ) ) {
 			super.setJavaFXFocus( value );
 		}
 		else {
@@ -161,73 +237,80 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 				S_ProcName,
 				"value",
 				value,
-				"ICFSecSecClusRoleObj" );
+				"ICFSecSecSysRoleEnablesObj" );
 		}
 		populateFields();
 		adjustComponentEnableStates();
 	}
 
-	public ICFSecSecClusRoleObj getJavaFXFocusAsSecClusRole() {
-		return( (ICFSecSecClusRoleObj)getJavaFXFocus() );
+	public ICFSecSecSysRoleEnablesObj getJavaFXFocusAsSecSysRoleEnables() {
+		return( (ICFSecSecSysRoleEnablesObj)getJavaFXFocus() );
 	}
 
-	public void setJavaFXFocusAsSecClusRole( ICFSecSecClusRoleObj value ) {
+	public void setJavaFXFocusAsSecSysRoleEnables( ICFSecSecSysRoleEnablesObj value ) {
 		setJavaFXFocus( value );
 	}
 
-	public ICFSecSecClusRoleObj getEffJavaFXFocus() {
-		ICFSecSecClusRoleObj eff = (ICFSecSecClusRoleObj)getJavaFXFocus();
+	public ICFSecSecSysRoleEnablesObj getEffJavaFXFocus() {
+		ICFSecSecSysRoleEnablesObj eff = (ICFSecSecSysRoleEnablesObj)getJavaFXFocus();
 		if( eff != null ) {
 			if( null != eff.getEdit() ) {
-				eff = (ICFSecSecClusRoleObj)eff.getEdit();
+				eff = (ICFSecSecSysRoleEnablesObj)eff.getEdit();
 			}
 		}
 		return( eff );
 	}
 
-	public SecClusRoleIdCFLabel getJavaFXLabelSecClusRoleId() {
-		if( javafxLabelSecClusRoleId == null ) {
-			javafxLabelSecClusRoleId = new SecClusRoleIdCFLabel();
+	public ICFSecSecSysGrpObj getJavaFXParentEnableGroupObj() {
+		return( javafxParentEnableGroupObj );
+	}
+
+	public void setJavaFXParentEnableGroupObj( ICFSecSecSysGrpObj value ) {
+		javafxParentEnableGroupObj = value;
+	}
+
+	public CFLabel getJavaFXLabelParentEnableGroup() {
+		if( javafxLabelParentEnableGroup == null ) {
+			javafxLabelParentEnableGroup = new SecSysRoleEnablesGroupCFLabel();
 		}
-		return( javafxLabelSecClusRoleId );
+		return( javafxLabelParentEnableGroup );
 	}
 
-	public void setJavaFXLabelSecClusRoleId( SecClusRoleIdCFLabel value ) {
-		javafxLabelSecClusRoleId = value;
-	}
-
-	public SecClusRoleIdEditor getJavaFXEditorSecClusRoleId() {
-		if( javafxEditorSecClusRoleId == null ) {
-			javafxEditorSecClusRoleId = new SecClusRoleIdEditor();
+	public CFReferenceEditor getJavaFXReferenceParentEnableGroup() {
+		if( javafxReferenceParentEnableGroup == null ) {
+			javafxReferenceParentEnableGroup = new SecSysRoleEnablesGroupCFReferenceEditor();
 		}
-		return( javafxEditorSecClusRoleId );
+		return( javafxReferenceParentEnableGroup );
 	}
 
-	public void setJavaFXEditorSecClusRoleId( SecClusRoleIdEditor value ) {
-		javafxEditorSecClusRoleId = value;
+	public void setJavaFXReferenceParentEnableGroup( SecSysRoleEnablesGroupCFReferenceEditor value ) {
+		javafxReferenceParentEnableGroup = value;
 	}
 
 	public void populateFields()
 	{
-		ICFSecSecClusRoleObj popObj = getEffJavaFXFocus();
+		ICFSecSecSysRoleEnablesObj popObj = getEffJavaFXFocus();
 		if( getPaneMode() == CFPane.PaneMode.Unknown ) {
 			popObj = null;
 		}
 		if( popObj == null ) {
-			getJavaFXEditorSecClusRoleId().setDbKeyHash256Value( null );
+			javafxParentEnableGroupObj = null;
 		}
 		else {
-			getJavaFXEditorSecClusRoleId().setDbKeyHash256Value( popObj.getRequiredSecClusRoleId() );
+			javafxParentEnableGroupObj = (ICFSecSecSysGrpObj)popObj.getRequiredParentEnableGroup( javafxIsInitializing );
+		}
+		if( javafxReferenceParentEnableGroup != null ) {
+			javafxReferenceParentEnableGroup.setReferencedObject( javafxParentEnableGroupObj );
 		}
 	}
 
 	public void postFields()
 	{
 		final String S_ProcName = "postFields";
-		ICFSecSecClusRoleObj focus = getJavaFXFocusAsSecClusRole();
-		ICFSecSecClusRoleEditObj editObj;
+		ICFSecSecSysRoleEnablesObj focus = getJavaFXFocusAsSecSysRoleEnables();
+		ICFSecSecSysRoleEnablesEditObj editObj;
 		if( focus != null ) {
-			editObj = (ICFSecSecClusRoleEditObj)(focus.getEdit());
+			editObj = (ICFSecSecSysRoleEnablesEditObj)(focus.getEdit());
 		}
 		else {
 			editObj = null;
@@ -238,6 +321,9 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 				Inz.s("cflibjavafx.common.PaneIsUnfocusedOrNotEditing"),
 				Inz.x("cflibjavafx.common.PaneIsUnfocusedOrNotEditing") );
 		}
+
+		javafxParentEnableGroupObj = (ICFSecSecSysGrpObj)( javafxReferenceParentEnableGroup.getReferencedObject() );
+		editObj.setRequiredParentEnableGroup( javafxParentEnableGroupObj );
 	}
 
 	public void setPaneMode( CFPane.PaneMode value ) {
@@ -246,7 +332,7 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 		if( oldValue == value ) {
 			return;
 		}
-		ICFSecSecClusRoleObj focus = getJavaFXFocusAsSecClusRole();
+		ICFSecSecSysRoleEnablesObj focus = getJavaFXFocusAsSecSysRoleEnables();
 		if( ( value != CFPane.PaneMode.Unknown ) && ( value != CFPane.PaneMode.View ) ) {
 			if( focus == null ) {
 				throw new CFLibNullArgumentException( getClass(),
@@ -255,9 +341,9 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 					"javaFXFocus" );
 			}
 		}
-		ICFSecSecClusRoleEditObj editObj;
+		ICFSecSecSysRoleEnablesEditObj editObj;
 		if( focus != null ) {
-			editObj  = (ICFSecSecClusRoleEditObj)focus.getEdit();
+			editObj  = (ICFSecSecSysRoleEnablesEditObj)focus.getEdit();
 		}
 		else {
 			editObj = null;
@@ -288,7 +374,7 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 										Inz.x("cflibjavafx.common.MustBeNew"),
 										Inz.s("cflibjavafx.common.MustBeNew") );
 								}
-								editObj = (ICFSecSecClusRoleEditObj)focus.beginEdit();
+								editObj = (ICFSecSecSysRoleEnablesEditObj)focus.beginEdit();
 								if( editObj == null ) {
 									throw new CFLibUsageException( getClass(),
 										S_ProcName,
@@ -356,7 +442,7 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 				switch( oldValue ) {
 					case Unknown:
 						if( editObj == null ) {
-							editObj = (ICFSecSecClusRoleEditObj)focus.beginEdit();
+							editObj = (ICFSecSecSysRoleEnablesEditObj)focus.beginEdit();
 							if( editObj == null ) {
 								throw new CFLibUsageException( getClass(),
 									S_ProcName,
@@ -367,7 +453,7 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 						break;
 					case View:
 						if( editObj == null ) {
-							editObj = (ICFSecSecClusRoleEditObj)focus.beginEdit();
+							editObj = (ICFSecSecSysRoleEnablesEditObj)focus.beginEdit();
 							if( editObj == null ) {
 								throw new CFLibUsageException( getClass(),
 									S_ProcName,
@@ -378,7 +464,7 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 						break;
 					case Edit:
 						if( editObj == null ) {
-							editObj = (ICFSecSecClusRoleEditObj)focus.beginEdit();
+							editObj = (ICFSecSecSysRoleEnablesEditObj)focus.beginEdit();
 							if( editObj == null ) {
 								throw new CFLibUsageException( getClass(),
 									S_ProcName,
@@ -413,7 +499,7 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 				if( editObj != null ) {
 					postFields();
 					if( editObj.getIsNew() ) {
-						focus = (ICFSecSecClusRoleObj)editObj.create();
+						focus = (ICFSecSecSysRoleEnablesObj)editObj.create();
 						setJavaFXFocus( focus );
 					}
 					else {
@@ -428,7 +514,7 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 					case View:
 						if( focus != null ) {
 							if( editObj == null ) {
-								editObj = (ICFSecSecClusRoleEditObj)focus.beginEdit();
+								editObj = (ICFSecSecSysRoleEnablesEditObj)focus.beginEdit();
 								if( editObj == null ) {
 								throw new CFLibUsageException( getClass(),
 									S_ProcName,
@@ -441,7 +527,7 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 					case Edit:
 						if( focus != null ) {
 							if( editObj == null ) {
-								editObj = (ICFSecSecClusRoleEditObj)focus.beginEdit();
+								editObj = (ICFSecSecSysRoleEnablesEditObj)focus.beginEdit();
 								if( editObj == null ) {
 								throw new CFLibUsageException( getClass(),
 									S_ProcName,
@@ -458,7 +544,7 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 							String.format(Inz.s("cflibjavafx.common.CannotTransitionOldValueToDelete"), oldValue) );
 					case Delete:
 						if( editObj == null ) {
-							editObj = (ICFSecSecClusRoleEditObj)focus.beginEdit();
+							editObj = (ICFSecSecSysRoleEnablesEditObj)focus.beginEdit();
 							if( editObj == null ) {
 								throw new CFLibUsageException( getClass(),
 									S_ProcName,
@@ -515,7 +601,7 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 				break;
 		}
 		if( isEditing ) {
-			ICFSecSecClusRoleObj focus = getJavaFXFocusAsSecClusRole();
+			ICFSecSecSysRoleEnablesObj focus = getJavaFXFocusAsSecSysRoleEnables();
 			if( focus == null ) {
 				isEditing = false;
 			}
@@ -523,8 +609,8 @@ implements ICFSecJavaFXSecClusRolePaneCommon
 				isEditing = false;
 			}
 		}
-		if( javafxEditorSecClusRoleId != null ) {
-			javafxEditorSecClusRoleId.setDisable( true );
+		if( javafxReferenceParentEnableGroup != null ) {
+			javafxReferenceParentEnableGroup.setCustomDisable( ! isEditing );
 		}
 	}
 }

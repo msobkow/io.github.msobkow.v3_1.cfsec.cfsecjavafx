@@ -1,4 +1,4 @@
-// Description: Java 25 JavaFX Display Element Factory Interface for SecClusRole.
+// Description: Java 25 JavaFX Display Element Factory Interface for SecSysRole.
 
 /*
  *	server.markhome.mcf.CFSec
@@ -40,41 +40,43 @@ import server.markhome.mcf.v3_1.cfsec.cfsec.*;
 import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 
 /**
- *	ICFSecJavaFXSecClusRoleFactory JavaFX Display Element Factory Interface
- *	for SecClusRole.
+ *	ICFSecJavaFXSecSysRoleFactory JavaFX Display Element Factory Interface
+ *	for SecSysRole.
  */
-public interface ICFSecJavaFXSecClusRoleFactory
+public interface ICFSecJavaFXSecSysRoleFactory
 {
-	public CFGridPane newAttrPane( ICFFormManager formManager, ICFSecSecClusRoleObj javaFXFocus );
+	public CFGridPane newAttrPane( ICFFormManager formManager, ICFSecSecSysRoleObj javaFXFocus );
 
 	public CFBorderPane newListPane( ICFFormManager formManager,
-		ICFSecSecSysGrpObj argContainer,
-		ICFSecSecClusRoleObj argFocus,
-		Collection<ICFSecSecClusRoleObj> argDataCollection,
+		ICFLibAnyObj argContainer,
+		ICFSecSecSysRoleObj argFocus,
+		Collection<ICFSecSecSysRoleObj> argDataCollection,
 		ICFRefreshCallback refreshCallback,
 		boolean sortByChain );
 
 	public CFBorderPane newPickerPane( ICFFormManager formManager,
-		ICFSecSecClusRoleObj argFocus,
-		ICFSecSecSysGrpObj argContainer,
-		Collection<ICFSecSecClusRoleObj> argDataCollection,
-		ICFSecJavaFXSecClusRoleChosen whenChosen );
+		ICFSecSecSysRoleObj argFocus,
+		ICFLibAnyObj argContainer,
+		Collection<ICFSecSecSysRoleObj> argDataCollection,
+		ICFSecJavaFXSecSysRoleChosen whenChosen );
 
-	public CFTabPane newEltTabPane( ICFFormManager formManger, ICFSecSecClusRoleObj javaFXFocus );
+	public CFTabPane newEltTabPane( ICFFormManager formManger, ICFSecSecSysRoleObj javaFXFocus );
 
-	public CFBorderPane newAskDeleteForm( ICFFormManager formManager, ICFSecSecClusRoleObj javaFXFocus, ICFDeleteCallback callback );
+	public CFBorderPane newAskDeleteForm( ICFFormManager formManager, ICFSecSecSysRoleObj javaFXFocus, ICFDeleteCallback callback );
 
-	public CFSplitPane newAddPane( ICFFormManager formManger, ICFSecSecClusRoleObj javaFXFocus );
+	public CFSplitPane newAddPane( ICFFormManager formManger, ICFSecSecSysRoleObj javaFXFocus );
 
-	public CFSplitPane newViewEditPane( ICFFormManager formManger, ICFSecSecClusRoleObj javaFXFocus );
+	public CFSplitPane newViewEditPane( ICFFormManager formManger, ICFSecSecSysRoleObj javaFXFocus );
+
+	public CFBorderPane newFinderForm( ICFFormManager formManager );
 
 	public CFBorderPane newPickerForm( ICFFormManager formManager,
-		ICFSecSecClusRoleObj javaFXFocus,
-		ICFSecSecSysGrpObj argContainer,
-		Collection<ICFSecSecClusRoleObj> argDataCollection,
-		ICFSecJavaFXSecClusRoleChosen whenChosen );
+		ICFSecSecSysRoleObj javaFXFocus,
+		ICFLibAnyObj argContainer,
+		Collection<ICFSecSecSysRoleObj> argDataCollection,
+		ICFSecJavaFXSecSysRoleChosen whenChosen );
 
-	public CFBorderPane newAddForm( ICFFormManager formManager, ICFSecSecClusRoleObj javaFXFocus, ICFFormClosedCallback closeCallback, boolean allowSave );
+	public CFBorderPane newAddForm( ICFFormManager formManager, ICFSecSecSysRoleObj javaFXFocus, ICFFormClosedCallback closeCallback, boolean allowSave );
 
-	public CFBorderPane newViewEditForm( ICFFormManager formManager, ICFSecSecClusRoleObj javaFXFocus, ICFFormClosedCallback closeCallback, boolean cameFromAdd );
+	public CFBorderPane newViewEditForm( ICFFormManager formManager, ICFSecSecSysRoleObj javaFXFocus, ICFFormClosedCallback closeCallback, boolean cameFromAdd );
 }

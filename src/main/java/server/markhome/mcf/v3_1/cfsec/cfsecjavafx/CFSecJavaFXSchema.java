@@ -58,19 +58,17 @@ implements ICFSecJavaFXSchema
 	protected ICFSecJavaFXISOLangFactory factoryISOLang = null;
 	protected ICFSecJavaFXISOTZoneFactory factoryISOTZone = null;
 	protected ICFSecJavaFXSecClusGrpFactory factorySecClusGrp = null;
-	protected ICFSecJavaFXSecClusGrpIncFactory factorySecClusGrpInc = null;
 	protected ICFSecJavaFXSecClusGrpMembFactory factorySecClusGrpMemb = null;
 	protected ICFSecJavaFXSecClusRoleFactory factorySecClusRole = null;
 	protected ICFSecJavaFXSecClusRoleMembFactory factorySecClusRoleMemb = null;
-	protected ICFSecJavaFXSecRoleFactory factorySecRole = null;
-	protected ICFSecJavaFXSecRoleEnablesFactory factorySecRoleEnables = null;
-	protected ICFSecJavaFXSecRoleMembFactory factorySecRoleMemb = null;
 	protected ICFSecJavaFXSecSessionFactory factorySecSession = null;
 	protected ICFSecJavaFXSecSysGrpFactory factorySecSysGrp = null;
 	protected ICFSecJavaFXSecSysGrpIncFactory factorySecSysGrpInc = null;
 	protected ICFSecJavaFXSecSysGrpMembFactory factorySecSysGrpMemb = null;
+	protected ICFSecJavaFXSecSysRoleFactory factorySecSysRole = null;
+	protected ICFSecJavaFXSecSysRoleEnablesFactory factorySecSysRoleEnables = null;
+	protected ICFSecJavaFXSecSysRoleMembFactory factorySecSysRoleMemb = null;
 	protected ICFSecJavaFXSecTentGrpFactory factorySecTentGrp = null;
-	protected ICFSecJavaFXSecTentGrpIncFactory factorySecTentGrpInc = null;
 	protected ICFSecJavaFXSecTentGrpMembFactory factorySecTentGrpMemb = null;
 	protected ICFSecJavaFXSecTentRoleFactory factorySecTentRole = null;
 	protected ICFSecJavaFXSecTentRoleMembFactory factorySecTentRoleMemb = null;
@@ -304,13 +302,6 @@ implements ICFSecJavaFXSchema
 		return( factorySecClusGrp );
 	}
 
-	public ICFSecJavaFXSecClusGrpIncFactory getSecClusGrpIncFactory() {
-		if( factorySecClusGrpInc == null ) {
-			factorySecClusGrpInc = new CFSecJavaFXSecClusGrpIncFactory( this );
-		}
-		return( factorySecClusGrpInc );
-	}
-
 	public ICFSecJavaFXSecClusGrpMembFactory getSecClusGrpMembFactory() {
 		if( factorySecClusGrpMemb == null ) {
 			factorySecClusGrpMemb = new CFSecJavaFXSecClusGrpMembFactory( this );
@@ -330,27 +321,6 @@ implements ICFSecJavaFXSchema
 			factorySecClusRoleMemb = new CFSecJavaFXSecClusRoleMembFactory( this );
 		}
 		return( factorySecClusRoleMemb );
-	}
-
-	public ICFSecJavaFXSecRoleFactory getSecRoleFactory() {
-		if( factorySecRole == null ) {
-			factorySecRole = new CFSecJavaFXSecRoleFactory( this );
-		}
-		return( factorySecRole );
-	}
-
-	public ICFSecJavaFXSecRoleEnablesFactory getSecRoleEnablesFactory() {
-		if( factorySecRoleEnables == null ) {
-			factorySecRoleEnables = new CFSecJavaFXSecRoleEnablesFactory( this );
-		}
-		return( factorySecRoleEnables );
-	}
-
-	public ICFSecJavaFXSecRoleMembFactory getSecRoleMembFactory() {
-		if( factorySecRoleMemb == null ) {
-			factorySecRoleMemb = new CFSecJavaFXSecRoleMembFactory( this );
-		}
-		return( factorySecRoleMemb );
 	}
 
 	public ICFSecJavaFXSecSessionFactory getSecSessionFactory() {
@@ -381,18 +351,32 @@ implements ICFSecJavaFXSchema
 		return( factorySecSysGrpMemb );
 	}
 
+	public ICFSecJavaFXSecSysRoleFactory getSecSysRoleFactory() {
+		if( factorySecSysRole == null ) {
+			factorySecSysRole = new CFSecJavaFXSecSysRoleFactory( this );
+		}
+		return( factorySecSysRole );
+	}
+
+	public ICFSecJavaFXSecSysRoleEnablesFactory getSecSysRoleEnablesFactory() {
+		if( factorySecSysRoleEnables == null ) {
+			factorySecSysRoleEnables = new CFSecJavaFXSecSysRoleEnablesFactory( this );
+		}
+		return( factorySecSysRoleEnables );
+	}
+
+	public ICFSecJavaFXSecSysRoleMembFactory getSecSysRoleMembFactory() {
+		if( factorySecSysRoleMemb == null ) {
+			factorySecSysRoleMemb = new CFSecJavaFXSecSysRoleMembFactory( this );
+		}
+		return( factorySecSysRoleMemb );
+	}
+
 	public ICFSecJavaFXSecTentGrpFactory getSecTentGrpFactory() {
 		if( factorySecTentGrp == null ) {
 			factorySecTentGrp = new CFSecJavaFXSecTentGrpFactory( this );
 		}
 		return( factorySecTentGrp );
-	}
-
-	public ICFSecJavaFXSecTentGrpIncFactory getSecTentGrpIncFactory() {
-		if( factorySecTentGrpInc == null ) {
-			factorySecTentGrpInc = new CFSecJavaFXSecTentGrpIncFactory( this );
-		}
-		return( factorySecTentGrpInc );
 	}
 
 	public ICFSecJavaFXSecTentGrpMembFactory getSecTentGrpMembFactory() {
